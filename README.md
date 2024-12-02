@@ -36,6 +36,7 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
 
 ## 릴리즈
-|  버전   |      날짜      | 변경사항    |
-|:-----:|:------------:|:--------|
-| 0.0.1 |  2024.11.29  | 프로젝트 생성 |
+|   버전   |     날짜     | 변경사항             |
+|:------:|:----------:|:-----------------|
+| v0.0.1 | 2024-11-29 | - `New` 프로젝트 생성  |
+| v0.0.2 | 2024-12-02 | - `New` 설정파일 추가  |
