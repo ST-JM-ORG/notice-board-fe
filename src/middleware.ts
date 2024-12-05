@@ -5,9 +5,12 @@ import { NextRequest, NextResponse } from "next/server";
  * - 요청이 완료되기 전에 실행되는 코드로, 들어오는 요청을 기반으로 응답을 수정하거나 처리
  * - 파일명은 반드시 'middleware'로 해야함
  * - 서버 사이드에서 동작
- * @param req
+ * @param request
  */
-export const middleware = async (req: NextRequest) => {
+export const middleware = async (request: NextRequest) => {
+  const { pathname } = request.nextUrl;
+  console.log(pathname);
+
   return NextResponse.next();
 };
 
