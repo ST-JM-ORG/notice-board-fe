@@ -26,6 +26,7 @@ export default {
       colors: {
         "anti-flash-white": "#efeff4",
         "baby-blue-eyes": "#9bc7ec",
+        celadon: "#bdecb6",
         coral: "#ee7f50",
         gainsboro: "#dedede",
         "silver-sand": "#c6c6c6",

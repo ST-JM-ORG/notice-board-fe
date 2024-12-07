@@ -40,13 +40,21 @@ const Page = () => {
           px-20 py-50 shadow-lg"
       >
         <p className="mb-10 text-center text-25 font-bold">SIGN UP</p>
-        <Input
-          type="text"
-          className="rounded-b-none"
-          text="이메일"
-          value={email}
-          onChange={handleChangeSignUpId}
-        />
+        <div className="flex space-x-1">
+          <Input
+            type="text"
+            className="w-full rounded-b-none"
+            text="이메일"
+            value={email}
+            onChange={handleChangeSignUpId}
+          />
+          <button
+            className="w-100 rounded-10 border-1 bg-silver-sand transition-colors duration-100
+              ease-in-out hover:bg-gainsboro"
+          >
+            중복체크
+          </button>
+        </div>
         <Input
           type="text"
           className="rounded-t-none"
@@ -61,7 +69,7 @@ const Page = () => {
           value={name}
           onChange={handleChangeSignUpName}
         />
-        <button className="bg-baby-blue-eyes w-full rounded-10 py-10 text-20">
+        <button className="w-full rounded-10 bg-baby-blue-eyes py-10 text-20">
           회원가입
         </button>
         <div className="flex items-center justify-center space-x-2">
