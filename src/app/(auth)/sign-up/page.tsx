@@ -102,7 +102,7 @@ const Page = () => {
           defaultValue=""
           render={({ field, fieldState }) => (
             <Input
-              type="text"
+              type="password"
               className="rounded-t-none"
               text="비밀번호"
               helperText={fieldState.error && fieldState.error.message}
@@ -134,7 +134,7 @@ const Page = () => {
           defaultValue=""
           render={({ field, fieldState }) => (
             <Input
-              type="text"
+              type="password"
               className="rounded-t-none"
               text="비밀번호 확인"
               helperText={fieldState.error && fieldState.error.message}

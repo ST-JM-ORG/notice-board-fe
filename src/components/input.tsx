@@ -47,7 +47,7 @@ const Input = (props: Props) => {
           </div>
         </label>
       </div>
-      <p className="text-red px-5 text-13">{helperText}</p>
+      <p className="px-5 text-13 text-red">{helperText}</p>
     </div>
   );
 };
