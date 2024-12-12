@@ -6,8 +6,9 @@ import { FaArrowRight } from "react-icons/fa";
 
 import { useRouter } from "next/navigation";
 
-import Input from "@/components/input";
-import { EmailRegex, PwRegex } from "@/constants/regex";
+import Input from "@components/input";
+
+import { EmailRegex, PwRegex } from "@constants/regex";
 
 interface SignUpForm {
   email: string;
@@ -21,6 +22,7 @@ const Page = () => {
 
   const { control, handleSubmit, getValues, watch } = useForm<SignUpForm>({
     mode: "onBlur",
+    reValidateMode: "onBlur",
     defaultValues: {
       email: "",
       pw: "",
@@ -49,17 +51,15 @@ const Page = () => {
             name="email"
             control={control}
             rules={{
-              required: "이메일을 입력해주세요",
               pattern: {
                 value: EmailRegex,
                 message: "이메일 형식을 맞춰주세요",
               },
               minLength: {
                 value: 1,
-                message: "최소 1글자 이상 입력해주세요",
+                message: "이메일을 입력해주세요",
               },
             }}
-            defaultValue=""
             render={({ field, fieldState }) => (
               <Input
                 type="text"
@@ -83,14 +83,13 @@ const Page = () => {
           name="pw"
           control={control}
           rules={{
-            required: "비밀번호를 입력해주세요",
             pattern: {
               value: PwRegex,
               message: "비밀번호 형식을 맞춰주세요",
             },
             minLength: {
               value: 1,
-              message: "최소 1글자 이상 입력해주세요",
+              message: "비밀번호를 입력해주세요",
             },
             maxLength: {
               value: 20,
@@ -99,7 +98,6 @@ const Page = () => {
             validate: (value) =>
               value === watch("pwConfirm") || "비밀번호가 일치하지 않습니다",
           }}
-          defaultValue=""
           render={({ field, fieldState }) => (
             <Input
               type="password"
@@ -115,14 +113,13 @@ const Page = () => {
           name="pwConfirm"
           control={control}
           rules={{
-            required: "비밀번호 확인을 입력해주세요",
             pattern: {
               value: PwRegex,
               message: "비밀번호 형식을 맞춰주세요",
             },
             minLength: {
               value: 1,
-              message: "최소 1글자 이상 입력해주세요",
+              message: "비밀번호 확인을 입력해주세요",
             },
             maxLength: {
               value: 20,
@@ -147,10 +144,9 @@ const Page = () => {
           name="name"
           control={control}
           rules={{
-            required: "이름을 입력해주세요",
             minLength: {
               value: 1,
-              message: "최소 1글자 이상 입력해주세요",
+              message: "이름을 입력해주세요",
             },
           }}
           defaultValue=""

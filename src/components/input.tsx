@@ -7,7 +7,7 @@ interface Props {
   value: string;
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
   onBlur?: (e: FocusEvent<HTMLInputElement>) => void;
-  helperText?: string | undefined;
+  helperText?: string | undefined | null;
 }
 
 const Input = (props: Props) => {
