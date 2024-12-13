@@ -48,21 +48,18 @@ const Page = () => {
             name="email"
             control={control}
             rules={{
+              required: "이메일을 입력해주세요",
               pattern: {
                 value: EmailRegex,
                 message: "이메일 형식을 맞춰주세요",
               },
-              minLength: {
-                value: 1,
-                message: "이메일을 입력해주세요",
-              },
             }}
-            render={({ field, fieldState }) => (
+            render={({ field, fieldState: { error } }) => (
               <Input
                 type="text"
                 className="w-full rounded-b-none"
                 text="이메일"
-                helperText={fieldState.error && fieldState.error.message}
+                helperText={error && error.message}
                 {...field}
               />
             )}
@@ -80,13 +77,14 @@ const Page = () => {
           name="pw"
           control={control}
           rules={{
+            required: "비밀번호를 입력해주세요",
             pattern: {
               value: PwRegex,
               message: "비밀번호 형식을 맞춰주세요",
             },
             minLength: {
-              value: 1,
-              message: "비밀번호를 입력해주세요",
+              value: 8,
+              message: "비밀번호는 최소 8자리 이상 입력해주세요",
             },
             maxLength: {
               value: 20,
@@ -95,12 +93,12 @@ const Page = () => {
             validate: (value) =>
               value === watch("pwConfirm") || "비밀번호가 일치하지 않습니다",
           }}
-          render={({ field, fieldState }) => (
+          render={({ field, fieldState: { error } }) => (
             <Input
               type="password"
               className="rounded-t-none"
               text="비밀번호"
-              helperText={fieldState.error && fieldState.error.message}
+              helperText={error && error.message}
               {...field}
             />
           )}
@@ -110,13 +108,14 @@ const Page = () => {
           name="pwConfirm"
           control={control}
           rules={{
+            required: "비밀번호를 입력해주세요",
             pattern: {
               value: PwRegex,
               message: "비밀번호 형식을 맞춰주세요",
             },
             minLength: {
-              value: 1,
-              message: "비밀번호 확인을 입력해주세요",
+              value: 8,
+              message: "비밀번호 확인은 최소 8자 이상 입력해주세요",
             },
             maxLength: {
               value: 20,
@@ -126,12 +125,12 @@ const Page = () => {
               value === watch("pw") || "비밀번호가 일치하지 않습니다",
           }}
           defaultValue=""
-          render={({ field, fieldState }) => (
+          render={({ field, fieldState: { error } }) => (
             <Input
               type="password"
               className="rounded-t-none"
               text="비밀번호 확인"
-              helperText={fieldState.error && fieldState.error.message}
+              helperText={error && error.message}
               {...field}
             />
           )}
@@ -147,12 +146,12 @@ const Page = () => {
             },
           }}
           defaultValue=""
-          render={({ field, fieldState }) => (
+          render={({ field, fieldState: { error } }) => (
             <Input
               type="text"
               className="rounded-t-none"
               text="이름"
-              helperText={fieldState.error && fieldState.error.message}
+              helperText={error && error.message}
               {...field}
             />
           )}
