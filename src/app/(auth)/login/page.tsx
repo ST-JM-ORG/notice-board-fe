@@ -32,11 +32,11 @@ const Page = () => {
   const handleLogin = () => {};
 
   return (
-    <form onSubmit={handleSubmit(handleLogin)}>
-      <div
-        className="w-full min-w-500 max-w-500 space-y-2 rounded-20 border-1 bg-anti-flash-white
-          px-20 py-50 shadow-lg"
-      >
+    <div
+      className="w-full min-w-500 max-w-500 rounded-20 border-1 bg-anti-flash-white px-20 py-50
+        shadow-lg"
+    >
+      <form onSubmit={handleSubmit(handleLogin)} className="space-y-2">
         <p className="mb-10 text-center text-25 font-bold">LOGIN</p>
 
         <Controller
@@ -44,10 +44,6 @@ const Page = () => {
           control={control}
           rules={{
             required: "이메일을 입력해주세요",
-            minLength: {
-              value: 1,
-              message: "이메일을 입력해주세요",
-            },
           }}
           render={({ field, fieldState: { error } }) => (
             <Input
@@ -64,10 +60,7 @@ const Page = () => {
           name="pw"
           control={control}
           rules={{
-            minLength: {
-              value: 1,
-              message: "비밀번호를 입력해주세요",
-            },
+            required: "비밀번호를 입력해주세요",
           }}
           defaultValue=""
           render={({ field, fieldState }) => (
@@ -93,15 +86,18 @@ const Page = () => {
         <button className="w-full rounded-10 bg-baby-blue-eyes py-10 text-20">
           로그인
         </button>
-        <div className="flex items-center justify-center space-x-2">
-          <span>계정이 없으신가요?</span>
-          <button className="flex items-center" onClick={handleRouteSignUp}>
-            <span>회원가입하러가기</span>
-            <FaArrowRight />
-          </button>
-        </div>
+      </form>
+      <div className="mt-8 flex items-center justify-center space-x-2">
+        <span>계정이 없으신가요?</span>
+        <button
+          className="flex items-center justify-center"
+          onClick={handleRouteSignUp}
+        >
+          <span>회원가입하러가기</span>
+          <FaArrowRight />
+        </button>
       </div>
-    </form>
+    </div>
   );
 };
 
