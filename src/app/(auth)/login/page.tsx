@@ -84,6 +84,7 @@ const Page = () => {
           로그인
         </button>
       </form>
+
       <div className="mt-8 flex items-center justify-center space-x-2">
         <span>계정이 없으신가요?</span>
         <button

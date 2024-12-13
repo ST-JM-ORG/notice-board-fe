@@ -58,7 +58,7 @@ const Page = () => {
               <Input
                 type="text"
                 className="w-full rounded-b-none"
-                text="이메일"
+                text="이메일 *"
                 helperText={error && error.message}
                 {...field}
               />
@@ -97,7 +97,7 @@ const Page = () => {
             <Input
               type="password"
               className="rounded-t-none"
-              text="비밀번호"
+              text="비밀번호 *"
               helperText={error && error.message}
               {...field}
             />
@@ -129,7 +129,7 @@ const Page = () => {
             <Input
               type="password"
               className="rounded-t-none"
-              text="비밀번호 확인"
+              text="비밀번호 확인 *"
               helperText={error && error.message}
               {...field}
             />
@@ -150,7 +150,7 @@ const Page = () => {
             <Input
               type="text"
               className="rounded-t-none"
-              text="이름"
+              text="이름 *"
               helperText={error && error.message}
               {...field}
             />
