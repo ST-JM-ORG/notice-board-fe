@@ -32,10 +32,7 @@ const Page = () => {
   const handleLogin = () => {};
 
   return (
-    <div
-      className="w-full min-w-500 max-w-500 rounded-20 border-1 bg-anti-flash-white px-20 py-50
-        shadow-lg"
-    >
+    <>
       <form onSubmit={handleSubmit(handleLogin)} className="space-y-2">
         <p className="mb-10 text-center text-25 font-bold">LOGIN</p>
 
@@ -97,7 +94,7 @@ const Page = () => {
           <FaArrowRight />
         </button>
       </div>
-    </div>
+    </>
   );
 };
 

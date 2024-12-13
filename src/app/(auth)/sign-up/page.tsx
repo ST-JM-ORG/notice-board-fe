@@ -40,11 +40,8 @@ const Page = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit(handleSignUp)}>
-      <div
-        className="w-full min-w-500 space-y-2 rounded-20 border-1 bg-anti-flash-white px-20 py-50
-          shadow-lg"
-      >
+    <>
+      <form onSubmit={handleSubmit(handleSignUp)} className="space-y-2">
         <p className="mb-10 text-center text-25 font-bold">SIGN UP</p>
         <div className="flex space-x-1">
           <Controller
@@ -164,15 +161,16 @@ const Page = () => {
         <button className="w-full rounded-10 bg-baby-blue-eyes py-10 text-20">
           회원가입
         </button>
-        <div className="flex items-center justify-center space-x-2">
-          <span>이미 계정이 있으신가요?</span>
-          <button className="flex items-center" onClick={handleRouteSignUp}>
-            <span>로그인하러가기</span>
-            <FaArrowRight />
-          </button>
-        </div>
+      </form>
+
+      <div className="mt-8 flex items-center justify-center space-x-2">
+        <span>이미 계정이 있으신가요?</span>
+        <button className="flex items-center" onClick={handleRouteSignUp}>
+          <span>로그인하러가기</span>
+          <FaArrowRight />
+        </button>
       </div>
-    </form>
+    </>
   );
 };
 
