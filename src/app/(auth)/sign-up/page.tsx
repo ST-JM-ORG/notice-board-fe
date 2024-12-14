@@ -1,48 +1,99 @@
 "use client";
 
-import React from "react";
+import React, { ChangeEvent } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { FaArrowRight } from "react-icons/fa";
 
 import { useRouter } from "next/navigation";
 
 import Input from "@components/input";
+import ProfileUploader from "@components/profile-uploader";
 
 import { EmailRegex, PwRegex } from "@constants/regex";
+
+import { encodeFileToBase64 } from "@utils/file-encoder";
 
 interface SignUpForm {
   email: string;
   pw: string;
   pwConfirm: string;
   name: string;
+  phoneNumber: string;
+  file?: string | null | undefined;
+  fileName?: string | null | undefined;
+  mime?: string | null | undefined;
 }
 
 const Page = () => {
   const router = useRouter();
 
-  const { control, handleSubmit, getValues, watch } = useForm<SignUpForm>({
-    mode: "onBlur",
-    reValidateMode: "onBlur",
-    defaultValues: {
-      email: "",
-      pw: "",
-      pwConfirm: "",
-      name: "",
-    },
-  });
-
-  const handleSignUp = () => {
-    console.log(getValues("email"));
-  };
+  const { control, handleSubmit, getValues, setValue, watch } =
+    useForm<SignUpForm>({
+      mode: "onChange",
+      reValidateMode: "onChange",
+      defaultValues: {
+        email: "",
+        pw: "",
+        pwConfirm: "",
+        name: "",
+        phoneNumber: "",
+        file: null,
+        fileName: null,
+        mime: null,
+      },
+    });
 
   const handleRouteSignUp = () => {
     router.push("/login");
+  };
+
+  const handleChangeFile = async (e: ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault();
+
+    if (e.target.files) {
+      const file: File = e.target.files[0];
+      const encodedFile = await encodeFileToBase64(file);
+
+      if (typeof encodedFile === "string") {
+        setValue("file", encodedFile);
+        setValue("fileName", file.name);
+        setValue("mime", file.type);
+      }
+    }
+  };
+
+  const handleSignUp = () => {
+    const formData = new FormData();
+    const file = getValues("file");
+
+    formData.append("email", getValues("email"));
+    formData.append("password", getValues("pw"));
+    formData.append("name", getValues("name"));
+    formData.append("contact", getValues("phoneNumber"));
+    if (file) {
+      formData.append("profileImg", file);
+    }
+
+    for (const [key, value] of formData.entries()) {
+      console.log(`${key}: ${value}`);
+    }
   };
 
   return (
     <>
       <form onSubmit={handleSubmit(handleSignUp)} className="space-y-2">
         <p className="mb-10 text-center text-25 font-bold">SIGN UP</p>
+
+        <Controller
+          name="file"
+          control={control}
+          render={({ field: { value } }) => (
+            <div className="flex items-center justify-center">
+              <ProfileUploader file={value} onChange={handleChangeFile} />
+            </div>
+          )}
+        />
+
         <div className="flex space-x-1">
           <Controller
             name="email"
@@ -90,8 +141,6 @@ const Page = () => {
               value: 20,
               message: "비밀번호는 최대 20글자까지 입력할 수 있습니다",
             },
-            validate: (value) =>
-              value === watch("pwConfirm") || "비밀번호가 일치하지 않습니다",
           }}
           render={({ field, fieldState: { error } }) => (
             <Input
@@ -140,10 +189,7 @@ const Page = () => {
           name="name"
           control={control}
           rules={{
-            minLength: {
-              value: 1,
-              message: "이름을 입력해주세요",
-            },
+            required: "이름을 입력해주세요",
           }}
           defaultValue=""
           render={({ field, fieldState: { error } }) => (
@@ -151,6 +197,20 @@ const Page = () => {
               type="text"
               className="rounded-t-none"
               text="이름 *"
+              helperText={error && error.message}
+              {...field}
+            />
+          )}
+        />
+
+        <Controller
+          name="phoneNumber"
+          control={control}
+          render={({ field, fieldState: { error } }) => (
+            <Input
+              type="text"
+              className="rounded-t-none"
+              text="전화번호"
               helperText={error && error.message}
               {...field}
             />
