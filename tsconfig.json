@@ -21,6 +21,8 @@
     "paths": {
       "@components/*": ["./src/components/*"],
       "@constants/*": ["./src/constants/*"],
+      "@models/*": ["./src/models/*"],
+      "@redux/*": ["./src/redux/*"],
       "@utils/*": ["./src/utils/*"],
       "@/*": ["./src/*"]
     }
