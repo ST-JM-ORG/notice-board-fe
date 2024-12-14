@@ -47,9 +47,13 @@
           [
             "^(@components)(/.*|$)"
           ],
-          // @로 시작하거나 components로 시작하는 내부 모듈을 배치
+          // @로 시작하거나 constants 시작하는 내부 모듈을 배치
           [
             "^(@constants)(/.*|$)"
+          ],
+          // @로 시작하거나 utils로 시작하는 내부 모듈을 배치
+          [
+            "^(@utils)(/.*|$)"
           ],
           // 사이드 이펙트 import를 처리합니다 (예: import 'styles.css')
           [

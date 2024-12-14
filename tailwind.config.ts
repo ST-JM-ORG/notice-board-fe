@@ -18,7 +18,7 @@ export default {
         "carousel-prev": "carousel-prev .5s ease-in-out forwards",
         "carousel-next": "carousel-next .5s ease-in-out forwards",
       },
-      borderRadius: pxToRem(30),
+      borderRadius: pxToRem(50),
       borderWidth: pxToRem(10),
       boxShadow: {
         header: "0 4px 6px -1px rgba(0,0,0,0.1)",
