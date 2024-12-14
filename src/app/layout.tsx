@@ -3,6 +3,8 @@ import { ReactNode } from "react";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 
+import ReduxProvider from "@redux/redux-provider";
+
 import "./globals.css";
 
 const pretendard = localFont({
@@ -25,7 +27,7 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <body className={`${pretendard.variable} font-pretendard antialiased`}>
-        {children}
+        <ReduxProvider>{children}</ReduxProvider>
       </body>
     </html>
   );

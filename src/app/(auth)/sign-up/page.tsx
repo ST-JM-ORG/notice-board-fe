@@ -11,6 +11,9 @@ import ProfileUploader from "@components/profile-uploader";
 
 import { EmailRegex, PwRegex } from "@constants/regex";
 
+import { signUp } from "@redux/apis/auth-api";
+import { useThunkDispatch } from "@redux/hook";
+
 import { encodeFileToBase64 } from "@utils/file-encoder";
 
 interface SignUpForm {
@@ -26,6 +29,7 @@ interface SignUpForm {
 
 const Page = () => {
   const router = useRouter();
+  const thunkDispatch = useThunkDispatch();
 
   const { control, handleSubmit, getValues, setValue, watch } =
     useForm<SignUpForm>({
@@ -74,9 +78,7 @@ const Page = () => {
       formData.append("profileImg", file);
     }
 
-    for (const [key, value] of formData.entries()) {
-      console.log(`${key}: ${value}`);
-    }
+    thunkDispatch(signUp({ formData }));
   };
 
   return (
