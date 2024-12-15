@@ -1,6 +1,7 @@
 import React, { ChangeEvent, FocusEvent } from "react";
 
 interface Props {
+  id?: string;
   className?: string;
   type?: string;
   text: string;
@@ -13,6 +14,7 @@ interface Props {
 
 const Input = (props: Props) => {
   const {
+    id,
     className,
     type = "text",
     text,
@@ -27,7 +29,7 @@ const Input = (props: Props) => {
     <div className={className}>
       <div className="relative">
         <input
-          id="input"
+          id={id}
           type={type}
           value={value}
           onChange={onChange}
