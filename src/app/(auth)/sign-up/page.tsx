@@ -75,19 +75,21 @@ const Page = () => {
     if (e.target.files) {
       const file: File = e.target.files[0];
 
-      if (!profileImgWhiteList.includes(file.type)) {
-        setError("file", {
-          message: "jpg, jpeg, png, gif, bmp 확장자만 허용됩니다.",
-        });
-      } else {
-        clearErrors("file");
+      if (file) {
+        if (!profileImgWhiteList.includes(file.type)) {
+          setError("file", {
+            message: "jpg, jpeg, png, gif, bmp 확장자만 허용됩니다.",
+          });
+        } else {
+          clearErrors("file");
 
-        const encodedFile = await encodeFileToBase64(file);
+          const encodedFile = await encodeFileToBase64(file);
 
-        if (typeof encodedFile === "string") {
-          setValue("file", encodedFile);
-          setValue("fileName", file.name);
-          setValue("mime", file.type);
+          if (typeof encodedFile === "string") {
+            setValue("file", encodedFile);
+            setValue("fileName", file.name);
+            setValue("mime", file.type);
+          }
         }
       }
     }
@@ -257,7 +259,6 @@ const Page = () => {
             validate: (value) =>
               value === watch("pw") || "비밀번호가 일치하지 않습니다",
           }}
-          defaultValue=""
           render={({ field, fieldState: { error } }) => (
             <Input
               type="password"
@@ -276,7 +277,6 @@ const Page = () => {
           rules={{
             required: "이름을 입력해주세요",
           }}
-          defaultValue=""
           render={({ field, fieldState: { error } }) => (
             <Input
               type="text"
