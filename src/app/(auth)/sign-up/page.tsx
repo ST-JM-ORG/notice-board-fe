@@ -17,6 +17,7 @@ import { useAppSelector, useThunkDispatch } from "@redux/hook";
 
 import { cn } from "@utils/classname";
 import { encodeFileToBase64 } from "@utils/file-encoder";
+import { profileImgWhiteList } from "@utils/mime";
 
 interface SignUpForm {
   email: string;
@@ -66,12 +67,19 @@ const Page = () => {
 
     if (e.target.files) {
       const file: File = e.target.files[0];
-      const encodedFile = await encodeFileToBase64(file);
 
-      if (typeof encodedFile === "string") {
-        setValue("file", encodedFile);
-        setValue("fileName", file.name);
-        setValue("mime", file.type);
+      if (!profileImgWhiteList.includes(file.type)) {
+        setError("file", {
+          message: "jpg, jpeg, png, gif, bmp 확장자만 허용됩니다.",
+        });
+      } else {
+        const encodedFile = await encodeFileToBase64(file);
+
+        if (typeof encodedFile === "string") {
+          setValue("file", encodedFile);
+          setValue("fileName", file.name);
+          setValue("mime", file.type);
+        }
       }
     }
   };
@@ -117,9 +125,10 @@ const Page = () => {
         <Controller
           name="file"
           control={control}
-          render={({ field: { value } }) => (
-            <div className="flex items-center justify-center">
+          render={({ field: { value }, fieldState: { error } }) => (
+            <div className="flex flex-col items-center justify-center">
               <ProfileUploader file={value} onChange={handleChangeFile} />
+              <p className="px-5 text-13 text-red">{error && error.message}</p>
             </div>
           )}
         />
