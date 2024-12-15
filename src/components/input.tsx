@@ -1,5 +1,7 @@
 import React, { ChangeEvent, FocusEvent } from "react";
 
+import { cn } from "@utils/classname";
+
 interface Props {
   id?: string;
   className?: string;
@@ -34,19 +36,30 @@ const Input = (props: Props) => {
           value={value}
           onChange={onChange}
           onBlur={onBlur}
-          className="focus:border-azure peer box-border w-full rounded-10 border-1 border-silver-sand
-            bg-white px-16 pb-8 pt-20 transition-colors duration-200 ease-in-out
-            focus:border-1 focus:outline-none dark:bg-sonic-silver dark:text-white"
+          className={cn(
+            `peer box-border w-full rounded-10 border-1 border-silver-sand bg-white px-16
+            pb-8 pt-20 transition-colors duration-200 ease-in-out`,
+            "focus:border-azure focus:border-1 focus:outline-none",
+            "dark:bg-sonic-silver dark:text-white",
+          )}
         />
         <label
           htmlFor="input"
-          className="peer-focus:text-azure pointer-events-none absolute bottom-0 left-3 top-0 flex
-            items-center text-15 text-sonic-silver transition-all duration-200 ease-in-out
-            peer-focus:-translate-y-20p peer-focus:text-12
+          className={cn(
+            `pointer-events-none absolute bottom-0 left-3 top-0 flex items-center text-15
+            text-sonic-silver`,
+            "transition-all duration-200 ease-in-out",
+            `peer-focus:text-azure peer-focus:-translate-y-20p peer-focus:text-12
             peer-[:not(input[value=''])]:-translate-y-20p
-            peer-[:not(input[value=''])]:text-12"
+            peer-[:not(input[value=''])]:text-12`,
+          )}
         >
-          <div className="text-philippine-gray bg-transparent px-5 dark:text-anti-flash-white">
+          <div
+            className={cn(
+              "text-philippine-gray bg-transparent px-5",
+              "dark:text-anti-flash-white",
+            )}
+          >
             {text}
             {required && <span className="ml-3">*</span>}
           </div>

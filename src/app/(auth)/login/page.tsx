@@ -9,6 +9,8 @@ import { useRouter } from "next/navigation";
 import Button from "@components/button";
 import Input from "@components/input";
 
+import { cn } from "@utils/classname";
+
 interface LoginForm {
   email: string;
   pw: string;
@@ -61,12 +63,12 @@ const Page = () => {
             required: "비밀번호를 입력해주세요",
           }}
           defaultValue=""
-          render={({ field, fieldState }) => (
+          render={({ field, fieldState: { error } }) => (
             <Input
               type="password"
               className="rounded-t-none"
               text="비밀번호"
-              helperText={fieldState.error && fieldState.error.message}
+              helperText={error && error.message}
               {...field}
             />
           )}
@@ -77,7 +79,9 @@ const Page = () => {
             <input type="checkbox" id="checkbox" />
             <label htmlFor="checkbox">아이디 저장</label>
           </div>
-          <div className="text-gray-500 underline hover:cursor-pointer">
+          <div
+            className={cn("text-gray-500 underline", "hover:cursor-pointer")}
+          >
             비밀번호 찾기
           </div>
         </div>
