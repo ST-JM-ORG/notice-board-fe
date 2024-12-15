@@ -8,6 +8,7 @@ interface Props {
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
   onBlur?: (e: FocusEvent<HTMLInputElement>) => void;
   helperText?: string | undefined | null;
+  required?: boolean;
 }
 
 const Input = (props: Props) => {
@@ -19,6 +20,7 @@ const Input = (props: Props) => {
     onChange,
     onBlur,
     helperText,
+    required = false,
   } = props;
 
   return (
@@ -44,6 +46,7 @@ const Input = (props: Props) => {
         >
           <div className="text-philippine-gray bg-transparent px-5 dark:text-anti-flash-white">
             {text}
+            {required && <span className="ml-3">*</span>}
           </div>
         </label>
       </div>
