@@ -306,7 +306,7 @@ const Page = () => {
       <div className="mt-8 flex items-center justify-center space-x-2">
         <span>이미 계정이 있으신가요?</span>
         <button className="flex items-center" onClick={handleRouteSignUp}>
-          <span>로그인하러가기</span>
+          <span className="underline">로그인하러가기</span>
           <FaArrowRight />
         </button>
       </div>

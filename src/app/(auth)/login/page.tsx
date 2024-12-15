@@ -96,7 +96,7 @@ const Page = () => {
           className="flex items-center justify-center"
           onClick={handleRouteSignUp}
         >
-          <span>회원가입하러가기</span>
+          <span className="underline">회원가입하러가기</span>
           <FaArrowRight />
         </button>
       </div>
