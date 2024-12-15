@@ -18,7 +18,7 @@ const ProfileUploader = (props: Props) => {
         className="hidden"
         onChange={onChange}
       />
-      <div className="flex items-center space-x-2">
+      <div className="flex items-center space-x-2 rounded-50">
         <label
           htmlFor="file-uploader"
           className={cn(
