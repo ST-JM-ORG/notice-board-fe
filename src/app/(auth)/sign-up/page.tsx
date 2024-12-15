@@ -31,21 +31,28 @@ interface SignUpForm {
 }
 
 const Page = () => {
-  const { control, handleSubmit, getValues, setValue, setError, watch } =
-    useForm<SignUpForm>({
-      mode: "onChange",
-      reValidateMode: "onChange",
-      defaultValues: {
-        email: "",
-        pw: "",
-        pwConfirm: "",
-        name: "",
-        phoneNumber: "",
-        file: null,
-        fileName: null,
-        mime: null, //  jpg, jpeg, png, gif, bmp
-      },
-    });
+  const {
+    control,
+    handleSubmit,
+    getValues,
+    setValue,
+    setError,
+    clearErrors,
+    watch,
+  } = useForm<SignUpForm>({
+    mode: "onChange",
+    reValidateMode: "onChange",
+    defaultValues: {
+      email: "",
+      pw: "",
+      pwConfirm: "",
+      name: "",
+      phoneNumber: "",
+      file: null,
+      fileName: null,
+      mime: null, //  jpg, jpeg, png, gif, bmp
+    },
+  });
 
   const router = useRouter();
   const thunkDispatch = useThunkDispatch();
@@ -73,6 +80,8 @@ const Page = () => {
           message: "jpg, jpeg, png, gif, bmp 확장자만 허용됩니다.",
         });
       } else {
+        clearErrors("file");
+
         const encodedFile = await encodeFileToBase64(file);
 
         if (typeof encodedFile === "string") {
@@ -85,6 +94,7 @@ const Page = () => {
   };
 
   const handleRemoveProfile = () => {
+    clearErrors("file");
     setValue("file", null);
     setValue("fileName", null);
     setValue("mime", null);

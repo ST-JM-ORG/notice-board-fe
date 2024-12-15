@@ -22,13 +22,17 @@ const ProfileUploader = (props: Props) => {
         <label
           htmlFor="file-uploader"
           className={cn(
-            `flex h-100 w-100 items-center justify-center rounded-50 border-1 border-dashed
+            `rounded-75 flex h-150 w-150 items-center justify-center border-1 border-dashed
             border-sonic-silver`,
             "hover:cursor-pointer",
           )}
         >
           {file ? (
-            <img src={file} alt="Profile image" className="rounded-50" />
+            <img
+              src={file}
+              alt="Profile image"
+              className="rounded-75 h-full w-full object-contain"
+            />
           ) : (
             <span className="text-sonic-silver">프로필 이미지</span>
           )}
