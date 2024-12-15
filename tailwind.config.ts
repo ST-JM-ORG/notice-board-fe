@@ -30,6 +30,7 @@ export default {
         celadon: "#bdecb6",
         coral: "#ee7f50",
         cultured: "#f9f6f2",
+        "dark-sky-blue": "#95b8d1",
         gainsboro: "#dedede",
         "pastel-green": "#77dd77",
         platinum: "#e2e2e2",

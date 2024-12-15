@@ -126,7 +126,7 @@ const Page = () => {
   return (
     <>
       <form onSubmit={handleSubmit(handleSignUp)} className="space-y-2">
-        <p className="mb-10 text-center text-25 font-bold">SIGN UP</p>
+        <p className="mb-10 text-center text-25 font-bold">회원가입</p>
 
         <Controller
           name="file"
@@ -289,10 +289,14 @@ const Page = () => {
           )}
         />
 
-        <button className="w-full rounded-10 bg-baby-blue-eyes py-10 text-20">
+        <Button
+          className="w-full rounded-10 py-10 text-20"
+          bgColor="bg-baby-blue-eyes"
+          borderColor="border-dark-sky-blue"
+        >
           {/* Note: '중복체크중...'을 로딩바로 나중에 변경 */}
           {signUpStatus === "pending" ? "회원가입중..." : "회원가입"}
-        </button>
+        </Button>
       </form>
 
       <div className="mt-8 flex items-center justify-center space-x-2">

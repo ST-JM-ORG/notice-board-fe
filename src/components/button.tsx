@@ -5,20 +5,23 @@ import { cn } from "@utils/classname";
 interface Props extends PropsWithChildren {
   type?: "submit" | "reset" | "button" | undefined;
   className?: string;
+  bgColor?: string;
+  borderColor?: string;
   onClick?: () => void;
 }
 
 const Button = (props: Props) => {
-  const { type, className, onClick, children } = props;
+  const { type, className, bgColor, borderColor, onClick, children } = props;
 
   return (
     <button
       type={type}
       className={cn(
-        `bg-platinum rounded-10 border-1 border-silver-sand px-8 py-4 shadow-xl
-        backdrop-blur-md`,
+        "rounded-10 border-1 px-8 py-4 shadow-xl backdrop-blur-md",
         "transition-opacity duration-300 ease-in-out",
         "hover:bg-opacity-80",
+        bgColor ? bgColor : "bg-platinum",
+        borderColor ? borderColor : "border-silver-sand",
         className,
       )}
       onClick={onClick}

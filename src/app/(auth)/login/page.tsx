@@ -6,6 +6,7 @@ import { FaArrowRight } from "react-icons/fa";
 
 import { useRouter } from "next/navigation";
 
+import Button from "@components/button";
 import Input from "@components/input";
 
 interface LoginForm {
@@ -34,7 +35,7 @@ const Page = () => {
   return (
     <>
       <form onSubmit={handleSubmit(handleLogin)} className="space-y-2">
-        <p className="mb-10 text-center text-25 font-bold">LOGIN</p>
+        <p className="mb-10 text-center text-25 font-bold">로그인</p>
 
         <Controller
           name="email"
@@ -80,9 +81,13 @@ const Page = () => {
             비밀번호 찾기
           </div>
         </div>
-        <button className="w-full rounded-10 bg-baby-blue-eyes py-10 text-20">
+        <Button
+          className="w-full rounded-10 py-10 text-20"
+          bgColor="bg-baby-blue-eyes"
+          borderColor="border-dark-sky-blue"
+        >
           로그인
-        </button>
+        </Button>
       </form>
 
       <div className="mt-8 flex items-center justify-center space-x-2">
