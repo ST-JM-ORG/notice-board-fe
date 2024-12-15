@@ -29,6 +29,7 @@ export default {
         celadon: "#bdecb6",
         coral: "#ee7f50",
         gainsboro: "#dedede",
+        "pastel-green": "#77dd77",
         red: "#ff0000",
         "silver-sand": "#c6c6c6",
         "sonic-silver": "#707579",

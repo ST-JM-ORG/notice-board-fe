@@ -1,8 +1,9 @@
 "use client";
 
-import React, { ChangeEvent } from "react";
+import React, { ChangeEvent, useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { FaArrowRight } from "react-icons/fa";
+import { shallowEqual } from "react-redux";
 
 import { useRouter } from "next/navigation";
 
@@ -11,9 +12,10 @@ import ProfileUploader from "@components/profile-uploader";
 
 import { EmailRegex, PwRegex } from "@constants/regex";
 
-import { signUp } from "@redux/apis/auth-api";
-import { useThunkDispatch } from "@redux/hook";
+import { emailDupCheck, signUp } from "@redux/apis/auth-api";
+import { useAppSelector, useThunkDispatch } from "@redux/hook";
 
+import { cn } from "@utils/classname";
 import { encodeFileToBase64 } from "@utils/file-encoder";
 
 interface SignUpForm {
@@ -28,10 +30,7 @@ interface SignUpForm {
 }
 
 const Page = () => {
-  const router = useRouter();
-  const thunkDispatch = useThunkDispatch();
-
-  const { control, handleSubmit, getValues, setValue, watch } =
+  const { control, handleSubmit, getValues, setValue, setError, watch } =
     useForm<SignUpForm>({
       mode: "onChange",
       reValidateMode: "onChange",
@@ -43,9 +42,20 @@ const Page = () => {
         phoneNumber: "",
         file: null,
         fileName: null,
-        mime: null,
+        mime: null, //  jpg, jpeg, png, gif, bmp
       },
     });
+
+  const router = useRouter();
+  const thunkDispatch = useThunkDispatch();
+  const { signUpStatus, emailDupCheckStatus, isEmailDup } = useAppSelector(
+    (state) => ({
+      signUpStatus: state.auth.signUpStatus,
+      emailDupCheckStatus: state.auth.emailDupCheckStatus,
+      isEmailDup: state.auth.isEmailDup,
+    }),
+    shallowEqual,
+  );
 
   const handleRouteSignUp = () => {
     router.push("/login");
@@ -66,6 +76,18 @@ const Page = () => {
     }
   };
 
+  const handleEmailDupCheck = () => {
+    const email: string = getValues("email");
+
+    if (!email) {
+      setError("email", { message: "이메일을 입력해주세요" });
+    } else if (!EmailRegex.test(email)) {
+      setError("email", { message: "이메일 형식을 맞춰주세요" });
+    } else {
+      thunkDispatch(emailDupCheck({ email }));
+    }
+  };
+
   const handleSignUp = () => {
     const formData = new FormData();
     const file = getValues("file");
@@ -80,6 +102,12 @@ const Page = () => {
 
     thunkDispatch(signUp({ formData }));
   };
+
+  useEffect(() => {
+    if (isEmailDup) {
+      setError("email", { message: "중복된 이메일입니다" });
+    }
+  }, [isEmailDup, setError]);
 
   return (
     <>
@@ -106,6 +134,12 @@ const Page = () => {
                 value: EmailRegex,
                 message: "이메일 형식을 맞춰주세요",
               },
+              validate: () => {
+                if (isEmailDup || isEmailDup === null) {
+                  return "이메일 중복체크를 해주세요";
+                }
+                return true;
+              },
             }}
             render={({ field, fieldState: { error } }) => (
               <Input
@@ -119,10 +153,16 @@ const Page = () => {
           />
 
           <button
-            className="h-54 w-100 rounded-10 border-1 bg-silver-sand transition-colors duration-100
-              ease-in-out hover:bg-gainsboro"
+            type="button"
+            className={cn(
+              "h-54 w-100 rounded-10 border-1 bg-silver-sand backdrop-blur-md",
+              "transition-color duration-200 ease-in-out",
+              "hover:bg-gainsboro",
+            )}
+            onClick={handleEmailDupCheck}
           >
-            중복체크
+            {/* Note: '중복체크중...'을 로딩바로 나중에 변경 */}
+            {emailDupCheckStatus === "pending" ? "중복체크중..." : "중복체크"}
           </button>
         </div>
 
@@ -220,7 +260,8 @@ const Page = () => {
         />
 
         <button className="w-full rounded-10 bg-baby-blue-eyes py-10 text-20">
-          회원가입
+          {/* Note: '중복체크중...'을 로딩바로 나중에 변경 */}
+          {signUpStatus === "pending" ? "회원가입중..." : "회원가입"}
         </button>
       </form>
 
