@@ -7,6 +7,7 @@ import { shallowEqual } from "react-redux";
 
 import { useRouter } from "next/navigation";
 
+import Button from "@components/button";
 import Input from "@components/input";
 import ProfileUploader from "@components/profile-uploader";
 
@@ -15,7 +16,6 @@ import { EmailRegex, PwRegex } from "@constants/regex";
 import { emailDupCheck, signUp } from "@redux/apis/auth-api";
 import { useAppSelector, useThunkDispatch } from "@redux/hook";
 
-import { cn } from "@utils/classname";
 import { encodeFileToBase64 } from "@utils/file-encoder";
 import { profileImgWhiteList } from "@utils/mime";
 
@@ -84,6 +84,12 @@ const Page = () => {
     }
   };
 
+  const handleRemoveProfile = () => {
+    setValue("file", null);
+    setValue("fileName", null);
+    setValue("mime", null);
+  };
+
   const handleEmailDupCheck = () => {
     const email: string = getValues("email");
 
@@ -126,8 +132,27 @@ const Page = () => {
           name="file"
           control={control}
           render={({ field: { value }, fieldState: { error } }) => (
-            <div className="flex flex-col items-center justify-center">
-              <ProfileUploader file={value} onChange={handleChangeFile} />
+            <div className="flex flex-col items-center">
+              <div className="flex items-center justify-start space-x-2">
+                <ProfileUploader file={value} onChange={handleChangeFile} />
+                <div>
+                  <div className="space-x-1">
+                    <Button type="button" onClick={handleRemoveProfile}>
+                      미리보기
+                    </Button>
+                    <Button
+                      type="button"
+                      className="text-red"
+                      onClick={handleRemoveProfile}
+                    >
+                      삭제
+                    </Button>
+                  </div>
+                  <p className="text-american-silver text-12 font-bold">
+                    jpg, jpeg, png, gif, bmp만 허용됩니다.
+                  </p>
+                </div>
+              </div>
               <p className="px-5 text-13 text-red">{error && error.message}</p>
             </div>
           )}
@@ -161,18 +186,14 @@ const Page = () => {
             )}
           />
 
-          <button
+          <Button
             type="button"
-            className={cn(
-              "h-54 w-100 rounded-10 border-1 bg-silver-sand backdrop-blur-md",
-              "transition-color duration-200 ease-in-out",
-              "hover:bg-gainsboro",
-            )}
+            className="h-54 w-100"
             onClick={handleEmailDupCheck}
           >
             {/* Note: '중복체크중...'을 로딩바로 나중에 변경 */}
             {emailDupCheckStatus === "pending" ? "중복체크중..." : "중복체크"}
-          </button>
+          </Button>
         </div>
 
         <Controller

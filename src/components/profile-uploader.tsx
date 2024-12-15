@@ -28,9 +28,9 @@ const ProfileUploader = (props: Props) => {
           )}
         >
           {file ? (
-            <img src={file} alt="Profile image" />
+            <img src={file} alt="Profile image" className="rounded-50" />
           ) : (
-            <span>프로필 이미지</span>
+            <span className="text-sonic-silver">프로필 이미지</span>
           )}
         </label>
       </div>
