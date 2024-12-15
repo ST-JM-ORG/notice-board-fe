@@ -18,7 +18,7 @@ const Button = (props: Props) => {
       type={type}
       className={cn(
         "rounded-10 border-1 px-8 py-4 shadow-xl backdrop-blur-md",
-        "transition-opacity duration-300 ease-in-out",
+        "transition-all duration-200 ease-in-out",
         "hover:bg-opacity-80",
         bgColor ? bgColor : "bg-platinum",
         borderColor ? borderColor : "border-silver-sand",
