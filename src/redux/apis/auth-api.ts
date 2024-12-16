@@ -1,6 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios, { AxiosError } from "axios";
 
+import { ApiResponse } from "@models/api-response";
 import { ErrorType } from "@models/error-type";
 
 import instance from "@redux/apis/instance";
@@ -39,7 +40,7 @@ export const signUp = createAsyncThunk<
 });
 
 export const emailDupCheck = createAsyncThunk<
-  Response,
+  ApiResponse<null>,
   { email: string },
   { rejectValue: ErrorType }
 >("auth/emailDupCheck", async (data, thunkAPI) => {

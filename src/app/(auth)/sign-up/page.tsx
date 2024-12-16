@@ -131,7 +131,7 @@ const Page = () => {
 
   useEffect(() => {
     if (isEmailDup) {
-      setError("email", { message: "중복된 이메일입니다" });
+      setError("email", { message: "이미 사용중인 이메일입니다" });
     }
   }, [isEmailDup, setError]);
 
@@ -160,7 +160,7 @@ const Page = () => {
                       삭제
                     </Button>
                   </div>
-                  <p className="text-american-silver text-12 font-bold">
+                  <p className="text-12 font-bold text-american-silver">
                     jpg, jpeg, png, gif, bmp만 허용됩니다.
                   </p>
                 </div>
@@ -179,12 +179,6 @@ const Page = () => {
               pattern: {
                 value: EmailRegex,
                 message: "이메일 형식을 맞춰주세요",
-              },
-              validate: () => {
-                if (isEmailDup || isEmailDup === null) {
-                  return "이메일 중복체크를 해주세요";
-                }
-                return true;
               },
             }}
             render={({ field, fieldState: { error } }) => (

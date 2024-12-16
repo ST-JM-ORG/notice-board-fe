@@ -59,8 +59,21 @@ const AuthSlice = createSlice<
         state.isEmailDup = false;
       })
       .addCase(emailDupCheck.fulfilled, (state, action) => {
-        state.emailDupCheckStatus = "fulfilled";
-        state.isEmailDup = true;
+        const {
+          payload: {
+            result: { status, message },
+          },
+        } = action;
+
+        if (status === 200) {
+          state.emailDupCheckStatus = "fulfilled";
+          state.isEmailDup = false;
+          state.errorMessage = "";
+        } else if (status === 500) {
+          state.emailDupCheckStatus = "fulfilled";
+          state.isEmailDup = true;
+          state.errorMessage = message;
+        }
       })
       .addCase(emailDupCheck.rejected, (state, action) => {
         state.emailDupCheckStatus = "rejected";
