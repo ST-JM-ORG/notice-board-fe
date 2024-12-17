@@ -7,7 +7,7 @@ import { ErrorType } from "@models/error-type";
 import instance from "@redux/apis/instance";
 
 export const signUp = createAsyncThunk<
-  { ok: boolean },
+  ApiResponse<null>,
   { formData: FormData },
   { rejectValue: ErrorType }
 >("auth/signUp", async (data, thunkAPI) => {

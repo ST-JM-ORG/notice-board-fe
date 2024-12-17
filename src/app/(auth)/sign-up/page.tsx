@@ -55,12 +55,15 @@ const Page = () => {
   });
 
   const router = useRouter();
+
   const thunkDispatch = useThunkDispatch();
-  const { signUpStatus, emailDupCheckStatus, isEmailDup } = useAppSelector(
+
+  // 이메일 중복체크
+  const { signUpStatus, emailDupStatus, emailAvailable } = useAppSelector(
     (state) => ({
-      signUpStatus: state.auth.signUpStatus,
-      emailDupCheckStatus: state.auth.emailDupCheckStatus,
-      isEmailDup: state.auth.isEmailDup,
+      signUpStatus: state.auth.signUp,
+      emailDupStatus: state.auth.emailDupCheck,
+      emailAvailable: state.auth.emailAvailable,
     }),
     shallowEqual,
   );
@@ -130,10 +133,15 @@ const Page = () => {
   };
 
   useEffect(() => {
-    if (isEmailDup) {
-      setError("email", { message: "이미 사용중인 이메일입니다" });
+    if (!emailAvailable) {
+      setError("email", { message: emailDupStatus.error });
     }
-  }, [isEmailDup, setError]);
+
+    if (signUpStatus.code === "E008") {
+      setError("pw", { message: signUpStatus.error });
+      setError("pwConfirm", { message: signUpStatus.error });
+    }
+  }, [signUpStatus, emailAvailable, emailDupStatus, setError]);
 
   return (
     <>
@@ -198,8 +206,7 @@ const Page = () => {
             className="h-54 w-100"
             onClick={handleEmailDupCheck}
           >
-            {/* Note: '중복체크중...'을 로딩바로 나중에 변경 */}
-            {emailDupCheckStatus === "pending" ? "중복체크중..." : "중복체크"}
+            중복체크
           </Button>
         </div>
 
@@ -298,12 +305,12 @@ const Page = () => {
         />
 
         <Button
+          type="submit"
           className="w-full rounded-10 py-10 text-20"
           bgColor="bg-baby-blue-eyes"
           borderColor="border-dark-sky-blue"
         >
-          {/* Note: '중복체크중...'을 로딩바로 나중에 변경 */}
-          {signUpStatus === "pending" ? "회원가입중..." : "회원가입"}
+          회원가입
         </Button>
       </form>
 

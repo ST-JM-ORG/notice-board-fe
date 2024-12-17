@@ -4,26 +4,42 @@ import {
   SliceSelectors,
 } from "@reduxjs/toolkit";
 
+import { Status } from "@constants/type";
+
 import { emailDupCheck, signUp } from "@redux/apis/auth-api";
 
+// E001 요청 DB 처리 실패
+// E003 이미지 업로드 실패
+// E004 입력 필수 값 미입력
+// E008 잘못된 입력값
+// E110 사용중인 이메일
+
+const ERROR_CODE: { [key: string]: string } = {
+  E001: "DB 에러 발생",
+  E003: "이미지 업로드에 실패했습니다. 잠시 후 다시 시도해주세요.",
+  E008: "비밀번호 형식을 맞춰주세요",
+  E110: "이미 사용중인 이메일입니다",
+};
+
+const DEFAULT_STATUS: Status = {
+  status: "pending",
+  message: "",
+  error: "",
+  code: "",
+};
+
 interface AuthState {
-  signUpStatus: "pending" | "fulfilled" | "rejected";
-  emailDupCheckStatus: "pending" | "fulfilled" | "rejected";
-  token: string;
-  isLoggedIn: boolean;
-  isEmailDup: boolean | null;
-  message: string;
-  errorMessage: string;
+  signUp: Status;
+  emailDupCheck: Status;
+  login: Status;
+  emailAvailable: boolean | null;
 }
 
 const initialState: AuthState = {
-  signUpStatus: "fulfilled",
-  emailDupCheckStatus: "fulfilled",
-  token: "",
-  isLoggedIn: false,
-  isEmailDup: null,
-  message: "",
-  errorMessage: "",
+  signUp: DEFAULT_STATUS,
+  emailDupCheck: DEFAULT_STATUS,
+  login: DEFAULT_STATUS,
+  emailAvailable: null,
 };
 
 const AuthSlice = createSlice<
@@ -40,44 +56,79 @@ const AuthSlice = createSlice<
     // 회원가입
     builder
       .addCase(signUp.pending, (state, action) => {
-        state.signUpStatus = "pending";
+        state.signUp = {
+          ...DEFAULT_STATUS,
+          status: "pending",
+        };
+        state.emailDupCheck = DEFAULT_STATUS;
       })
       .addCase(signUp.fulfilled, (state, action) => {
-        state.signUpStatus = "fulfilled";
+        const {
+          payload: {
+            result: { status, code },
+          },
+        } = action;
+
+        if (status === 200) {
+          state.signUp.status = "fulfilled";
+          window.location.href = "/login";
+        } else if (status === 500) {
+          state.signUp.status = "rejected";
+
+          if (["E001", "E003", "E008"].includes(code)) {
+            state.signUp.status = "rejected";
+            state.signUp.error = ERROR_CODE[code];
+            state.signUp.code = code;
+          } else if (code === "E110") {
+            state.emailDupCheck.status = "rejected";
+            state.emailDupCheck.error = ERROR_CODE[code];
+            state.emailAvailable = false;
+          }
+        }
       })
       .addCase(signUp.rejected, (state, action) => {
-        state.signUpStatus = "rejected";
-        state.errorMessage = action.payload
+        state.signUp.status = "rejected";
+        state.signUp.error = action.payload
           ? action.payload.error
-          : "알 수 없는 오류가 발생했습니다.";
+          : "서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.";
       });
 
     // 이메일 중복체크
     builder
       .addCase(emailDupCheck.pending, (state, action) => {
-        state.emailDupCheckStatus = "pending";
-        state.isEmailDup = false;
+        state.emailDupCheck.status = "pending";
+        state.emailAvailable = null;
       })
       .addCase(emailDupCheck.fulfilled, (state, action) => {
         const {
           payload: {
-            result: { status, message },
+            result: { status, code, message },
           },
         } = action;
 
         if (status === 200) {
-          state.emailDupCheckStatus = "fulfilled";
-          state.isEmailDup = false;
-          state.errorMessage = "";
+          state.emailDupCheck.status = "fulfilled";
+          state.emailDupCheck.message = "사용 가능한 이메일입니다";
+          state.emailDupCheck.code = code;
+          state.emailAvailable = true;
         } else if (status === 500) {
-          state.emailDupCheckStatus = "fulfilled";
-          state.isEmailDup = true;
-          state.errorMessage = message;
+          if (code === "E110") {
+            state.emailDupCheck.status = "rejected";
+            state.emailAvailable = false;
+            state.emailDupCheck.error = ERROR_CODE[code];
+          } else {
+            state.emailDupCheck.status = "rejected";
+            state.emailAvailable = false;
+            state.emailDupCheck.error = message;
+          }
         }
       })
       .addCase(emailDupCheck.rejected, (state, action) => {
-        state.emailDupCheckStatus = "rejected";
-        state.isEmailDup = false;
+        state.emailDupCheck.status = "rejected";
+        state.emailAvailable = false;
+        state.emailDupCheck.error =
+          action.payload?.error ||
+          "서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.";
       });
   },
 });
