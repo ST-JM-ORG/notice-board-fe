@@ -13,6 +13,8 @@ import ProfileUploader from "@components/profile-uploader";
 
 import { EmailRegex, PwRegex } from "@constants/regex";
 
+import useToastContext from "@hook/use-toast-context";
+
 import { emailDupCheck, signUp } from "@redux/apis/auth-api";
 import { useAppSelector, useThunkDispatch } from "@redux/hook";
 
@@ -55,14 +57,28 @@ const Page = () => {
   });
 
   const router = useRouter();
-
   const thunkDispatch = useThunkDispatch();
+  const toast = useToastContext();
 
   // 이메일 중복체크
-  const { signUpStatus, emailDupStatus, emailAvailable } = useAppSelector(
+  const {
+    signUpStatus,
+    signUpCode,
+    signUpMsg,
+    signUpError,
+    emailDupCheckStatus,
+    emailDupCheckMsg,
+    emailDupCheckError,
+    emailAvailable,
+  } = useAppSelector(
     (state) => ({
-      signUpStatus: state.auth.signUp,
-      emailDupStatus: state.auth.emailDupCheck,
+      signUpStatus: state.auth.signUp.status,
+      signUpCode: state.auth.signUp.code,
+      signUpMsg: state.auth.signUp.message,
+      signUpError: state.auth.signUp.error,
+      emailDupCheckStatus: state.auth.emailDupCheck.status,
+      emailDupCheckMsg: state.auth.emailDupCheck.message,
+      emailDupCheckError: state.auth.emailDupCheck.error,
       emailAvailable: state.auth.emailAvailable,
     }),
     shallowEqual,
@@ -134,14 +150,27 @@ const Page = () => {
 
   useEffect(() => {
     if (!emailAvailable) {
-      setError("email", { message: emailDupStatus.error });
+      setError("email", { message: emailDupCheckError });
     }
+  }, [emailAvailable, emailDupCheckError, setError]);
 
-    if (signUpStatus.code === "E008") {
-      setError("pw", { message: signUpStatus.error });
-      setError("pwConfirm", { message: signUpStatus.error });
+  useEffect(() => {
+    if (emailDupCheckStatus === "fulfilled") {
+      toast.success({
+        heading: "Success",
+        message: emailDupCheckMsg,
+      });
     }
-  }, [signUpStatus, emailAvailable, emailDupStatus, setError]);
+  }, [emailDupCheckMsg, emailDupCheckStatus]);
+
+  useEffect(() => {
+    if (signUpStatus === "rejected" && signUpCode === "E008") {
+      setError("pw", { message: signUpError });
+      setError("pwConfirm", { message: signUpError });
+    } else if (signUpStatus === "fulfilled") {
+      toast.success({ heading: "Success", message: signUpMsg });
+    }
+  }, [signUpCode, signUpError, signUpStatus]);
 
   return (
     <>
