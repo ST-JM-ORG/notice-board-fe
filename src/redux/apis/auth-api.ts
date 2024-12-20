@@ -67,3 +67,33 @@ export const emailDupCheck = createAsyncThunk<
     }
   }
 });
+
+export const login = createAsyncThunk<
+  ApiResponse<string>,
+  { email: string; pw: string },
+  { rejectValue: ErrorType }
+>("auth/login", async ({ email, pw }, thunkAPI) => {
+  try {
+    const response = await instance.post(`/auth/login`, {
+      email,
+      password: pw,
+    });
+    return response.data;
+  } catch (e) {
+    console.error(e);
+
+    if (axios.isAxiosError(e)) {
+      const error = e as AxiosError;
+
+      if (error.message === "Network Error") {
+        return thunkAPI.rejectWithValue({
+          error: "네트워크에 문제가 발생했습니다. 잠시 후 다시 시도해주세요.",
+        });
+      }
+    } else {
+      return thunkAPI.rejectWithValue({
+        error: "알 수 없는 에러가 발생했습니다.",
+      });
+    }
+  }
+});

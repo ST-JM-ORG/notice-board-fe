@@ -9,7 +9,15 @@ import { NextRequest, NextResponse } from "next/server";
  */
 export const middleware = async (request: NextRequest) => {
   const { pathname } = request.nextUrl;
-  console.log(pathname);
+  const token: string | undefined = request.cookies.get("token")?.value;
+
+  if (!token && pathname !== "/login") {
+    return NextResponse.redirect(new URL("/login", request.url));
+  }
+
+  if (token && pathname === "/login") {
+    return NextResponse.redirect(new URL("/", request.url));
+  }
 
   return NextResponse.next();
 };

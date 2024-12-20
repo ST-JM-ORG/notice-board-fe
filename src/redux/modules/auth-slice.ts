@@ -6,7 +6,9 @@ import {
 
 import { Status } from "@constants/type";
 
-import { emailDupCheck, signUp } from "@redux/apis/auth-api";
+import { emailDupCheck, login, signUp } from "@redux/apis/auth-api";
+
+import { setCookie } from "@utils/cookie";
 
 // E001 요청 DB 처리 실패
 // E003 이미지 업로드 실패
@@ -71,7 +73,7 @@ const AuthSlice = createSlice<
 
         if (status === 200) {
           state.signUp.status = "fulfilled";
-          window.location.href = "/login";
+          state.signUp.message = "회원가입되었습니다";
         } else if (status === 500) {
           state.signUp.status = "rejected";
 
@@ -130,6 +132,34 @@ const AuthSlice = createSlice<
           action.payload?.error ||
           "서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.";
       });
+
+    // 로그인
+    builder
+      .addCase(login.pending, (state, action) => {
+        state.login.status = "pending";
+        state.login.message = "로그인중입니다";
+        state.login.error = "";
+      })
+      .addCase(login.fulfilled, (state, action) => {
+        const {
+          payload: {
+            data,
+            result: { status, message },
+          },
+        } = action;
+
+        if (status === 200) {
+          state.login.status = "fulfilled";
+          state.login.message = message;
+          if (data) {
+            setCookie("token", data);
+          }
+        } else if (status === 401 || status === 500) {
+          state.login.status = "rejected";
+          state.login.error = message;
+        }
+      })
+      .addCase(login.rejected, (state, action) => {});
   },
 });
 
