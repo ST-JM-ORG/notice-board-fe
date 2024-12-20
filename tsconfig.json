@@ -21,7 +21,10 @@
     "paths": {
       "@components/*": ["./src/components/*"],
       "@constants/*": ["./src/constants/*"],
+      "@context/*": ["./src/context/*"],
+      "@hook/*": ["./src/hook/*"],
       "@models/*": ["./src/models/*"],
+      "@provider/*": ["./src/provider/*"],
       "@redux/*": ["./src/redux/*"],
       "@utils/*": ["./src/utils/*"],
       "@/*": ["./src/*"]

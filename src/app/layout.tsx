@@ -3,7 +3,8 @@ import { ReactNode } from "react";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 
-import ReduxProvider from "@redux/redux-provider";
+import ReduxProvider from "@provider/redux-provider";
+import ToastProvider from "@provider/toast-provider";
 
 import "./globals.css";
 
@@ -27,7 +28,10 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <body className={`${pretendard.variable} font-pretendard antialiased`}>
-        <ReduxProvider>{children}</ReduxProvider>
+        <ReduxProvider>
+          <ToastProvider>{children}</ToastProvider>
+        </ReduxProvider>
+        <div id="noti"></div>
       </body>
     </html>
   );
