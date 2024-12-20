@@ -160,6 +160,7 @@ const Page = () => {
         heading: "Success",
         message: emailDupCheckMsg,
       });
+      router.replace("/login");
     }
   }, [emailDupCheckMsg, emailDupCheckStatus]);
 
