@@ -25,8 +25,13 @@ export default {
         "fade-in": "fade-in .5s ease-in-out",
         "fade-out": "fade-out .25s ease-in-out",
         "progress-in": "progress-in 3.0s linear forwards",
+        "slide-top-right-in": "slide-top-right-in .3s ease-in-out forwards",
+        "slide-top-right-out": "slide-top-right-out .3s ease-in-out forwards",
       },
-      borderRadius: pxToRem(100),
+      borderRadius: {
+        ...pxToRem(100),
+        "1/2": "50%",
+      },
       borderWidth: pxToRem(10),
       boxShadow: {
         header: "0 4px 6px -1px rgba(0,0,0,0.1)",
@@ -82,7 +87,37 @@ export default {
             transformOrigin: "left",
           },
         },
+        "slide-top-right-in": {
+          "0%": {
+            transform: "scale(0)",
+            transformOrigin: "top right",
+            opacity: "1",
+          },
+          "70%": {
+            transform: "scale(1.05)",
+            transformOrigin: "top right",
+            opacity: "1",
+          },
+          "100%": {
+            transform: "scale(1)",
+            transformOrigin: "top right",
+            opacity: "1",
+          },
+        },
+        "slide-top-right-out": {
+          "0%": {
+            transform: "scale(1)",
+            transformOrigin: "top right",
+            opacity: "1",
+          },
+          "100%": {
+            transform: "scale(0)",
+            transformOrigin: "top right",
+            opacity: "1",
+          },
+        },
       },
+      inset: pxToRem(100),
       margin: pxToRem(50),
       padding: pxToRem(100),
       translate: {
