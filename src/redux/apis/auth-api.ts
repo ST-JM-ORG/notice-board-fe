@@ -69,7 +69,7 @@ export const emailDupCheck = createAsyncThunk<
 });
 
 export const login = createAsyncThunk<
-  ApiResponse<string>,
+  ApiResponse<{ accessToken: string; refreshToken: string }>,
   { email: string; pw: string },
   { rejectValue: ErrorType }
 >("auth/login", async ({ email, pw }, thunkAPI) => {

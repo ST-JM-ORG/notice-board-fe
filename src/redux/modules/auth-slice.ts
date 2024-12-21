@@ -152,7 +152,8 @@ const AuthSlice = createSlice<
           state.login.status = "fulfilled";
           state.login.message = message;
           if (data) {
-            setCookie("token", data);
+            setCookie("token", data.accessToken);
+            setCookie("refresh", data.refreshToken);
           }
         } else if (status === 401 || status === 500) {
           state.login.status = "rejected";
