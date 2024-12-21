@@ -1,6 +1,8 @@
 import axios, { InternalAxiosRequestConfig } from "axios";
 
+import { ACCESS_TOKEN, REFRESH_TOKEN } from "@utils/constants";
 import { getCookies, setCookie } from "@utils/cookie";
+import { isRefreshTokenExpired } from "@utils/token";
 
 interface CustomAxiosRequestConfig extends InternalAxiosRequestConfig {
   useToken?: boolean;
@@ -15,7 +17,7 @@ const instance = axios.create({
 // 요청 인터셉터
 instance.interceptors.request.use(
   (config: CustomAxiosRequestConfig) => {
-    const accessToken = getCookies("token");
+    const accessToken = getCookies(ACCESS_TOKEN);
 
     if (config.useToken && accessToken) {
       config.headers.Authorization = `Bearer ${accessToken}`;
@@ -44,8 +46,8 @@ instance.interceptors.response.use(
         response.data.data.refreshToken;
 
       if (accessToken && refreshToken) {
-        setCookie("token", accessToken);
-        setCookie("refresh", refreshToken);
+        setCookie(ACCESS_TOKEN, accessToken);
+        setCookie(REFRESH_TOKEN, refreshToken);
       }
     }
 
@@ -61,14 +63,18 @@ instance.interceptors.response.use(
       error.response?.status === 401 &&
       error.response?.data.result.code === "E102"
     ) {
-      const refreshToken = getCookies("refresh");
+      const isRefreshExpired: boolean = isRefreshTokenExpired();
 
-      if (refreshToken) {
-        // 토큰 재발행
-        error.config.headers.Refresh = refreshToken;
-        return instance.post("/auth/reissue-token", null, {
-          headers: { Refresh: refreshToken },
-        });
+      if (isRefreshExpired) {
+        window.alert("인증정보가 만료되었습니다. 다시 로그인 후 이용해주세요");
+        window.location.href = "/login";
+      } else {
+        const refreshToken = getCookies(REFRESH_TOKEN);
+        if (refreshToken) {
+          return instance.post("/auth/reissue-token", null, {
+            headers: { Refresh: refreshToken },
+          });
+        }
       }
     }
     return Promise.reject(error);
