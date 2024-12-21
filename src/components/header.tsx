@@ -5,6 +5,8 @@ import { IoPerson } from "react-icons/io5";
 
 import { useRouter } from "next/navigation";
 
+import useOutsideClick from "@hook/use-outside-click";
+
 import { cn } from "@utils/classname";
 import { pxToRem } from "@utils/size";
 
@@ -33,6 +35,8 @@ export default function Header() {
       setAnimation(false);
     }
   };
+
+  useOutsideClick(ref, handleSwitchProfileButton);
 
   useEffect(() => {
     if (ref.current) {
