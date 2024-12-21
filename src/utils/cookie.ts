@@ -2,7 +2,7 @@ import { Cookies } from "react-cookie";
 
 const cookie = new Cookies();
 
-export const getCookies = (key: string): string => {
+export const getCookies = (key: string): string | undefined | null => {
   return cookie.get(key);
 };
 
