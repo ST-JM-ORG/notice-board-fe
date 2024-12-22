@@ -29,10 +29,6 @@ export default function Header() {
 
   const menuRef = useOutsideClick<HTMLDivElement>(() => setOpen(false));
 
-  const handleGoHome = () => {
-    router.push("/");
-  };
-
   const handleSwitchProfileButton = () => {
     setOpen(!open);
     if (!open) {
@@ -46,7 +42,17 @@ export default function Header() {
     }
   };
 
+  const handleGoHomePage = () => {
+    router.push("/");
+  };
+
+  const handleGoProfilePage = () => {
+    setOpen(false);
+    router.push("/profile");
+  };
+
   const handleLogout = () => {
+    setOpen(false);
     appDispatch(logout(null));
   };
 
@@ -70,7 +76,7 @@ export default function Header() {
     >
       <h2
         className={cn("p-5 text-20 font-bold", "hover:cursor-pointer")}
-        onClick={handleGoHome}
+        onClick={handleGoHomePage}
       >
         Notice Board
       </h2>
@@ -121,7 +127,7 @@ export default function Header() {
                   "transition-colors duration-100 ease-in-out",
                   "hover:bg-gainsboro hover:bg-opacity-30",
                 )}
-                onClick={() => router.push("/profile")}
+                onClick={handleGoProfilePage}
               >
                 내 정보
               </button>
