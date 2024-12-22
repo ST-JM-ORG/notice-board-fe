@@ -205,7 +205,11 @@ const Page = () => {
           render={({ field: { value }, fieldState: { error } }) => (
             <div className="flex flex-col items-center">
               <div className="flex items-center justify-start space-x-2">
-                <ProfileUploader file={value} onChange={handleChangeFile} />
+                <ProfileUploader
+                  size={150}
+                  file={value}
+                  onChange={handleChangeFile}
+                />
                 <div>
                   <div className="space-x-1">
                     <Button type="button" onClick={handleRemoveProfile}>

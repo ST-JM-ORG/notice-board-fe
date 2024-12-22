@@ -8,7 +8,7 @@ export default function Layout(props: PropsWithChildren) {
   return (
     <main className="h-full w-full">
       <Header />
-      {children}
+      <div className="mx-auto mt-30 max-w-[80rem] px-10">{children}</div>
     </main>
   );
 }

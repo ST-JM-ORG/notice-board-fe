@@ -1,14 +1,16 @@
 import React, { ChangeEvent } from "react";
 
 import { cn } from "@utils/classname";
+import { pxToRem } from "@utils/size";
 
 interface Props {
+  size: number;
   file?: string | null | undefined;
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
 }
 
 const ProfileUploader = (props: Props) => {
-  const { file, onChange } = props;
+  const { size, file, onChange } = props;
 
   return (
     <>
@@ -22,16 +24,20 @@ const ProfileUploader = (props: Props) => {
         <label
           htmlFor="file-uploader"
           className={cn(
-            `rounded-75 flex h-150 w-150 items-center justify-center border-1 border-dashed
-            border-sonic-silver`,
+            "flex items-center justify-center border-1 border-dashed border-sonic-silver",
             "hover:cursor-pointer",
           )}
+          style={{
+            width: `${pxToRem(size)}rem`,
+            height: `${pxToRem(size)}rem`,
+            borderRadius: "50%",
+          }}
         >
           {file ? (
             <img
               src={file}
               alt="Profile image"
-              className="rounded-75 h-full w-full object-contain"
+              className="h-full w-full rounded-75 object-contain"
             />
           ) : (
             <span className="text-sonic-silver">프로필 이미지</span>

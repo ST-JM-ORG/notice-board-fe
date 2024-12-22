@@ -120,6 +120,12 @@ export default {
       inset: pxToRem(100),
       margin: pxToRem(50),
       padding: pxToRem(100),
+      screens: {
+        // => @media (min-width: 000px) { ... }
+        mobile: "480px",
+        tablet: "768px",
+        laptop: "1280px",
+      },
       translate: {
         "20p": "20%",
       },
