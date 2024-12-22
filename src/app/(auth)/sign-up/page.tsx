@@ -11,15 +11,18 @@ import Button from "@components/button";
 import Input from "@components/input";
 import ProfileUploader from "@components/profile-uploader";
 
+import { profileImgWhiteList } from "@constants/mime";
 import { EmailRegex, PwRegex } from "@constants/regex";
+import { ErrorType } from "@constants/type";
 
 import useToastContext from "@hook/use-toast-context";
 
 import { emailDupCheck, signUp } from "@redux/apis/auth-api";
-import { useAppSelector, useThunkDispatch } from "@redux/hook";
+import { useAppDispatch, useAppSelector, useThunkDispatch } from "@redux/hook";
+import { resetEmailDupCheck } from "@redux/modules/auth/email-dup-check-slice";
+import { resetSignUp } from "@redux/modules/auth/sign-up-slice";
 
 import { encodeFileToBase64 } from "@utils/file-encoder";
-import { profileImgWhiteList } from "@utils/mime";
 
 interface SignUpForm {
   email: string;
@@ -57,32 +60,32 @@ const Page = () => {
   });
 
   const router = useRouter();
+  const appDispatch = useAppDispatch();
   const thunkDispatch = useThunkDispatch();
   const toast = useToastContext();
 
-  // 이메일 중복체크
-  const {
-    signUpStatus,
-    signUpCode,
-    signUpMsg,
-    signUpError,
-    emailDupCheckStatus,
-    emailDupCheckMsg,
-    emailDupCheckError,
-    emailAvailable,
-  } = useAppSelector(
+  // 회원가입
+  const { signUpStatus, signUpCode, signUpMsg, signUpError } = useAppSelector(
     (state) => ({
-      signUpStatus: state.auth.signUp.status,
-      signUpCode: state.auth.signUp.code,
-      signUpMsg: state.auth.signUp.message,
-      signUpError: state.auth.signUp.error,
-      emailDupCheckStatus: state.auth.emailDupCheck.status,
-      emailDupCheckMsg: state.auth.emailDupCheck.message,
-      emailDupCheckError: state.auth.emailDupCheck.error,
-      emailAvailable: state.auth.emailAvailable,
+      signUpStatus: state.signUp.status,
+      signUpCode: state.signUp.code,
+      signUpMsg: state.signUp.message,
+      signUpError: state.signUp.error,
     }),
     shallowEqual,
   );
+  // 이메일 중복체크
+  const {
+    emailDupCheckStatus,
+    emailDupCheckCode,
+    emailDupCheckMsg,
+    emailDupCheckError,
+  } = useAppSelector((state) => ({
+    emailDupCheckStatus: state.emailDupCheck.status,
+    emailDupCheckCode: state.emailDupCheck.code,
+    emailDupCheckMsg: state.emailDupCheck.message,
+    emailDupCheckError: state.emailDupCheck.error,
+  }));
 
   const handleRouteSignUp = () => {
     router.push("/login");
@@ -149,10 +152,9 @@ const Page = () => {
   };
 
   useEffect(() => {
-    if (!emailAvailable) {
-      setError("email", { message: emailDupCheckError });
-    }
-  }, [emailAvailable, emailDupCheckError, setError]);
+    appDispatch(resetEmailDupCheck(null));
+    appDispatch(resetSignUp(null));
+  }, [appDispatch]);
 
   useEffect(() => {
     if (emailDupCheckStatus === "fulfilled") {
@@ -160,18 +162,37 @@ const Page = () => {
         heading: "Success",
         message: emailDupCheckMsg,
       });
-      router.replace("/login");
     }
-  }, [emailDupCheckMsg, emailDupCheckStatus]);
+
+    if (emailDupCheckStatus === "rejected") {
+      if (emailDupCheckCode === ErrorType.ALREADY_USED_EMAIL) {
+        setError("email", { message: emailDupCheckError });
+      } else {
+        toast.error({
+          heading: "Error",
+          message: emailDupCheckMsg,
+        });
+      }
+    }
+  }, [emailDupCheckStatus]);
 
   useEffect(() => {
-    if (signUpStatus === "rejected" && signUpCode === "E008") {
-      setError("pw", { message: signUpError });
-      setError("pwConfirm", { message: signUpError });
-    } else if (signUpStatus === "fulfilled") {
+    if (signUpStatus === "fulfilled") {
       toast.success({ heading: "Success", message: signUpMsg });
+      router.push("/login");
     }
-  }, [signUpCode, signUpError, signUpStatus]);
+
+    if (signUpStatus === "rejected") {
+      if (signUpCode === ErrorType.INVALID_VALUE) {
+        setError("pw", { message: signUpError });
+        setError("pwConfirm", { message: signUpError });
+      } else if (signUpCode === ErrorType.ALREADY_USED_EMAIL) {
+        setError("email", { message: signUpError });
+      } else if (signUpCode === ErrorType.IMAGE_UPLOAD_ERROR) {
+        setError("file", { message: signUpError });
+      }
+    }
+  }, [signUpStatus]);
 
   return (
     <>
@@ -218,6 +239,10 @@ const Page = () => {
                 value: EmailRegex,
                 message: "이메일 형식을 맞춰주세요",
               },
+              validate: () =>
+                emailDupCheckStatus === "rejected"
+                  ? "이메일 중복체크를 해주세요"
+                  : true,
             }}
             render={({ field, fieldState: { error } }) => (
               <Input

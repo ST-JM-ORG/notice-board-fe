@@ -7,10 +7,14 @@ import {
 import { combineReducers } from "redux";
 import logger from "redux-logger";
 
-import AuthSlice from "@redux/modules/auth-slice";
+import emailDupCheckSlice from "@redux/modules/auth/email-dup-check-slice";
+import LoginSlice from "@redux/modules/auth/login-slice";
+import SignUpSlice from "@redux/modules/auth/sign-up-slice";
 
 const reducer = combineReducers({
-  auth: AuthSlice.reducer,
+  signUp: SignUpSlice.reducer,
+  emailDupCheck: emailDupCheckSlice.reducer,
+  login: LoginSlice.reducer,
 });
 
 const store = configureStore({

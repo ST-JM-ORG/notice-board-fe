@@ -13,7 +13,8 @@ import Input from "@components/input";
 import useToastContext from "@hook/use-toast-context";
 
 import { login } from "@redux/apis/auth-api";
-import { useAppSelector, useThunkDispatch } from "@redux/hook";
+import { useAppDispatch, useAppSelector, useThunkDispatch } from "@redux/hook";
+import { resetLogin } from "@redux/modules/auth/login-slice";
 
 import { cn } from "@utils/classname";
 
@@ -33,14 +34,15 @@ const Page = () => {
   });
 
   const router = useRouter();
+  const appDispatch = useAppDispatch();
   const thunkDispatch = useThunkDispatch();
   const toast = useToastContext();
 
   const { status, message, error } = useAppSelector(
     (state) => ({
-      status: state.auth.login.status,
-      message: state.auth.login.message,
-      error: state.auth.login.error,
+      status: state.login.status,
+      message: state.login.message,
+      error: state.login.error,
     }),
     shallowEqual,
   );
@@ -57,13 +59,17 @@ const Page = () => {
   };
 
   useEffect(() => {
+    appDispatch(resetLogin(null));
+  }, [appDispatch]);
+
+  useEffect(() => {
     if (status === "fulfilled") {
       toast.success({ heading: "Success", message: message });
       router.push("/");
     } else if (status === "rejected") {
       toast.error({ heading: "Error", message: error });
     }
-  }, [status, message, error]);
+  }, [status]);
 
   return (
     <>

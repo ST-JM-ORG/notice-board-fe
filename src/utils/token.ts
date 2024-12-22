@@ -1,6 +1,7 @@
 import { jwtDecode, JwtPayload } from "jwt-decode";
 
-import { ACCESS_TOKEN, REFRESH_TOKEN } from "@utils/constants";
+import { ACCESS_TOKEN, REFRESH_TOKEN } from "@constants/const";
+
 import { getCookies } from "@utils/cookie";
 
 export const isAccessTokenExpired = () => {

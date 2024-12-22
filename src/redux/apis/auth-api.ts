@@ -2,14 +2,14 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios, { AxiosError } from "axios";
 
 import { ApiResponse } from "@models/api-response";
-import { ErrorType } from "@models/error-type";
+import { AxiosErrorType } from "@models/axios-error-type";
 
 import instance from "@redux/apis/instance";
 
 export const signUp = createAsyncThunk<
   ApiResponse<null>,
   { formData: FormData },
-  { rejectValue: ErrorType }
+  { rejectValue: AxiosErrorType }
 >("auth/signUp", async (data, thunkAPI) => {
   const { formData } = data;
 
@@ -42,7 +42,7 @@ export const signUp = createAsyncThunk<
 export const emailDupCheck = createAsyncThunk<
   ApiResponse<null>,
   { email: string },
-  { rejectValue: ErrorType }
+  { rejectValue: AxiosErrorType }
 >("auth/emailDupCheck", async (data, thunkAPI) => {
   const { email } = data;
 
@@ -71,7 +71,7 @@ export const emailDupCheck = createAsyncThunk<
 export const login = createAsyncThunk<
   ApiResponse<{ accessToken: string; refreshToken: string }>,
   { email: string; pw: string },
-  { rejectValue: ErrorType }
+  { rejectValue: AxiosErrorType }
 >("auth/login", async ({ email, pw }, thunkAPI) => {
   try {
     const response = await instance.post(`/auth/login`, {

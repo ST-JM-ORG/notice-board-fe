@@ -7,11 +7,15 @@ import { useRouter } from "next/navigation";
 
 import useOutsideClick from "@hook/use-outside-click";
 
+import { useAppDispatch } from "@redux/hook";
+import { logout } from "@redux/modules/auth-slice";
+
 import { cn } from "@utils/classname";
 import { pxToRem } from "@utils/size";
 
 export default function Header() {
   const router = useRouter();
+  const appDispatch = useAppDispatch();
 
   const ref = useRef<HTMLButtonElement | null>(null);
 
@@ -35,6 +39,15 @@ export default function Header() {
       setAnimation(false);
     }
   };
+
+  const handleLogout = () => {
+    appDispatch(logout(null));
+  };
+
+  const menus: { text: string; cb: () => void }[] = [
+    { text: "내 정보", cb: () => router.push("/profile") },
+    { text: "로그아웃", cb: handleLogout },
+  ];
 
   useOutsideClick(ref, handleSwitchProfileButton);
 
@@ -70,7 +83,7 @@ export default function Header() {
         {animation && (
           <div
             className={cn(
-              `absolute right-10 flex w-200 flex-col rounded-10 border-2 border-gainsboro
+              `absolute right-10 flex w-200 flex-col rounded-10 border-1 border-gainsboro
               bg-platinum bg-opacity-50 py-10 shadow-xl backdrop-blur`,
               open
                 ? "animate-slide-top-right-in"
@@ -79,8 +92,11 @@ export default function Header() {
             style={{ top: `${pxToRem(height + 5)}rem` }}
             onAnimationEnd={handleAnimatedEnd}
           >
-            <button>내 정보</button>
-            <button>로그아웃</button>
+            {menus.map(({ text, cb }, index) => (
+              <button key={index} type="button" onClick={cb}>
+                {text}
+              </button>
+            ))}
           </div>
         )}
       </div>
