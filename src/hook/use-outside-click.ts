@@ -1,22 +1,25 @@
-import { RefObject, useEffect } from "react";
+import { RefObject, useEffect, useRef } from "react";
 
 /**
  * ref 외부의 요소를 클릭했을 경우 실행할 콜백 함수를 등록합니다.
  */
-export default function useOutsideClick(
-  ref: RefObject<HTMLElement>,
-  callback?: (event?: Event) => void,
-): void {
+export default function useOutsideClick<T extends HTMLElement>(
+  callback: () => void,
+): RefObject<T> {
+  const ref = useRef<T | null>(null);
+
   useEffect(() => {
-    const handleClickOutside = (e: Event): void => {
-      if (ref.current === null || ref.current.contains(e.target as Node)) {
-        return;
+    const handleClickOutside = (e: MouseEvent): void => {
+      if (ref.current && !ref.current.contains(e.target as Node)) {
+        callback(); // 모달 외부 요소 클릭 시 실행
       }
-      callback?.(e); // 모달 외부 요소 클릭 시 실행
     };
-    window.addEventListener("click", handleClickOutside);
+
+    document.addEventListener("click", handleClickOutside);
     return () => {
-      window.removeEventListener("click", handleClickOutside);
+      document.removeEventListener("click", handleClickOutside);
     };
-  }, [ref, callback]);
+  }, [callback]);
+
+  return ref;
 }

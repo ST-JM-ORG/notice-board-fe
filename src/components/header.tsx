@@ -7,11 +7,14 @@ import { useRouter } from "next/navigation";
 
 import useOutsideClick from "@hook/use-outside-click";
 
+import { TokenPayload } from "@models/token";
+
 import { useAppDispatch } from "@redux/hook";
 import { logout } from "@redux/modules/auth/login-slice";
 
 import { cn } from "@utils/classname";
 import { pxToRem } from "@utils/size";
+import { decodeAccessToken } from "@utils/token";
 
 export default function Header() {
   const router = useRouter();
@@ -22,6 +25,9 @@ export default function Header() {
   const [open, setOpen] = useState<boolean>(false);
   const [animation, setAnimation] = useState<boolean>(false);
   const [height, setHeight] = useState<number>(0);
+  const [token, setToken] = useState<TokenPayload | null>(null);
+
+  const menuRef = useOutsideClick<HTMLDivElement>(() => setOpen(false));
 
   const handleGoHome = () => {
     router.push("/");
@@ -44,16 +50,16 @@ export default function Header() {
     appDispatch(logout(null));
   };
 
-  const menus: { text: string; cb: () => void }[] = [
-    { text: "내 정보", cb: () => router.push("/profile") },
-    { text: "로그아웃", cb: handleLogout },
-  ];
-
-  useOutsideClick(ref, () => setOpen(false));
-
   useEffect(() => {
     if (ref.current) {
       setHeight(ref.current.offsetHeight);
+    }
+  }, []);
+
+  useEffect(() => {
+    const decodedToken = decodeAccessToken();
+    if (decodedToken) {
+      setToken(decodedToken);
     }
   }, []);
 
@@ -82,9 +88,10 @@ export default function Header() {
         </button>
         {animation && (
           <div
+            ref={menuRef}
             className={cn(
-              `absolute right-10 flex w-200 flex-col rounded-10 border-1 border-gainsboro
-              bg-platinum bg-opacity-50 py-10 shadow-xl backdrop-blur`,
+              `absolute right-10 flex w-200 flex-col space-y-2 rounded-10 border-1
+              border-gainsboro bg-platinum bg-opacity-50 p-5 shadow-xl backdrop-blur`,
               open
                 ? "animate-slide-top-right-in"
                 : "animate-slide-top-right-out",
@@ -92,11 +99,44 @@ export default function Header() {
             style={{ top: `${pxToRem(height + 5)}rem` }}
             onAnimationEnd={handleAnimatedEnd}
           >
-            {menus.map(({ text, cb }, index) => (
-              <button key={index} type="button" onClick={cb}>
-                {text}
+            <div className="flex flex-col items-center justify-center">
+              <div>
+                {!token || !token.profileImg ? (
+                  <div className="rounded-1/2 bg-white p-10">
+                    <IoPerson />
+                  </div>
+                ) : (
+                  <img src={token.profileImg} />
+                )}
+              </div>
+              <p className="w-full text-center font-bold">
+                안녕하세요! {token && token.name}님
+              </p>
+            </div>
+            <div className="flex flex-col">
+              <button
+                type="button"
+                className={cn(
+                  "mb-2 rounded-t-10 bg-white py-5 text-14",
+                  "transition-colors duration-100 ease-in-out",
+                  "hover:bg-gainsboro hover:bg-opacity-30",
+                )}
+                onClick={() => router.push("/profile")}
+              >
+                내 정보
               </button>
-            ))}
+              <button
+                type="button"
+                className={cn(
+                  "rounded-b-10 bg-white py-5 text-14",
+                  "transition-colors duration-100 ease-in-out",
+                  "hover:bg-gainsboro hover:bg-opacity-30",
+                )}
+                onClick={handleLogout}
+              >
+                로그아웃
+              </button>
+            </div>
           </div>
         )}
       </div>
