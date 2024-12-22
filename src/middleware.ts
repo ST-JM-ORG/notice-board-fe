@@ -11,7 +11,7 @@ export const middleware = async (request: NextRequest) => {
   const { pathname } = request.nextUrl;
   const token: string | undefined = request.cookies.get("token")?.value;
 
-  if (!token && pathname !== "/login") {
+  if (!token && !["/login", "/sign-up"].includes(pathname)) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
