@@ -1,7 +1,8 @@
 "use client";
 
-import React, { ChangeEvent } from "react";
+import React, { ChangeEvent, useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
+import { shallowEqual } from "react-redux";
 
 import { useRouter } from "next/navigation";
 
@@ -11,6 +12,11 @@ import ProfileUploader from "@components/profile-uploader";
 
 import { profileImgWhiteList } from "@constants/mime";
 import { PwRegex } from "@constants/regex";
+
+import useToastContext from "@hook/use-toast-context";
+
+import { getUser } from "@redux/apis/user-api";
+import { useAppSelector, useThunkDispatch } from "@redux/hook";
 
 import { encodeFileToBase64 } from "@utils/file-encoder";
 
@@ -50,6 +56,17 @@ export default function Page() {
   });
 
   const router = useRouter();
+  const thunkDispatch = useThunkDispatch();
+  const toast = useToastContext();
+
+  const { status, message, error } = useAppSelector(
+    (state) => ({
+      status: state.getUser.status,
+      message: state.getUser.message,
+      error: state.getUser.error,
+    }),
+    shallowEqual,
+  );
 
   const handleChangeFile = async (e: ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
@@ -81,6 +98,20 @@ export default function Page() {
     setValue("fileName", null);
     setValue("mime", null);
   };
+
+  useEffect(() => {
+    thunkDispatch(getUser(null));
+  }, [thunkDispatch]);
+
+  useEffect(() => {
+    if (status === "fulfilled") {
+      toast.success({ heading: "Success", message });
+    }
+
+    if (status === "rejected") {
+      toast.error({ heading: "Error", message: error });
+    }
+  }, [status]);
 
   return (
     <div

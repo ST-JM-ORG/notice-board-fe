@@ -65,6 +65,7 @@ instance.interceptors.response.use(
       error.response?.data.result.code === "E102"
     ) {
       const isRefreshExpired: boolean = isRefreshTokenExpired();
+      console.log(isRefreshExpired);
 
       if (isRefreshExpired) {
         window.alert("인증정보가 만료되었습니다. 다시 로그인 후 이용해주세요");
