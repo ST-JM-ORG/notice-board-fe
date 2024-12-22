@@ -8,7 +8,7 @@ import { useRouter } from "next/navigation";
 import useOutsideClick from "@hook/use-outside-click";
 
 import { useAppDispatch } from "@redux/hook";
-import { logout } from "@redux/modules/auth-slice";
+import { logout } from "@redux/modules/auth/login-slice";
 
 import { cn } from "@utils/classname";
 import { pxToRem } from "@utils/size";
@@ -49,7 +49,7 @@ export default function Header() {
     { text: "로그아웃", cb: handleLogout },
   ];
 
-  useOutsideClick(ref, handleSwitchProfileButton);
+  useOutsideClick(ref, () => setOpen(false));
 
   useEffect(() => {
     if (ref.current) {
