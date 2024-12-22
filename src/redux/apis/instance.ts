@@ -54,9 +54,11 @@ instance.interceptors.response.use(
 
     return response;
   },
-  (error) => {
+  async (error) => {
     // 응답 200번대가 아닌 status일 때 응답 에러 직전 호출
+    const originRequest = error.config;
     console.log(error);
+
     // E102: Authentication failed
     // E103: Access denied
     if (
@@ -65,7 +67,6 @@ instance.interceptors.response.use(
       error.response?.data.result.code === "E102"
     ) {
       const isRefreshExpired: boolean = isRefreshTokenExpired();
-      console.log(isRefreshExpired);
 
       if (isRefreshExpired) {
         window.alert("인증정보가 만료되었습니다. 다시 로그인 후 이용해주세요");
@@ -73,9 +74,29 @@ instance.interceptors.response.use(
       } else {
         const refreshToken = getCookies(REFRESH_TOKEN);
         if (refreshToken) {
-          return instance.post("/auth/reissue-token", null, {
+          const result = await instance.post("/auth/reissue-token", null, {
             headers: { Refresh: refreshToken },
           });
+
+          if (result.data) {
+            const newAccessToken: string = result.data.data.accessToken;
+            const newRefreshToken: string = result.data.data.refreshToken;
+
+            if (newAccessToken && refreshToken) {
+              setCookie(ACCESS_TOKEN, newAccessToken);
+              setCookie(REFRESH_TOKEN, newRefreshToken);
+            }
+
+            originRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+
+            return axios(originRequest);
+          } else {
+            window.alert(
+              "인증정보가 만료되었습니다. 다시 로그인 후 이용해주세요",
+            );
+            window.location.href = "/login";
+            return Promise.reject(error);
+          }
         }
       }
     }
