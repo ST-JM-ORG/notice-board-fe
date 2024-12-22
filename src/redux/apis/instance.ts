@@ -1,13 +1,9 @@
-import axios, { InternalAxiosRequestConfig } from "axios";
+import axios from "axios";
 
 import { ACCESS_TOKEN, REFRESH_TOKEN } from "@constants/const";
 
 import { getCookies, setCookie } from "@utils/cookie";
 import { isRefreshTokenExpired } from "@utils/token";
-
-interface CustomAxiosRequestConfig extends InternalAxiosRequestConfig {
-  useToken?: boolean;
-}
 
 const instance = axios.create({
   baseURL: "http://3.34.123.112:8080",
@@ -17,10 +13,10 @@ const instance = axios.create({
 
 // 요청 인터셉터
 instance.interceptors.request.use(
-  (config: CustomAxiosRequestConfig) => {
+  (config) => {
     const accessToken = getCookies(ACCESS_TOKEN);
 
-    if (config.useToken && accessToken) {
+    if (accessToken) {
       config.headers.Authorization = `Bearer ${accessToken}`;
     }
 
