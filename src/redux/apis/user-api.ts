@@ -5,7 +5,7 @@ import { ApiResponse } from "@models/api-response";
 import { AxiosErrorType } from "@models/axios-error-type";
 import { SingleUserType } from "@models/user-response";
 
-import instance from "@redux/apis/instance";
+import instance from "@utils/instance";
 
 export const getUser = createAsyncThunk<
   ApiResponse<SingleUserType>,

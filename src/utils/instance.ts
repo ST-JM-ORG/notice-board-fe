@@ -68,36 +68,48 @@ instance.interceptors.response.use(
         window.alert("인증정보가 만료되었습니다. 다시 로그인 후 이용해주세요");
         window.location.href = "/login";
       } else {
-        const refreshToken = getCookies(REFRESH_TOKEN);
-        if (refreshToken) {
-          const result = await instance.post("/auth/reissue-token", null, {
-            headers: { Refresh: refreshToken },
-          });
+        const newAccessToken = await reissueToken();
 
-          if (result.data) {
-            const newAccessToken: string = result.data.data.accessToken;
-            const newRefreshToken: string = result.data.data.refreshToken;
-
-            if (newAccessToken && refreshToken) {
-              setCookie(ACCESS_TOKEN, newAccessToken);
-              setCookie(REFRESH_TOKEN, newRefreshToken);
-            }
-
-            originRequest.headers.Authorization = `Bearer ${newAccessToken}`;
-
-            return axios(originRequest);
-          } else {
-            window.alert(
-              "인증정보가 만료되었습니다. 다시 로그인 후 이용해주세요",
-            );
-            window.location.href = "/login";
-            return Promise.reject(error);
-          }
+        if (!newAccessToken) {
+          window.alert(
+            "인증정보가 만료되었습니다. 다시 로그인 후 이용해주세요",
+          );
+          window.location.href = "/login";
+          return Promise.reject(error);
         }
+
+        originRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+
+        return axios(originRequest);
       }
     }
     return Promise.reject(error);
   },
 );
+
+const reissueToken = async () => {
+  const refreshToken = getCookies(REFRESH_TOKEN);
+
+  if (refreshToken) {
+    const result = await instance.post("/auth/reissue-token", null, {
+      headers: { Refresh: refreshToken },
+    });
+
+    if (result.data) {
+      const newAccessToken: string = result.data.data.accessToken;
+      const newRefreshToken: string = result.data.data.refreshToken;
+
+      if (newAccessToken && refreshToken) {
+        setCookie(ACCESS_TOKEN, newAccessToken);
+        setCookie(REFRESH_TOKEN, newRefreshToken);
+      }
+
+      return newAccessToken;
+    } else {
+      return null;
+    }
+  }
+  return null;
+};
 
 export default instance;

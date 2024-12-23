@@ -2,7 +2,7 @@ import { AxiosRequestConfig, AxiosResponse } from "axios";
 
 import { ApiResponse } from "@models/api-response";
 
-import instance from "@redux/apis/instance";
+import instance from "@utils/instance";
 
 export const Get = async <T>(
   url: string,

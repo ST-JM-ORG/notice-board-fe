@@ -4,7 +4,7 @@ import axios, { AxiosError } from "axios";
 import { ApiResponse } from "@models/api-response";
 import { AxiosErrorType } from "@models/axios-error-type";
 
-import instance from "@redux/apis/instance";
+import instance from "@utils/instance";
 
 export const signUp = createAsyncThunk<
   ApiResponse<null>,
