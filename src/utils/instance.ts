@@ -6,7 +6,7 @@ import { getCookies, setCookie } from "@utils/cookie";
 import { isRefreshTokenExpired } from "@utils/token";
 
 const instance = axios.create({
-  baseURL: "http://3.34.123.112:8080",
+  baseURL: process.env.NEXT_PUBLIC_BASE_URL,
   timeout: 10000,
   responseType: "json",
 });
