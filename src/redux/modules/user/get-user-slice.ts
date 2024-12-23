@@ -54,6 +54,7 @@ const GetUserSlice = createSlice<
       .addCase(getUser.fulfilled, (state, action) => {
         const {
           payload: {
+            data,
             result: { status, message },
           },
         } = action;
@@ -64,6 +65,7 @@ const GetUserSlice = createSlice<
         } else if (status >= 200) {
           state.status = "fulfilled";
           state.message = message;
+          state.user = data;
         }
       })
       .addCase(getUser.rejected, (state, action) => {

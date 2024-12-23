@@ -39,7 +39,7 @@ export default function Page() {
     setValue,
     setError,
     clearErrors,
-    watch,
+    watch
   } = useForm<ProfileForm>({
     mode: "onChange",
     reValidateMode: "onChange",
@@ -51,21 +51,22 @@ export default function Page() {
       phoneNumber: "",
       file: null,
       fileName: null,
-      mime: null, //  jpg, jpeg, png, gif, bmp
-    },
+      mime: null //  jpg, jpeg, png, gif, bmp
+    }
   });
 
   const router = useRouter();
   const thunkDispatch = useThunkDispatch();
   const toast = useToastContext();
 
-  const { status, message, error } = useAppSelector(
+  const { status, message, error, user } = useAppSelector(
     (state) => ({
       status: state.getUser.status,
       message: state.getUser.message,
       error: state.getUser.error,
+      user: state.getUser.user,
     }),
-    shallowEqual,
+    shallowEqual
   );
 
   const handleChangeFile = async (e: ChangeEvent<HTMLInputElement>) => {
@@ -77,7 +78,7 @@ export default function Page() {
       if (file) {
         if (!profileImgWhiteList.includes(file.type)) {
           setError("file", {
-            message: "jpg, jpeg, png, gif, bmp 확장자만 허용됩니다.",
+            message: "jpg, jpeg, png, gif, bmp 확장자만 허용됩니다."
           });
         } else {
           clearErrors("file");
@@ -105,7 +106,9 @@ export default function Page() {
 
   useEffect(() => {
     if (status === "fulfilled") {
-      toast.success({ heading: "Success", message });
+      setValue("email", user ? user.email : "");
+      setValue("name", user ? user.name : "");
+      setValue("phoneNumber", user ? user.contact : "");
     }
 
     if (status === "rejected") {
@@ -133,7 +136,8 @@ export default function Page() {
               />
               <div className="flex flex-col items-center justify-start space-y-1">
                 <div className="space-x-1">
-                  <Button type="button" onClick={() => {}}>
+                  <Button type="button" onClick={() => {
+                  }}>
                     미리보기
                   </Button>
                   <Button
@@ -165,6 +169,7 @@ export default function Page() {
                 required={true}
                 value={value}
                 onChange={() => {}}
+                disabled={true}
               />
             )}
           />
@@ -173,19 +178,18 @@ export default function Page() {
             name="pw"
             control={control}
             rules={{
-              required: "비밀번호를 입력해주세요",
               pattern: {
                 value: PwRegex,
-                message: "비밀번호 형식을 맞춰주세요",
+                message: "비밀번호 형식을 맞춰주세요"
               },
               minLength: {
                 value: 8,
-                message: "비밀번호는 최소 8자리 이상 입력해주세요",
+                message: "비밀번호는 최소 8자리 이상 입력해주세요"
               },
               maxLength: {
                 value: 20,
-                message: "비밀번호는 최대 20글자까지 입력할 수 있습니다",
-              },
+                message: "비밀번호는 최대 20글자까지 입력할 수 있습니다"
+              }
             }}
             render={({ field, fieldState: { error } }) => (
               <Input
@@ -203,21 +207,20 @@ export default function Page() {
             name="pwConfirm"
             control={control}
             rules={{
-              required: "비밀번호를 입력해주세요",
               pattern: {
                 value: PwRegex,
-                message: "비밀번호 형식을 맞춰주세요",
+                message: "비밀번호 형식을 맞춰주세요"
               },
               minLength: {
                 value: 8,
-                message: "비밀번호 확인은 최소 8자 이상 입력해주세요",
+                message: "비밀번호 확인은 최소 8자 이상 입력해주세요"
               },
               maxLength: {
                 value: 20,
-                message: "비밀번호 확인은 최대 20글자까지 입력할 수 있습니다",
+                message: "비밀번호 확인은 최대 20글자까지 입력할 수 있습니다"
               },
               validate: (value) =>
-                value === watch("pw") || "비밀번호가 일치하지 않습니다",
+                value === watch("pw") || "비밀번호가 일치하지 않습니다"
             }}
             render={({ field, fieldState: { error } }) => (
               <Input
@@ -235,7 +238,7 @@ export default function Page() {
             name="name"
             control={control}
             rules={{
-              required: "이름을 입력해주세요",
+              required: "이름을 입력해주세요"
             }}
             render={({ field, fieldState: { error } }) => (
               <Input
