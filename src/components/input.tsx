@@ -12,6 +12,7 @@ interface Props {
   onBlur?: (e: FocusEvent<HTMLInputElement>) => void;
   helperText?: string | undefined | null;
   required?: boolean;
+  disabled?: boolean;
 }
 
 const Input = (props: Props) => {
@@ -25,6 +26,7 @@ const Input = (props: Props) => {
     onBlur,
     helperText,
     required = false,
+    disabled = false,
   } = props;
 
   return (
@@ -36,11 +38,13 @@ const Input = (props: Props) => {
           value={value}
           onChange={onChange}
           onBlur={onBlur}
+          disabled={disabled}
           className={cn(
             `peer box-border w-full rounded-10 border-1 border-silver-sand bg-white px-15
             pb-8 pt-20 transition-colors duration-200 ease-in-out`,
             "focus:border-azure focus:border-1 focus:outline-none",
             "dark:bg-sonic-silver dark:text-white",
+            disabled ? "text-silver-sand": "text-black"
           )}
         />
         <label
@@ -56,7 +60,7 @@ const Input = (props: Props) => {
         >
           <div
             className={cn(
-              "text-philippine-gray bg-transparent px-5",
+              "text-sonic-silver bg-transparent px-5",
               "dark:text-anti-flash-white",
             )}
           >
