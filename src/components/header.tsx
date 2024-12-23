@@ -96,7 +96,7 @@ export default function Header() {
           <div
             ref={menuRef}
             className={cn(
-              `absolute right-10 flex w-200 flex-col space-y-2 rounded-10 border-1
+              `absolute right-10 z-[99] flex w-200 flex-col space-y-2 rounded-10 border-1
               border-gainsboro bg-platinum bg-opacity-50 p-5 shadow-xl backdrop-blur`,
               open
                 ? "animate-slide-top-right-in"
