@@ -35,19 +35,6 @@ instance.interceptors.request.use(
 // 응답 인터셉터
 instance.interceptors.response.use(
   (response) => {
-    // response.data.data(API response)가 null이 아닐 때 accessToken과 refreshToken이 response.data에 있는지 확인하고 있으면 쿠키에 저장
-    if (response.data.data) {
-      const accessToken: string | undefined | null =
-        response.data.data.accessToken;
-      const refreshToken: string | undefined | null =
-        response.data.data.refreshToken;
-
-      if (accessToken && refreshToken) {
-        setCookie(ACCESS_TOKEN, accessToken);
-        setCookie(REFRESH_TOKEN, refreshToken);
-      }
-    }
-
     return response;
   },
   async (error) => {
