@@ -126,6 +126,9 @@ export default {
         tablet: "768px",
         laptop: "1280px",
       },
+      transitionTimingFunction: {
+        "in-out-quart": "cubic-bezier(0.770, 0.000, 0.175, 1.000)",
+      },
       translate: {
         "20p": "20%",
       },
