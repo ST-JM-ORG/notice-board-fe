@@ -37,7 +37,14 @@ const UpdateUserSlice = createSlice<
 >({
   name: "updateUserSlice",
   initialState,
-  reducers: {},
+  reducers: {
+    resetUpdateUser: (state, action) => {
+      state.status = "idle";
+      state.code = null;
+      state.message = "";
+      state.error = "";
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(updateUser.pending, (state, action) => {
@@ -67,5 +74,7 @@ const UpdateUserSlice = createSlice<
       });
   },
 });
+
+export const { resetUpdateUser } = UpdateUserSlice.actions;
 
 export default UpdateUserSlice;

@@ -13,7 +13,8 @@ import { profileImgWhiteList } from "@constants/mime";
 import useToastContext from "@hook/use-toast-context";
 
 import { getUser, updateUser } from "@redux/apis/user-api";
-import { useAppSelector, useThunkDispatch } from "@redux/hook";
+import { useAppDispatch, useAppSelector, useThunkDispatch } from "@redux/hook";
+import { resetUpdateUser } from "@redux/modules/user/update-user-slice";
 
 import { encodeFileToBase64 } from "@utils/file-encoder";
 
@@ -43,6 +44,7 @@ export default function UpdateUserInfo() {
       },
     });
 
+  const appDispatch = useAppDispatch();
   const thunkDispatch = useThunkDispatch();
   const toast = useToastContext();
   const router = useRouter();
@@ -142,6 +144,12 @@ export default function UpdateUserInfo() {
       toast.error({ heading: "Error", message: updateError });
     }
   }, [updateStatus]);
+
+  useEffect(() => {
+    return () => {
+      appDispatch(resetUpdateUser(null));
+    };
+  }, [appDispatch]);
 
   return (
     <>
