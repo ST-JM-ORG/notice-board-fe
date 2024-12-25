@@ -12,7 +12,7 @@ import { profileImgWhiteList } from "@constants/mime";
 
 import useToastContext from "@hook/use-toast-context";
 
-import { getUser } from "@redux/apis/user-api";
+import { getUser, updateUser } from "@redux/apis/user-api";
 import { useAppSelector, useThunkDispatch } from "@redux/hook";
 
 import { encodeFileToBase64 } from "@utils/file-encoder";
@@ -21,6 +21,7 @@ interface UserInfoForm {
   email: string;
   name: string;
   phoneNumber: string;
+  originFile: File | null;
   file?: string | null | undefined;
   fileName?: string | null | undefined;
   mime?: string | null | undefined;
@@ -35,6 +36,7 @@ export default function UpdateUserInfo() {
         email: "",
         name: "",
         phoneNumber: "",
+        originFile: null,
         file: null,
         fileName: null,
         mime: null, //  jpg, jpeg, png, gif, bmp
@@ -45,12 +47,21 @@ export default function UpdateUserInfo() {
   const toast = useToastContext();
   const router = useRouter();
 
-  const { status, message, error, user } = useAppSelector(
+  // Get user
+  const { status, error, user } = useAppSelector(
     (state) => ({
       status: state.getUser.status,
-      message: state.getUser.message,
       error: state.getUser.error,
       user: state.getUser.user,
+    }),
+    shallowEqual,
+  );
+  // Update user
+  const { updateStatus, updateMsg, updateError } = useAppSelector(
+    (state) => ({
+      updateStatus: state.updateUser.status,
+      updateMsg: state.updateUser.message,
+      updateError: state.updateUser.error,
     }),
     shallowEqual,
   );
@@ -70,6 +81,7 @@ export default function UpdateUserInfo() {
           clearErrors("file");
           const encodedFile = await encodeFileToBase64(file);
           if (typeof encodedFile === "string") {
+            setValue("originFile", file);
             setValue("file", encodedFile);
             setValue("fileName", file.name);
             setValue("mime", file.type);
@@ -86,7 +98,24 @@ export default function UpdateUserInfo() {
     setValue("mime", null);
   };
 
-  const handleChangeUserInfo = () => {};
+  const handleChangeUserInfo = () => {
+    const formData = new FormData();
+
+    const file = getValues("originFile");
+    if (file) {
+      formData.append("profileImg", file);
+    }
+    formData.append("name", getValues("name"));
+    formData.append("contact", getValues("phoneNumber"));
+    formData.append("profileDelYn", file ? "false" : "true");
+
+    // FormData의 key 확인
+    for (const [key, value] of formData.entries()) {
+      console.log(key + ": " + value);
+    }
+
+    thunkDispatch(updateUser({ formData }));
+  };
 
   useEffect(() => {
     thunkDispatch(getUser(null));
@@ -103,6 +132,16 @@ export default function UpdateUserInfo() {
       toast.error({ heading: "Error", message: error });
     }
   }, [status]);
+
+  useEffect(() => {
+    if (updateStatus === "fulfilled") {
+      toast.success({ heading: "Success", message: updateMsg });
+    }
+
+    if (updateStatus === "rejected") {
+      toast.error({ heading: "Error", message: updateError });
+    }
+  }, [updateStatus]);
 
   return (
     <>
@@ -197,7 +236,9 @@ export default function UpdateUserInfo() {
 
         <div className="flex justify-end space-x-1">
           <Button onClick={() => router.push("/")}>취소</Button>
-          <Button className="text-salem">프로필 변경</Button>
+          <Button type="submit" className="text-salem">
+            프로필 변경
+          </Button>
         </div>
       </form>
     </>
