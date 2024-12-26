@@ -19,12 +19,12 @@
       }
     ],
     "paths": {
+      "@app/*": ["./src/app/*"],
       "@components/*": ["./src/components/*"],
       "@constants/*": ["./src/constants/*"],
       "@context/*": ["./src/context/*"],
       "@hook/*": ["./src/hook/*"],
       "@models/*": ["./src/models/*"],
-      "@pages/*": ["./src/pages/*"],
       "@provider/*": ["./src/provider/*"],
       "@redux/*": ["./src/redux/*"],
       "@utils/*": ["./src/utils/*"],

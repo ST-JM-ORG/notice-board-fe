@@ -4,10 +4,10 @@ import React, { useState } from "react";
 import { FaUser } from "react-icons/fa";
 import { RiLockPasswordLine } from "react-icons/ri";
 
-import TabBar from "@components/tab-bar";
+import UpdateUserInfo from "@app/(main)/profile/update-user-info";
+import UpdateUserPw from "@app/(main)/profile/update-user-pw";
 
-import UpdateUserInfo from "@pages/user/update-user-info";
-import UpdateUserPw from "@pages/user/update-user-pw";
+import TabBar from "@components/tab-bar";
 
 export default function Page() {
   const [tabIndex, setTabIndex] = useState<number>(0);
