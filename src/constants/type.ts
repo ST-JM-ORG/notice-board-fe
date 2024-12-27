@@ -1,33 +1,29 @@
-export enum SuccessType {
-  SUCCESS = "success",
-}
-
-export enum ErrorType {
-  DB_ERROR = "DB_ERROR",
-  IMAGE_UPLOAD_ERROR = "IMAGE_UPLOAD_ERROR",
-  REQUIRED_INPUT_ERROR = "REQUIRED_INPUT_ERROR",
-  INVALID_VALUE = "INVALID_VALUE",
-  ALREADY_USED_EMAIL = "ALREADY_USED_EMAIL",
-  NOT_FOUND = "NOT_FOUND",
-}
-
 export type Status = "idle" | "pending" | "fulfilled" | "rejected";
+export type SuccessType = "Success";
+
+export type ErrorType =
+  | "DbError"
+  | "ImageUploadError"
+  | "RequiredInputError"
+  | "InvalidValue"
+  | "AlreadyUsedEmail"
+  | "NotFound";
 
 export const SUCCESS_CODE: {
   [key: string]: SuccessType;
 } = {
-  A000: SuccessType.SUCCESS,
+  A000: "Success",
 };
 
 export const ERROR_CODE: {
   [key: string]: ErrorType;
 } = {
-  E001: ErrorType.DB_ERROR,
-  E003: ErrorType.IMAGE_UPLOAD_ERROR,
-  E004: ErrorType.REQUIRED_INPUT_ERROR,
-  E008: ErrorType.INVALID_VALUE,
-  E110: ErrorType.ALREADY_USED_EMAIL,
-  E404: ErrorType.NOT_FOUND,
+  E001: "DbError",
+  E003: "ImageUploadError",
+  E004: "RequiredInputError",
+  E008: "InvalidValue",
+  E110: "AlreadyUsedEmail",
+  E404: "NotFound",
 };
 
 export const ERROR_CODE_MSG: { [key: string]: string } = {

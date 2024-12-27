@@ -19,14 +19,14 @@ import { removeCookie } from "@utils/cookie";
 
 interface SignUpState {
   status: Status;
-  code: SuccessType | ErrorType | null;
+  type: SuccessType | ErrorType | "InternalServerError" | null;
   message: string;
   error: string;
 }
 
 const initialState: SignUpState = {
   status: "idle",
-  code: null,
+  type: null,
   message: "",
   error: "",
 };
@@ -43,7 +43,7 @@ const SignUpSlice = createSlice<
   reducers: {
     resetSignUp: (state, action) => {
       state.status = "idle";
-      state.code = null;
+      state.type = null;
       state.message = "";
       state.error = "";
     },
@@ -65,33 +65,30 @@ const SignUpSlice = createSlice<
       .addCase(signUp.fulfilled, (state, action) => {
         const {
           payload: {
-            result: { status, code, message },
+            result: { code },
           },
         } = action;
 
-        if (status === 200) {
-          state.status = "fulfilled";
-          state.code = SUCCESS_CODE[code];
-          state.message = "회원가입되었습니다";
-        } else if (status === 500) {
-          state.status = "rejected";
-
-          if (["E001", "E003", "E008"].includes(code)) {
-            state.status = "rejected";
-            state.code = ERROR_CODE[code];
-            state.error = message;
-          } else if (code === "E110") {
-            state.status = "rejected";
-            state.code = ERROR_CODE[code];
-            state.error = message;
-          }
-        }
+        state.status = "fulfilled";
+        state.type = SUCCESS_CODE[code];
+        state.message = "회원가입되었습니다";
       })
       .addCase(signUp.rejected, (state, action) => {
-        state.status = "rejected";
-        state.error = action.payload
-          ? action.payload.error
-          : "서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.";
+        if (action.payload) {
+          const {
+            response: {
+              result: { code, message },
+            },
+          } = action.payload;
+
+          if (["E001", "E003", "E008", "E110"].includes(code)) {
+            state.type = ERROR_CODE[code];
+          } else {
+            state.type = "InternalServerError";
+          }
+          state.status = "rejected";
+          state.error = message;
+        }
       });
   },
 });

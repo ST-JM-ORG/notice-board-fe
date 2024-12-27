@@ -13,7 +13,6 @@ import ProfileUploader from "@components/profile-uploader";
 
 import { profileImgWhiteList } from "@constants/mime";
 import { EmailRegex, PwRegex } from "@constants/regex";
-import { ErrorType } from "@constants/type";
 
 import useToastContext from "@hook/use-toast-context";
 
@@ -65,10 +64,10 @@ const Page = () => {
   const toast = useToastContext();
 
   // 회원가입
-  const { signUpStatus, signUpCode, signUpMsg, signUpError } = useAppSelector(
+  const { signUpStatus, signUpType, signUpMsg, signUpError } = useAppSelector(
     (state) => ({
       signUpStatus: state.signUp.status,
-      signUpCode: state.signUp.code,
+      signUpType: state.signUp.type,
       signUpMsg: state.signUp.message,
       signUpError: state.signUp.error,
     }),
@@ -165,7 +164,7 @@ const Page = () => {
     }
 
     if (emailDupCheckStatus === "rejected") {
-      if (emailDupCheckCode === ErrorType.ALREADY_USED_EMAIL) {
+      if (emailDupCheckCode === "AlreadyUsedEmail") {
         setError("email", { message: emailDupCheckError });
       } else {
         toast.error({
@@ -180,15 +179,13 @@ const Page = () => {
     if (signUpStatus === "fulfilled") {
       toast.success({ heading: "Success", message: signUpMsg });
       router.push("/login");
-    }
-
-    if (signUpStatus === "rejected") {
-      if (signUpCode === ErrorType.INVALID_VALUE) {
+    } else if (signUpStatus === "rejected") {
+      if (signUpType === "InvalidValue") {
         setError("pw", { message: signUpError });
         setError("pwConfirm", { message: signUpError });
-      } else if (signUpCode === ErrorType.ALREADY_USED_EMAIL) {
+      } else if (signUpType === "AlreadyUsedEmail") {
         setError("email", { message: signUpError });
-      } else if (signUpCode === ErrorType.IMAGE_UPLOAD_ERROR) {
+      } else if (signUpType === "ImageUploadError") {
         setError("file", { message: signUpError });
       }
     }
