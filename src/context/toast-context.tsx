@@ -57,7 +57,7 @@ export default function ToastContextProvider(props: PropsWithChildren) {
     type: "info" | "success" | "warn" | "error";
   }) => {
     const id = nanoid();
-    const newToast: ToastData = { ...toast, type, id, duration: 3 };
+    const newToast: ToastData = { ...toast, type, id, duration: 2 };
 
     // Toast 메시지는 최대 TOAST_MAX_COUNT 개까지만 출력됨
     // if (toasts.length >= TOAST_MAX_COUNT) {

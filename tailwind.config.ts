@@ -24,7 +24,7 @@ export default {
         "carousel-next": "carousel-next .5s ease-in-out forwards",
         "fade-in": "fade-in .5s ease-in-out",
         "fade-out": "fade-out .25s ease-in-out",
-        "progress-in": "progress-in 3.0s linear forwards",
+        "progress-in": "progress-in 2.0s linear forwards",
         "slide-top-right-in": "slide-top-right-in .3s ease-in-out forwards",
         "slide-top-right-out": "slide-top-right-out .3s ease-in-out forwards",
       },
