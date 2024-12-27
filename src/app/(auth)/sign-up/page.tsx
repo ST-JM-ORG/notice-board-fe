@@ -76,12 +76,12 @@ const Page = () => {
   // 이메일 중복체크
   const {
     emailDupCheckStatus,
-    emailDupCheckCode,
+    emailDupCheckType,
     emailDupCheckMsg,
     emailDupCheckError,
   } = useAppSelector((state) => ({
     emailDupCheckStatus: state.emailDupCheck.status,
-    emailDupCheckCode: state.emailDupCheck.code,
+    emailDupCheckType: state.emailDupCheck.type,
     emailDupCheckMsg: state.emailDupCheck.message,
     emailDupCheckError: state.emailDupCheck.error,
   }));
@@ -161,10 +161,8 @@ const Page = () => {
         heading: "Success",
         message: emailDupCheckMsg,
       });
-    }
-
-    if (emailDupCheckStatus === "rejected") {
-      if (emailDupCheckCode === "AlreadyUsedEmail") {
+    } else if (emailDupCheckStatus === "rejected") {
+      if (emailDupCheckType === "AlreadyUsedEmail") {
         setError("email", { message: emailDupCheckError });
       } else {
         toast.error({

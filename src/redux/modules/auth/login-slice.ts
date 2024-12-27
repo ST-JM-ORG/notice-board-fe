@@ -81,8 +81,7 @@ const LoginSlice = createSlice<
         if (action.payload) {
           const {
             response: {
-              data,
-              result: { status, code, message },
+              result: { message },
             },
           } = action.payload;
           state.error = message;

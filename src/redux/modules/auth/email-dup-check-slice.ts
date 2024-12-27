@@ -16,14 +16,14 @@ import { emailDupCheck } from "@redux/apis/auth-api";
 
 interface EmailDupCheckState {
   status: Status;
-  code: SuccessType | ErrorType | null;
+  type: SuccessType | ErrorType | "InternalServerError" | null;
   message: string;
   error: string;
 }
 
 const initialState: EmailDupCheckState = {
   status: "idle",
-  code: null,
+  type: null,
   message: "",
   error: "",
 };
@@ -40,7 +40,7 @@ const EmailDupCheckSlice = createSlice<
   reducers: {
     resetEmailDupCheck: (state, action) => {
       state.status = "idle";
-      state.code = null;
+      state.type = null;
       state.message = "";
       state.error = "";
     },
@@ -60,25 +60,35 @@ const EmailDupCheckSlice = createSlice<
 
         if (status === 200) {
           state.status = "fulfilled";
-          state.code = SUCCESS_CODE[code];
+          state.type = SUCCESS_CODE[code];
           state.message = message;
         } else if (status === 500) {
           if (code === "E110") {
             state.status = "rejected";
-            state.code = ERROR_CODE[code];
+            state.type = ERROR_CODE[code];
             state.error = message;
           } else {
             state.status = "rejected";
-            state.code = ERROR_CODE[code];
+            state.type = ERROR_CODE[code];
             state.error = message;
           }
         }
       })
       .addCase(emailDupCheck.rejected, (state, action) => {
         state.status = "rejected";
-        state.error =
-          action.payload?.error ||
-          "서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.";
+        if (action.payload) {
+          const {
+            response: {
+              result: { code, message },
+            },
+          } = action.payload;
+          if (code === "E110") {
+            state.type = ERROR_CODE[code];
+          } else {
+            state.type = "InternalServerError";
+          }
+          state.error = message;
+        }
       });
   },
 });
