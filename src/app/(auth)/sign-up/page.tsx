@@ -29,6 +29,7 @@ interface SignUpForm {
   pwConfirm: string;
   name: string;
   phoneNumber: string;
+  originFile: File | null;
   file?: string | null | undefined;
   fileName?: string | null | undefined;
   mime?: string | null | undefined;
@@ -52,6 +53,7 @@ const Page = () => {
       pwConfirm: "",
       name: "",
       phoneNumber: "",
+      originFile: null,
       file: null,
       fileName: null,
       mime: null, //  jpg, jpeg, png, gif, bmp
@@ -107,6 +109,7 @@ const Page = () => {
           const encodedFile = await encodeFileToBase64(file);
 
           if (typeof encodedFile === "string") {
+            setValue("originFile", file);
             setValue("file", encodedFile);
             setValue("fileName", file.name);
             setValue("mime", file.type);
@@ -137,7 +140,7 @@ const Page = () => {
 
   const handleSignUp = () => {
     const formData = new FormData();
-    const file = getValues("file");
+    const file = getValues("originFile");
 
     formData.append("email", getValues("email"));
     formData.append("password", getValues("pw"));
