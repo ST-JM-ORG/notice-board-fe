@@ -5,12 +5,13 @@ import { pxToRem } from "@utils/size";
 
 interface Props {
   size: number;
+  defaultImg?: string | null | undefined;
   file?: string | null | undefined;
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
 }
 
 const ProfileUploader = (props: Props) => {
-  const { size, file, onChange } = props;
+  const { size, defaultImg, file, onChange } = props;
 
   return (
     <>
@@ -39,6 +40,8 @@ const ProfileUploader = (props: Props) => {
               alt="Profile image"
               className="h-full w-full rounded-1/2 object-contain"
             />
+          ) : defaultImg ? (
+            <img src={defaultImg} />
           ) : (
             <span className="text-sonic-silver">프로필 이미지</span>
           )}

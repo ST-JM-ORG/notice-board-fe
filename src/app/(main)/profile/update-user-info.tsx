@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useEffect } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { shallowEqual } from "react-redux";
 
@@ -45,7 +45,7 @@ export default function UpdateUserInfo() {
     });
 
   const appDispatch = useAppDispatch();
-  const thunkDispatch = useThunkDispatch();
+  const dispatch = useThunkDispatch();
   const toast = useToastContext();
   const router = useRouter();
 
@@ -67,6 +67,8 @@ export default function UpdateUserInfo() {
     }),
     shallowEqual,
   );
+
+  const [defaultImg, setDefaultImg] = useState<string>("");
 
   const handleChangeFile = async (e: ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
@@ -116,18 +118,21 @@ export default function UpdateUserInfo() {
       console.log(key + ": " + value);
     }
 
-    thunkDispatch(updateUser({ formData }));
+    dispatch(updateUser({ formData }));
   };
 
   useEffect(() => {
-    thunkDispatch(getUser(null));
-  }, [thunkDispatch]);
+    dispatch(getUser(null));
+  }, [dispatch]);
 
   useEffect(() => {
     if (status === "fulfilled") {
       setValue("email", user ? user.email : "");
       setValue("name", user ? user.name : "");
       setValue("phoneNumber", user ? user.contact : "");
+      if (user) {
+        setDefaultImg(user.profileImg);
+      }
     }
 
     if (status === "rejected") {
@@ -138,6 +143,7 @@ export default function UpdateUserInfo() {
   useEffect(() => {
     if (updateStatus === "fulfilled") {
       toast.success({ heading: "Success", message: updateMsg });
+      // TODO: 프로필 변경 후 토큰 재발급 해야함
     }
 
     if (updateStatus === "rejected") {
@@ -164,6 +170,7 @@ export default function UpdateUserInfo() {
               <div className="flex flex-col items-center justify-center space-y-2">
                 <ProfileUploader
                   size={250}
+                  defaultImg={process.env.NEXT_PUBLIC_BASE_URL + defaultImg}
                   file={value}
                   onChange={handleChangeFile}
                 />

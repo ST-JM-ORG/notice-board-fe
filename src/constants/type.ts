@@ -2,6 +2,7 @@ export type Status = "idle" | "pending" | "fulfilled" | "rejected";
 export type SuccessType = "Success";
 
 export type ErrorType =
+  | "FailToFetch"
   | "DbError"
   | "ImageUploadError"
   | "RequiredInputError"
@@ -18,6 +19,7 @@ export const SUCCESS_CODE: {
 export const ERROR_CODE: {
   [key: string]: ErrorType;
 } = {
+  E000: "FailToFetch",
   E001: "DbError",
   E003: "ImageUploadError",
   E004: "RequiredInputError",
