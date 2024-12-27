@@ -112,10 +112,13 @@ export default function Header() {
                     <IoPerson />
                   </div>
                 ) : (
-                  <img src={token.profileImg} />
+                  <img
+                    src={`${process.env.NEXT_PUBLIC_BASE_URL}${token.profileImg}`}
+                    className="4-30 h-40 rounded-1/2 border-1 border-gainsboro object-contain backdrop-blur"
+                  />
                 )}
               </div>
-              <p className="w-full text-center font-bold">
+              <p className="mt-5 w-full text-center font-bold">
                 안녕하세요! {token && token.name}님
               </p>
             </div>

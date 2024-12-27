@@ -37,8 +37,7 @@ const ProfileUploader = (props: Props) => {
             <img
               src={file}
               alt="Profile image"
-              className="h-full w-full object-contain"
-              style={{ borderRadius: "50%" }}
+              className="h-full w-full rounded-1/2 object-contain"
             />
           ) : (
             <span className="text-sonic-silver">프로필 이미지</span>
