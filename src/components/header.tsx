@@ -80,17 +80,24 @@ export default function Header() {
       >
         Notice Board
       </h2>
-      <div className="relative">
+      <div className="relative h-40 w-40">
         <button
           ref={ref}
           className={cn(
-            "rounded-1/2 bg-gainsboro p-10 shadow-xl backdrop-blur",
+            "box-border h-full w-full rounded-1/2 bg-gainsboro p-5 shadow-xl backdrop-blur",
             "hover:bg-anti-flash-white",
             "transition-colors duration-200 ease-in-out",
           )}
           onClick={handleSwitchProfileButton}
         >
-          <IoPerson />
+          {!token || !token.profileImg ? (
+            <IoPerson />
+          ) : (
+            <img
+              src={process.env.NEXT_PUBLIC_BASE_URL + token.profileImg}
+              className="h-full w-full rounded-1/2 object-contain backdrop-blur"
+            />
+          )}
         </button>
         {animation && (
           <div
@@ -106,15 +113,15 @@ export default function Header() {
             onAnimationEnd={handleAnimatedEnd}
           >
             <div className="flex flex-col items-center justify-center">
-              <div>
+              <div className="h-40 w-40 rounded-1/2 border-1 border-gainsboro object-contain p-5 backdrop-blur">
                 {!token || !token.profileImg ? (
                   <div className="rounded-1/2 bg-white p-10">
                     <IoPerson />
                   </div>
                 ) : (
                   <img
-                    src={`${process.env.NEXT_PUBLIC_BASE_URL}${token.profileImg}`}
-                    className="4-30 h-40 rounded-1/2 border-1 border-gainsboro object-contain backdrop-blur"
+                    src={process.env.NEXT_PUBLIC_BASE_URL + token.profileImg}
+                    className="h-full w-full"
                   />
                 )}
               </div>
