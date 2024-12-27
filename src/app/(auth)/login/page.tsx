@@ -35,7 +35,7 @@ const Page = () => {
 
   const router = useRouter();
   const appDispatch = useAppDispatch();
-  const thunkDispatch = useThunkDispatch();
+  const dispatch = useThunkDispatch();
   const toast = useToastContext();
 
   const { status, message, error } = useAppSelector(
@@ -55,7 +55,7 @@ const Page = () => {
     const email = getValues("email");
     const pw = getValues("pw");
 
-    thunkDispatch(login({ email, pw }));
+    dispatch(login({ email, pw }));
   };
 
   useEffect(() => {

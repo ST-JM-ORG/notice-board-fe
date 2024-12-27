@@ -5,7 +5,7 @@ import {
 } from "@reduxjs/toolkit";
 
 import { ACCESS_TOKEN, REFRESH_TOKEN } from "@constants/const";
-import { ErrorType, Status, SuccessType } from "@constants/type";
+import { Status } from "@constants/type";
 
 import { login } from "@redux/apis/auth-api";
 
@@ -13,14 +13,12 @@ import { removeCookie, setCookie } from "@utils/cookie";
 
 interface LoginState {
   status: Status;
-  code: SuccessType | ErrorType | null;
   message: string;
   error: string;
 }
 
 const initialState: LoginState = {
   status: "idle",
-  code: null,
   message: "",
   error: "",
 };
@@ -37,7 +35,6 @@ const LoginSlice = createSlice<
   reducers: {
     resetLogin: (state, action) => {
       state.status = "idle";
-      state.code = null;
       state.message = "";
       state.error = "";
     },
@@ -78,7 +75,19 @@ const LoginSlice = createSlice<
           state.error = message;
         }
       })
-      .addCase(login.rejected, (state, action) => {});
+      .addCase(login.rejected, (state, action) => {
+        state.status = "rejected";
+
+        if (action.payload) {
+          const {
+            response: {
+              data,
+              result: { status, code, message },
+            },
+          } = action.payload;
+          state.error = message;
+        }
+      });
   },
 });
 
