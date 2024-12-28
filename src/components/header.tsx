@@ -2,19 +2,18 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import { IoPerson } from "react-icons/io5";
+import { shallowEqual } from "react-redux";
 
 import { useRouter } from "next/navigation";
 
 import useOutsideClick from "@hook/use-outside-click";
 
-import { TokenPayload } from "@models/token";
-
-import { useAppDispatch } from "@redux/hook";
+import { useAppDispatch, useAppSelector } from "@redux/hook";
 import { logout } from "@redux/modules/auth/login-slice";
+import { getProfileImg } from "@redux/modules/auth/token-slice";
 
 import { cn } from "@utils/classname";
 import { pxToRem } from "@utils/size";
-import { decodeAccessToken } from "@utils/token";
 
 export default function Header() {
   const router = useRouter();
@@ -25,9 +24,17 @@ export default function Header() {
   const [open, setOpen] = useState<boolean>(false);
   const [animation, setAnimation] = useState<boolean>(false);
   const [height, setHeight] = useState<number>(0);
-  const [token, setToken] = useState<TokenPayload | null>(null);
 
   const menuRef = useOutsideClick<HTMLDivElement>(() => setOpen(false));
+
+  const { token, profileImg, username } = useAppSelector(
+    (state) => ({
+      token: state.token.token,
+      profileImg: state.token.profileImg,
+      username: state.token.username,
+    }),
+    shallowEqual,
+  );
 
   const handleSwitchProfileButton = () => {
     setOpen(!open);
@@ -63,11 +70,8 @@ export default function Header() {
   }, []);
 
   useEffect(() => {
-    const decodedToken = decodeAccessToken();
-    if (decodedToken) {
-      setToken(decodedToken);
-    }
-  }, []);
+    appDispatch(getProfileImg(null));
+  }, [token, appDispatch]);
 
   return (
     <div
@@ -84,17 +88,19 @@ export default function Header() {
         <button
           ref={ref}
           className={cn(
-            "box-border h-full w-full rounded-1/2 bg-gainsboro p-5 shadow-xl backdrop-blur",
+            `box-border flex h-full w-full items-center justify-center rounded-1/2
+            bg-gainsboro p-5 shadow-xl backdrop-blur`,
             "hover:bg-anti-flash-white",
             "transition-colors duration-200 ease-in-out",
           )}
           onClick={handleSwitchProfileButton}
         >
-          {!token || !token.profileImg ? (
+          {!profileImg ? (
             <IoPerson />
           ) : (
             <img
-              src={process.env.NEXT_PUBLIC_BASE_URL + token.profileImg}
+              alt="profile image"
+              src={process.env.NEXT_PUBLIC_BASE_URL + profileImg}
               className="h-full w-full rounded-1/2 object-contain backdrop-blur"
             />
           )}
@@ -114,19 +120,20 @@ export default function Header() {
           >
             <div className="flex flex-col items-center justify-center">
               <div className="h-40 w-40 rounded-1/2 border-1 border-gainsboro object-contain p-5 backdrop-blur">
-                {!token || !token.profileImg ? (
+                {!profileImg ? (
                   <div className="rounded-1/2 bg-white p-10">
                     <IoPerson />
                   </div>
                 ) : (
                   <img
-                    src={process.env.NEXT_PUBLIC_BASE_URL + token.profileImg}
-                    className="h-full w-full"
+                    alt="profile image"
+                    src={process.env.NEXT_PUBLIC_BASE_URL + profileImg}
+                    className="h-full w-full rounded-1/2"
                   />
                 )}
               </div>
               <p className="mt-5 w-full text-center font-bold">
-                안녕하세요! {token && token.name}님
+                안녕하세요! {username}님
               </p>
             </div>
             <div className="flex flex-col">

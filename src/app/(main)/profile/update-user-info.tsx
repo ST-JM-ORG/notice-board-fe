@@ -12,6 +12,7 @@ import { profileImgWhiteList } from "@constants/mime";
 
 import useToastContext from "@hook/use-toast-context";
 
+import { reissueToken } from "@redux/apis/auth-api";
 import { getUser, updateUser } from "@redux/apis/user-api";
 import { useAppDispatch, useAppSelector, useThunkDispatch } from "@redux/hook";
 import { resetUpdateUser } from "@redux/modules/user/update-user-slice";
@@ -133,20 +134,16 @@ export default function UpdateUserInfo() {
       if (user) {
         setDefaultImg(user.profileImg);
       }
-    }
-
-    if (status === "rejected") {
+    } else if (status === "rejected") {
       toast.error({ heading: "Error", message: error });
     }
   }, [status]);
 
   useEffect(() => {
     if (updateStatus === "fulfilled") {
+      dispatch(reissueToken(null));
       toast.success({ heading: "Success", message: updateMsg });
-      // TODO: 프로필 변경 후 토큰 재발급 해야함
-    }
-
-    if (updateStatus === "rejected") {
+    } else if (updateStatus === "rejected") {
       toast.error({ heading: "Error", message: updateError });
     }
   }, [updateStatus]);

@@ -16,6 +16,8 @@ interface GetUserState {
   message: string;
   error: string;
   user: SingleUserType | null;
+  profileImg: string | null | undefined;
+  username: string;
 }
 
 const initialState: GetUserState = {
@@ -24,6 +26,8 @@ const initialState: GetUserState = {
   message: "",
   error: "",
   user: null,
+  profileImg: null,
+  username: "",
 };
 
 const GetUserSlice = createSlice<

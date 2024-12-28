@@ -59,20 +59,15 @@ const LoginSlice = createSlice<
         const {
           payload: {
             data,
-            result: { status, message },
+            result: { message },
           },
         } = action;
 
-        if (status === 200) {
-          state.status = "fulfilled";
-          state.message = message;
-          if (data) {
-            setCookie("token", data.accessToken);
-            setCookie("refresh", data.refreshToken);
-          }
-        } else if (status === 401 || status === 500) {
-          state.status = "rejected";
-          state.error = message;
+        state.status = "fulfilled";
+        state.message = message;
+        if (data) {
+          setCookie(ACCESS_TOKEN, data.accessToken);
+          setCookie(REFRESH_TOKEN, data.refreshToken);
         }
       })
       .addCase(login.rejected, (state, action) => {
