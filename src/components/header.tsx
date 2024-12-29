@@ -10,8 +10,8 @@ import useOutsideClick from "@hook/use-outside-click";
 
 import { logout } from "@redux/apis/auth-api";
 import { useAppDispatch, useAppSelector, useThunkDispatch } from "@redux/hook";
-import { resetLogout } from "@redux/modules/auth/logout-slice";
-import { getProfileImg } from "@redux/modules/auth/token-slice";
+import { resetAuth } from "@redux/modules/auth-slice";
+import { getProfileImg } from "@redux/modules/token-slice";
 
 import { cn } from "@utils/classname";
 import { pxToRem } from "@utils/size";
@@ -34,7 +34,7 @@ export default function Header() {
       token: state.token.token,
       profileImg: state.token.profileImg,
       username: state.token.username,
-      logoutStatus: state.logout.status,
+      logoutStatus: state.auth.logout.status,
     }),
     shallowEqual,
   );
@@ -84,7 +84,7 @@ export default function Header() {
 
   useEffect(() => {
     return () => {
-      appDispatch(resetLogout(null));
+      appDispatch(resetAuth("logout"));
     };
   }, [appDispatch]);
 

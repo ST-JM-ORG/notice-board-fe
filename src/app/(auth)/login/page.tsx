@@ -14,7 +14,7 @@ import useToastContext from "@hook/use-toast-context";
 
 import { login } from "@redux/apis/auth-api";
 import { useAppDispatch, useAppSelector, useThunkDispatch } from "@redux/hook";
-import { resetLogin } from "@redux/modules/auth/login-slice";
+import { resetAuth } from "@redux/modules/auth-slice";
 
 import { cn } from "@utils/classname";
 
@@ -40,9 +40,9 @@ const Page = () => {
 
   const { status, message, error } = useAppSelector(
     (state) => ({
-      status: state.login.status,
-      message: state.login.message,
-      error: state.login.error,
+      status: state.auth.login.status,
+      message: state.auth.login.message,
+      error: state.auth.login.error,
     }),
     shallowEqual,
   );
@@ -59,10 +59,6 @@ const Page = () => {
   };
 
   useEffect(() => {
-    appDispatch(resetLogin(null));
-  }, [appDispatch]);
-
-  useEffect(() => {
     if (status === "fulfilled") {
       toast.success({ heading: "Success", message: message });
       router.push("/");
@@ -70,6 +66,12 @@ const Page = () => {
       toast.error({ heading: "Error", message: error });
     }
   }, [status]);
+
+  useEffect(() => {
+    return () => {
+      appDispatch(resetAuth("login"));
+    };
+  }, [appDispatch]);
 
   return (
     <>

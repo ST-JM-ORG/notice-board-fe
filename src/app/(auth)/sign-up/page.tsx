@@ -18,8 +18,7 @@ import useToastContext from "@hook/use-toast-context";
 
 import { emailDupCheck, signUp } from "@redux/apis/auth-api";
 import { useAppDispatch, useAppSelector, useThunkDispatch } from "@redux/hook";
-import { resetEmailDupCheck } from "@redux/modules/auth/email-dup-check-slice";
-import { resetSignUp } from "@redux/modules/auth/sign-up-slice";
+import { resetAuth } from "@redux/modules/auth-slice";
 
 import { encodeFileToBase64 } from "@utils/file-encoder";
 
@@ -66,27 +65,28 @@ const Page = () => {
   const toast = useToastContext();
 
   // 회원가입
-  const { signUpStatus, signUpType, signUpMsg, signUpError } = useAppSelector(
-    (state) => ({
-      signUpStatus: state.signUp.status,
-      signUpType: state.signUp.type,
-      signUpMsg: state.signUp.message,
-      signUpError: state.signUp.error,
-    }),
-    shallowEqual,
-  );
-  // 이메일 중복체크
   const {
+    signUpStatus,
+    signUpType,
+    signUpMsg,
+    signUpError,
     emailDupCheckStatus,
     emailDupCheckType,
     emailDupCheckMsg,
     emailDupCheckError,
-  } = useAppSelector((state) => ({
-    emailDupCheckStatus: state.emailDupCheck.status,
-    emailDupCheckType: state.emailDupCheck.type,
-    emailDupCheckMsg: state.emailDupCheck.message,
-    emailDupCheckError: state.emailDupCheck.error,
-  }));
+  } = useAppSelector(
+    (state) => ({
+      signUpStatus: state.auth.signUp.status,
+      signUpType: state.auth.signUp.type,
+      signUpMsg: state.auth.signUp.message,
+      signUpError: state.auth.signUp.error,
+      emailDupCheckStatus: state.auth.emailDupCheck.status,
+      emailDupCheckType: state.auth.emailDupCheck.type,
+      emailDupCheckMsg: state.auth.emailDupCheck.message,
+      emailDupCheckError: state.auth.emailDupCheck.error,
+    }),
+    shallowEqual,
+  );
 
   const handleRouteSignUp = () => {
     router.push("/login");
@@ -154,11 +154,6 @@ const Page = () => {
   };
 
   useEffect(() => {
-    appDispatch(resetEmailDupCheck(null));
-    appDispatch(resetSignUp(null));
-  }, [appDispatch]);
-
-  useEffect(() => {
     if (emailDupCheckStatus === "fulfilled") {
       toast.success({
         heading: "Success",
@@ -191,6 +186,12 @@ const Page = () => {
       }
     }
   }, [signUpStatus]);
+
+  useEffect(() => {
+    return () => {
+      appDispatch(resetAuth("signUp"));
+    };
+  }, [appDispatch]);
 
   return (
     <>
