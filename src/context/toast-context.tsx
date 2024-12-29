@@ -107,7 +107,10 @@ export default function ToastContextProvider(props: PropsWithChildren) {
     <ToastContext.Provider value={{ success, warning, info, error }}>
       {children}
       {createPortal(
-        <div className="fixed right-0 top-0 mr-5 mt-5 space-y-1" ref={ref}>
+        <div
+          className="fixed right-0 top-0 mr-5 mt-[3.75rem] space-y-1"
+          ref={ref}
+        >
           {toasts.map(({ id, type, heading, duration, message }) => (
             <ToastContainer
               key={id}
