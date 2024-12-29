@@ -9,7 +9,7 @@ import { Status } from "@constants/type";
 
 import { login } from "@redux/apis/auth-api";
 
-import { removeCookie, setCookie } from "@utils/cookie";
+import { setCookie } from "@utils/cookie";
 
 interface LoginState {
   status: Status;
@@ -35,14 +35,6 @@ const LoginSlice = createSlice<
   reducers: {
     resetLogin: (state, action) => {
       state.status = "idle";
-      state.message = "";
-      state.error = "";
-    },
-    logout: (state, action) => {
-      removeCookie(ACCESS_TOKEN);
-      removeCookie(REFRESH_TOKEN);
-      window.location.href = "/login";
-      state.status = "pending";
       state.message = "";
       state.error = "";
     },
@@ -74,17 +66,12 @@ const LoginSlice = createSlice<
         state.status = "rejected";
 
         if (action.payload) {
-          const {
-            response: {
-              result: { message },
-            },
-          } = action.payload;
-          state.error = message;
+          state.error = action.payload.response.result.message;
         }
       });
   },
 });
 
-export const { resetLogin, logout } = LoginSlice.actions;
+export const { resetLogin } = LoginSlice.actions;
 
 export default LoginSlice;

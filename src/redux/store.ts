@@ -9,6 +9,7 @@ import logger from "redux-logger";
 
 import emailDupCheckSlice from "@redux/modules/auth/email-dup-check-slice";
 import LoginSlice from "@redux/modules/auth/login-slice";
+import LogoutSlice from "@redux/modules/auth/logout-slice";
 import SignUpSlice from "@redux/modules/auth/sign-up-slice";
 import TokenSlice from "@redux/modules/auth/token-slice";
 import GetUserSlice from "@redux/modules/user/get-user-slice";
@@ -18,6 +19,7 @@ const reducer = combineReducers({
   signUp: SignUpSlice.reducer,
   emailDupCheck: emailDupCheckSlice.reducer,
   login: LoginSlice.reducer,
+  logout: LogoutSlice.reducer,
   getUser: GetUserSlice.reducer,
   updateUser: UpdateUserSlice.reducer,
   token: TokenSlice.reducer,

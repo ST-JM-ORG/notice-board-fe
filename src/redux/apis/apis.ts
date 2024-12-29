@@ -13,7 +13,7 @@ export const Get = async <T>(
 
 export const Post = async <T>(
   url: string,
-  data?: never,
+  data?: null | undefined,
   config?: AxiosRequestConfig,
 ): Promise<AxiosResponse<ApiResponse<T>>> => {
   return await instance.post(url, data, config);

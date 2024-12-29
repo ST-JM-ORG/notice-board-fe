@@ -83,9 +83,45 @@ export const login = createAsyncThunk<
   { rejectValue: AxiosErrorType }
 >("auth/login", async ({ email, pw }, thunkAPI) => {
   try {
-    const response = await instance.post(`/auth/login`, {
+    const response = await instance.post("/auth/login", {
       email,
       password: pw,
+    });
+    return response.data;
+  } catch (e) {
+    if (axios.isAxiosError(e) && e.response) {
+      return thunkAPI.rejectWithValue({
+        status: e.status ? e.status : 500,
+        response: e.response.data,
+      });
+    } else {
+      return thunkAPI.rejectWithValue({
+        status: 500,
+        response: {
+          data: null,
+          result: {
+            status: 500,
+            code: "ERR500",
+            message: "서버에 에러가 발생했습니다. 잠시 후 다시 시도해주세요.",
+          },
+        },
+      });
+    }
+  }
+});
+
+export const logout = createAsyncThunk<
+  ApiResponse<boolean | null | undefined>,
+  null,
+  { rejectValue: AxiosErrorType }
+>("auth/logout", async (_, thunkAPI) => {
+  const refreshToken = getCookies(REFRESH_TOKEN);
+
+  try {
+    const response = await instance.post("/auth/logout", null, {
+      headers: {
+        Refresh: refreshToken,
+      },
     });
     return response.data;
   } catch (e) {

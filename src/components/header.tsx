@@ -8,8 +8,9 @@ import { useRouter } from "next/navigation";
 
 import useOutsideClick from "@hook/use-outside-click";
 
-import { useAppDispatch, useAppSelector } from "@redux/hook";
-import { logout } from "@redux/modules/auth/login-slice";
+import { logout } from "@redux/apis/auth-api";
+import { useAppDispatch, useAppSelector, useThunkDispatch } from "@redux/hook";
+import { resetLogout } from "@redux/modules/auth/logout-slice";
 import { getProfileImg } from "@redux/modules/auth/token-slice";
 
 import { cn } from "@utils/classname";
@@ -18,6 +19,7 @@ import { pxToRem } from "@utils/size";
 export default function Header() {
   const router = useRouter();
   const appDispatch = useAppDispatch();
+  const dispatch = useThunkDispatch();
 
   const ref = useRef<HTMLButtonElement | null>(null);
 
@@ -27,11 +29,12 @@ export default function Header() {
 
   const menuRef = useOutsideClick<HTMLDivElement>(() => setOpen(false));
 
-  const { token, profileImg, username } = useAppSelector(
+  const { token, profileImg, username, logoutStatus } = useAppSelector(
     (state) => ({
       token: state.token.token,
       profileImg: state.token.profileImg,
       username: state.token.username,
+      logoutStatus: state.logout.status,
     }),
     shallowEqual,
   );
@@ -60,7 +63,7 @@ export default function Header() {
 
   const handleLogout = () => {
     setOpen(false);
-    appDispatch(logout(null));
+    dispatch(logout(null));
   };
 
   useEffect(() => {
@@ -72,6 +75,18 @@ export default function Header() {
   useEffect(() => {
     appDispatch(getProfileImg(null));
   }, [token, appDispatch]);
+
+  useEffect(() => {
+    if (logoutStatus === "fulfilled" || logoutStatus === "rejected") {
+      router.replace("/login");
+    }
+  }, [logoutStatus]);
+
+  useEffect(() => {
+    return () => {
+      appDispatch(resetLogout(null));
+    };
+  }, [appDispatch]);
 
   return (
     <div
