@@ -9,14 +9,12 @@ import logger from "redux-logger";
 
 import AuthSlice from "@redux/modules/auth-slice";
 import TokenSlice from "@redux/modules/token-slice";
-import GetUserSlice from "@redux/modules/user/get-user-slice";
-import UpdateUserSlice from "@redux/modules/user/update-user-slice";
+import UserSlice from "@redux/modules/user-slice";
 
 const reducer = combineReducers({
-  auth: AuthSlice.reducer,
-  getUser: GetUserSlice.reducer,
-  updateUser: UpdateUserSlice.reducer,
   token: TokenSlice.reducer,
+  auth: AuthSlice.reducer,
+  user: UserSlice.reducer,
 });
 
 const store = configureStore({

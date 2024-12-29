@@ -15,7 +15,7 @@ import useToastContext from "@hook/use-toast-context";
 import { reissueToken } from "@redux/apis/auth-api";
 import { getUser, updateUser } from "@redux/apis/user-api";
 import { useAppDispatch, useAppSelector, useThunkDispatch } from "@redux/hook";
-import { resetUpdateUser } from "@redux/modules/user/update-user-slice";
+import { resetUser } from "@redux/modules/user-slice";
 
 import { encodeFileToBase64 } from "@utils/file-encoder";
 
@@ -51,23 +51,18 @@ export default function UpdateUserInfo() {
   const router = useRouter();
 
   // Get user
-  const { status, error, user } = useAppSelector(
-    (state) => ({
-      status: state.getUser.status,
-      error: state.getUser.error,
-      user: state.getUser.user,
-    }),
-    shallowEqual,
-  );
-  // Update user
-  const { updateStatus, updateMsg, updateError } = useAppSelector(
-    (state) => ({
-      updateStatus: state.updateUser.status,
-      updateMsg: state.updateUser.message,
-      updateError: state.updateUser.error,
-    }),
-    shallowEqual,
-  );
+  const { status, error, user, updateStatus, updateMsg, updateError } =
+    useAppSelector(
+      (state) => ({
+        status: state.user.getUser.status,
+        error: state.user.getUser.error,
+        user: state.user.getUser.user,
+        updateStatus: state.user.updateUser.status,
+        updateMsg: state.user.updateUser.message,
+        updateError: state.user.updateUser.error,
+      }),
+      shallowEqual,
+    );
 
   const [defaultImg, setDefaultImg] = useState<string>("");
 
@@ -150,7 +145,7 @@ export default function UpdateUserInfo() {
 
   useEffect(() => {
     return () => {
-      appDispatch(resetUpdateUser(null));
+      appDispatch(resetUser("updateUser"));
     };
   }, [appDispatch]);
 
