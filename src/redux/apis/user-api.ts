@@ -75,7 +75,7 @@ export const changePw = createAsyncThunk<
   ApiResponse<boolean | undefined | null>,
   { currPw: string; newPw: string },
   { rejectValue: ApiResponse<undefined> }
->("user/update", async ({ currPw, newPw }, thunkAPI) => {
+>("user/changePw", async ({ currPw, newPw }, thunkAPI) => {
   try {
     const response = await instance.put("/user/me/password", {
       currentPw: currPw,

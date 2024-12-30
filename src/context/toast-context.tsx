@@ -66,7 +66,7 @@ export default function ToastContextProvider(props: PropsWithChildren) {
     // } else {
     //   setToasts([newToast, ...toasts]);
     // }
-    setToasts([newToast, ...toasts]);
+    setToasts([...toasts, newToast]);
   };
 
   const info = (data: ToastInput) => {
@@ -107,10 +107,7 @@ export default function ToastContextProvider(props: PropsWithChildren) {
     <ToastContext.Provider value={{ success, warning, info, error }}>
       {children}
       {createPortal(
-        <div
-          className="fixed right-0 top-0 mr-5 mt-[3.75rem] space-y-1"
-          ref={ref}
-        >
+        <div className="fixed bottom-0 right-0 mb-5 mr-5 space-y-1" ref={ref}>
           {toasts.map(({ id, type, heading, duration, message }) => (
             <ToastContainer
               key={id}
