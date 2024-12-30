@@ -1,21 +1,10 @@
-import {
-  createSlice,
-  PayloadAction,
-  SliceCaseReducers,
-  SliceSelectors,
-} from "@reduxjs/toolkit";
+import { createSlice, PayloadAction, SliceCaseReducers, SliceSelectors } from "@reduxjs/toolkit";
 
-import {
-  ERROR_CODE,
-  ErrorType,
-  Status,
-  SUCCESS_CODE,
-  SuccessType,
-} from "@constants/type";
+import { ERROR_CODE, ErrorType, Status, SUCCESS_CODE, SuccessType } from "@constants/type";
 
 import { SingleUserType } from "@models/user-response";
 
-import { getUser, updateUser } from "@redux/apis/user-api";
+import { changePw, getUser, updateUser } from "@redux/apis/user-api";
 
 interface UserState {
   getUser: {
@@ -32,6 +21,11 @@ interface UserState {
     message: string;
     error: string;
     type: SuccessType | ErrorType | "InternalServerError" | null;
+  };
+  changePw: {
+    status: Status;
+    message: string;
+    error: string;
   };
 }
 
@@ -50,6 +44,11 @@ const initialState: UserState = {
     message: "",
     error: "",
     type: null,
+  },
+  changePw: {
+    status: "idle",
+    message: "",
+    error: "",
   },
 };
 
@@ -148,6 +147,24 @@ const UserSlice = createSlice<
       })
       .addCase(updateUser.rejected, (state, action) => {
         state.updateUser.status = "rejected";
+      });
+
+    // 비밀번호 수정
+    builder
+      .addCase(changePw.pending, (state, action) => {
+        state.changePw.status = "pending";
+        state.changePw.message = "";
+        state.changePw.error = "";
+      })
+      .addCase(changePw.fulfilled, (state, action) => {
+        state.changePw.status = "fulfilled";
+        state.changePw.message = action.payload.result.message;
+      })
+      .addCase(changePw.rejected, (state, action) => {
+        state.changePw.status = "rejected";
+        state.changePw.error =
+          action.payload?.result.message ||
+          "서버에 에러가 발생했습니다. 잠시 후 다시 시도해주세요.";
       });
   },
 });

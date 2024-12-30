@@ -5,8 +5,9 @@ import Button from "@components/button";
 import Input from "@components/input";
 
 interface UserPwForm {
-  pw: string;
-  pwConfirm: string;
+  currPw: string;
+  newPw: string;
+  newPwConfirm: string;
 }
 
 export default function UpdateUserPw() {
@@ -15,8 +16,9 @@ export default function UpdateUserPw() {
       mode: "onChange",
       reValidateMode: "onChange",
       defaultValues: {
-        pw: "",
-        pwConfirm: "",
+        currPw: "",
+        newPw: "",
+        newPwConfirm: "",
       },
     });
 
@@ -26,13 +28,13 @@ export default function UpdateUserPw() {
     <>
       <form className="space-y-2" onSubmit={handleSubmit(handleChangePw)}>
         <Controller
-          name="pw"
+          name="currPw"
           control={control}
           render={({ field, fieldState: { error } }) => (
             <Input
               type="password"
               className="rounded-t-none"
-              text="비밀번호"
+              text="현재 비밀번호"
               helperText={error && error.message}
               {...field}
             />
@@ -40,13 +42,27 @@ export default function UpdateUserPw() {
         />
 
         <Controller
-          name="pwConfirm"
+          name="newPw"
           control={control}
           render={({ field, fieldState: { error } }) => (
             <Input
               type="password"
               className="rounded-t-none"
-              text="비밀번호 확인"
+              text="변경할 비밀번호"
+              helperText={error && error.message}
+              {...field}
+            />
+          )}
+        />
+
+        <Controller
+          name="newPwConfirm"
+          control={control}
+          render={({ field, fieldState: { error } }) => (
+            <Input
+              type="password"
+              className="rounded-t-none"
+              text="변경할 비밀번호 확인"
               helperText={error && error.message}
               {...field}
             />
@@ -54,7 +70,7 @@ export default function UpdateUserPw() {
         />
 
         <div className="flex justify-end">
-          <Button>비밀번호 변경</Button>
+          <Button type="submit">비밀번호 변경</Button>
         </div>
       </form>
     </>

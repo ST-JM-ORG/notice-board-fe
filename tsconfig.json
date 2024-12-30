@@ -28,7 +28,7 @@
       "@provider/*": ["./src/provider/*"],
       "@redux/*": ["./src/redux/*"],
       "@utils/*": ["./src/utils/*"],
-      "@/*": ["./src/*"]
+      "@src/*": ["./src/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],

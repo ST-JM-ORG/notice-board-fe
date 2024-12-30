@@ -70,3 +70,30 @@ export const updateUser = createAsyncThunk<
     }
   }
 });
+
+export const changePw = createAsyncThunk<
+  ApiResponse<boolean | undefined | null>,
+  { currPw: string; newPw: string },
+  { rejectValue: ApiResponse<undefined> }
+>("user/update", async ({ currPw, newPw }, thunkAPI) => {
+  try {
+    const response = await instance.put("/user/me/password", {
+      currentPw: currPw,
+      newPw,
+    });
+    return response.data;
+  } catch (e) {
+    if (axios.isAxiosError(e) && e.response) {
+      return thunkAPI.rejectWithValue(e.response.data);
+    } else {
+      return thunkAPI.rejectWithValue({
+        data: null,
+        result: {
+          status: 500,
+          code: "ERR500",
+          message: "서버에 에러가 발생했습니다. 잠시 후 다시 시도해주세요.",
+        },
+      });
+    }
+  }
+});
