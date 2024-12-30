@@ -1,10 +1,17 @@
-import { createSlice, PayloadAction, SliceCaseReducers, SliceSelectors } from "@reduxjs/toolkit";
+import {
+  createSlice,
+  PayloadAction,
+  SliceCaseReducers,
+  SliceSelectors,
+} from "@reduxjs/toolkit";
 
-import { ERROR_CODE, ErrorType, Status, SUCCESS_CODE, SuccessType } from "@constants/type";
+import { ERROR_CODE, ERROR_MESSAGE, ErrorType } from "@constants/error-code";
+import { SUCCESS_CODE, SuccessType } from "@constants/success-code";
+import { Status } from "@constants/type";
 
 import { SingleUserType } from "@models/user-response";
 
-import { changePw, getUser, updateUser } from "@redux/apis/user-api";
+import { getUser, updatePw, updateUser } from "@redux/apis/user-api";
 
 interface UserState {
   getUser: {
@@ -26,6 +33,7 @@ interface UserState {
     status: Status;
     message: string;
     error: string;
+    code: string;
   };
 }
 
@@ -49,6 +57,7 @@ const initialState: UserState = {
     status: "idle",
     message: "",
     error: "",
+    code: "",
   },
 };
 
@@ -62,7 +71,10 @@ const UserSlice = createSlice<
   name: "user",
   initialState,
   reducers: {
-    resetUser: (state, action: PayloadAction<"getUser" | "updateUser">) => {
+    resetUser: (
+      state,
+      action: PayloadAction<"getUser" | "updateUser" | "changePw">,
+    ) => {
       switch (action.payload) {
         case "getUser":
           state.getUser.status = "idle";
@@ -78,6 +90,12 @@ const UserSlice = createSlice<
           state.updateUser.message = "";
           state.updateUser.error = "";
           state.updateUser.type = null;
+          break;
+        case "changePw":
+          state.changePw.status = "idle";
+          state.changePw.message = "";
+          state.changePw.error = "";
+          state.changePw.code = "";
           break;
       }
     },
@@ -151,20 +169,32 @@ const UserSlice = createSlice<
 
     // 비밀번호 수정
     builder
-      .addCase(changePw.pending, (state, action) => {
+      .addCase(updatePw.pending, (state, action) => {
         state.changePw.status = "pending";
         state.changePw.message = "";
         state.changePw.error = "";
+        state.changePw.code = "";
       })
-      .addCase(changePw.fulfilled, (state, action) => {
+      .addCase(updatePw.fulfilled, (state, action) => {
+        const {
+          result: { code, message },
+        } = action.payload;
+
         state.changePw.status = "fulfilled";
-        state.changePw.message = action.payload.result.message;
+        state.changePw.code = code;
+        state.changePw.message = message;
       })
-      .addCase(changePw.rejected, (state, action) => {
+      .addCase(updatePw.rejected, (state, action) => {
         state.changePw.status = "rejected";
-        state.changePw.error =
-          action.payload?.result.message ||
-          "서버에 에러가 발생했습니다. 잠시 후 다시 시도해주세요.";
+
+        if (action.payload?.result) {
+          const { code, message } = action.payload.result;
+          state.changePw.code = code;
+          state.changePw.error = message;
+        } else {
+          state.changePw.error =
+            action.payload?.result.message || ERROR_MESSAGE["E500"];
+        }
       });
   },
 });

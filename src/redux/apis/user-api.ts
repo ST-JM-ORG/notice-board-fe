@@ -71,10 +71,10 @@ export const updateUser = createAsyncThunk<
   }
 });
 
-export const changePw = createAsyncThunk<
+export const updatePw = createAsyncThunk<
   ApiResponse<boolean | undefined | null>,
   { currPw: string; newPw: string },
-  { rejectValue: ApiResponse<undefined> }
+  { rejectValue: ApiResponse<null> }
 >("user/changePw", async ({ currPw, newPw }, thunkAPI) => {
   try {
     const response = await instance.put("/user/me/password", {
