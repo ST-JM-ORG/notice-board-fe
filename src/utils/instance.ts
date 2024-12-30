@@ -2,26 +2,26 @@ import axios from "axios";
 
 import { ACCESS_TOKEN, REFRESH_TOKEN } from "@constants/const";
 
-import { getCookies, setCookie } from "@utils/cookie";
+import { getCookie, setCookie } from "@utils/cookie";
 import { isRefreshTokenExpired } from "@utils/token";
 
 const instance = axios.create({
   baseURL: process.env.NEXT_PUBLIC_BASE_URL,
   timeout: 10000,
-  responseType: "json"
+  responseType: "json",
 });
 
 // 요청 인터셉터
 instance.interceptors.request.use(
   (config) => {
-    const accessToken = getCookies(ACCESS_TOKEN);
+    const accessToken = getCookie(ACCESS_TOKEN);
 
     if (accessToken) {
       config.headers.Authorization = `Bearer ${accessToken}`;
     }
 
     config.headers = config.headers || {
-      "Content-Type": "application/json"
+      "Content-Type": "application/json",
     };
 
     return config;
@@ -29,7 +29,7 @@ instance.interceptors.request.use(
   (error) => {
     // 2. 요청 에러가 있는 작업 처리
     return Promise.reject(error);
-  }
+  },
 );
 
 // 응답 인터셉터
@@ -59,7 +59,7 @@ instance.interceptors.response.use(
 
         if (!newAccessToken) {
           window.alert(
-            "인증정보가 만료되었습니다. 다시 로그인 후 이용해주세요"
+            "인증정보가 만료되었습니다. 다시 로그인 후 이용해주세요",
           );
           window.location.href = "/login";
           return Promise.reject(error);
@@ -71,17 +71,21 @@ instance.interceptors.response.use(
       }
     }
     return Promise.reject(error);
-  }
+  },
 );
 
 const reissueToken = async () => {
-  const refreshToken = getCookies(REFRESH_TOKEN);
+  const refreshToken = getCookie(REFRESH_TOKEN);
   const isRefreshExpired: boolean = isRefreshTokenExpired();
 
   if (refreshToken && !isRefreshExpired) {
-    const result = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/auth/reissue-token`, null, {
-      headers: { Refresh: refreshToken }
-    });
+    const result = await axios.post(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/auth/reissue-token`,
+      null,
+      {
+        headers: { Refresh: refreshToken },
+      },
+    );
 
     if (result.data) {
       const newAccessToken: string = result.data.data.accessToken;

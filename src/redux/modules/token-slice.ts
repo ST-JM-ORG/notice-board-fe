@@ -1,15 +1,11 @@
-import {
-  createSlice,
-  SliceCaseReducers,
-  SliceSelectors,
-} from "@reduxjs/toolkit";
+import { createSlice, SliceCaseReducers, SliceSelectors } from "@reduxjs/toolkit";
 
 import { ACCESS_TOKEN, REFRESH_TOKEN } from "@constants/const";
 import { Status } from "@constants/type";
 
 import { reissueToken } from "@redux/apis/auth-api";
 
-import { getCookies, setCookie } from "@utils/cookie";
+import { getCookie, setCookie } from "@utils/cookie";
 import { decodeAccessToken } from "@utils/token";
 
 interface ReissueTokenState {
@@ -41,7 +37,7 @@ const TokenSlice = createSlice<
   initialState,
   reducers: {
     getProfileImg: (state, action) => {
-      const token = getCookies(ACCESS_TOKEN);
+      const token = getCookie(ACCESS_TOKEN);
       state.token = token;
 
       if (token) {

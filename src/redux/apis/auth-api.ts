@@ -6,7 +6,7 @@ import { REFRESH_TOKEN } from "@constants/const";
 import { ApiResponse } from "@models/api-response";
 import { AxiosErrorType } from "@models/axios-error-type";
 
-import { getCookies } from "@utils/cookie";
+import { getCookie } from "@utils/cookie";
 import instance from "@utils/instance";
 
 export const signUp = createAsyncThunk<
@@ -115,7 +115,7 @@ export const logout = createAsyncThunk<
   null,
   { rejectValue: AxiosErrorType }
 >("auth/logout", async (_, thunkAPI) => {
-  const refreshToken = getCookies(REFRESH_TOKEN);
+  const refreshToken = getCookie(REFRESH_TOKEN);
 
   try {
     const response = await instance.post("/auth/logout", null, {
@@ -151,7 +151,7 @@ export const reissueToken = createAsyncThunk<
   null,
   { rejectValue: AxiosErrorType }
 >("auth/reissueToken", async (_, thunkAPI) => {
-  const refreshToken = getCookies(REFRESH_TOKEN);
+  const refreshToken = getCookie(REFRESH_TOKEN);
 
   try {
     const response = await instance.post(`/auth/reissue-token`, null, {
