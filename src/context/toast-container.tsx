@@ -57,16 +57,16 @@ export default function ToastContainer(props: Props) {
   return (
     <div
       className={cn(
-        `flex w-300 items-start space-x-2 rounded-5 border-l-3 bg-opacity-50 p-10
+        `z-[98] flex w-300 items-start space-x-2 rounded-5 border-l-3 bg-opacity-50 p-10
         backdrop-blur`,
         type === "info" &&
-          "border-l-brandeis-blue after:border-brandeis-blue bg-sky-blue",
+          "border-l-brandeis-blue bg-sky-blue after:border-brandeis-blue",
         type === "success" &&
           "border-l-salem bg-light-green after:border-salem",
         type === "warn" &&
-          "bg-dandelion border-l-bright-yellow after:border-bright-yellow",
+          "border-l-bright-yellow bg-dandelion after:border-bright-yellow",
         type === "error" &&
-          "bg-light-salmon-pink border-l-pastel-red after:border-pastel-red",
+          "border-l-pastel-red bg-light-salmon-pink after:border-pastel-red",
         show ? "animate-fade-in opacity-100" : "animate-fade-out opacity-0",
         `after:absolute after:bottom-0 after:left-0 after:animate-progress-in
         after:border-b-1 after:border-l-[9.125rem] after:border-r-[9.125rem]
@@ -77,14 +77,14 @@ export default function ToastContainer(props: Props) {
     >
       <div className="flex-none pt-4">
         {type === "info" && (
-          <IoMdNotificationsOutline className="text-brandeis-blue h-20 w-20" />
+          <IoMdNotificationsOutline className="h-20 w-20 text-brandeis-blue" />
         )}
-        {type === "success" && <FaCheck className="text-salem h-20 w-20" />}
+        {type === "success" && <FaCheck className="h-20 w-20 text-salem" />}
         {type === "warn" && (
-          <GoAlert className="text-bright-yellow h-20 w-20" />
+          <GoAlert className="h-20 w-20 text-bright-yellow" />
         )}
         {type === "error" && (
-          <MdOutlineErrorOutline className="text-pastel-red h-20 w-20" />
+          <MdOutlineErrorOutline className="h-20 w-20 text-pastel-red" />
         )}
       </div>
 
