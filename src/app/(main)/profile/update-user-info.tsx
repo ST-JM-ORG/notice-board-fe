@@ -162,7 +162,11 @@ export default function UpdateUserInfo() {
               <div className="flex flex-col items-center justify-center space-y-2">
                 <ProfileUploader
                   size={250}
-                  defaultImg={process.env.NEXT_PUBLIC_BASE_URL + defaultImg}
+                  defaultImg={
+                    defaultImg
+                      ? process.env.NEXT_PUBLIC_BASE_URL + defaultImg
+                      : null
+                  }
                   file={value}
                   onChange={handleChangeFile}
                 />

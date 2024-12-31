@@ -25,13 +25,13 @@ const ProfileUploader = (props: Props) => {
         <label
           htmlFor="file-uploader"
           className={cn(
-            "flex items-center justify-center border-1 border-dashed border-sonic-silver",
+            `flex items-center justify-center rounded-1/2 border-1 border-dashed
+            border-sonic-silver`,
             "hover:cursor-pointer",
           )}
           style={{
             width: `${pxToRem(size)}rem`,
             height: `${pxToRem(size)}rem`,
-            borderRadius: "50%",
           }}
         >
           {file ? (
@@ -41,7 +41,7 @@ const ProfileUploader = (props: Props) => {
               className="h-full w-full rounded-1/2 object-contain"
             />
           ) : defaultImg ? (
-            <img src={defaultImg} className="rounded-1/2" />
+            <img src={defaultImg} alt="Profile image" className="rounded-1/2" />
           ) : (
             <span className="text-sonic-silver">프로필 이미지</span>
           )}
