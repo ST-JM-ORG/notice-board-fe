@@ -11,7 +11,7 @@ import useOutsideClick from "@hook/use-outside-click";
 import { logout } from "@redux/apis/auth-api";
 import { useAppDispatch, useAppSelector, useThunkDispatch } from "@redux/hook";
 import { resetAuth } from "@redux/modules/auth-slice";
-import { getProfileImg } from "@redux/modules/token-slice";
+import { saveToken } from "@redux/modules/token-slice";
 
 import { cn } from "@utils/classname";
 import { pxToRem } from "@utils/size";
@@ -29,11 +29,12 @@ export default function Header() {
 
   const menuRef = useOutsideClick<HTMLDivElement>(() => setOpen(false));
 
-  const { token, profileImg, username, logoutStatus } = useAppSelector(
+  const { token, profileImg, username, role, logoutStatus } = useAppSelector(
     (state) => ({
       token: state.token.token,
       profileImg: state.token.profileImg,
       username: state.token.username,
+      role: state.token.role,
       logoutStatus: state.auth.logout.status,
     }),
     shallowEqual,
@@ -73,7 +74,7 @@ export default function Header() {
   }, []);
 
   useEffect(() => {
-    appDispatch(getProfileImg(null));
+    appDispatch(saveToken(null));
   }, [token, appDispatch]);
 
   useEffect(() => {
@@ -164,6 +165,19 @@ export default function Header() {
                 >
                   내 정보
                 </button>
+                {role === "SUPER_ADMIN" && (
+                  <button
+                    type="button"
+                    className={cn(
+                      "mb-2 bg-white py-5 text-14",
+                      "transition-colors duration-100 ease-in-out",
+                      "hover:bg-gainsboro hover:bg-opacity-30",
+                    )}
+                    onClick={handleGoProfilePage}
+                  >
+                    관리자 관리
+                  </button>
+                )}
                 <button
                   type="button"
                   className={cn(

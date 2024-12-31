@@ -1,4 +1,8 @@
-import { createSlice, SliceCaseReducers, SliceSelectors } from "@reduxjs/toolkit";
+import {
+  createSlice,
+  SliceCaseReducers,
+  SliceSelectors,
+} from "@reduxjs/toolkit";
 
 import { ACCESS_TOKEN, REFRESH_TOKEN } from "@constants/const";
 import { Status } from "@constants/type";
@@ -8,35 +12,37 @@ import { reissueToken } from "@redux/apis/auth-api";
 import { getCookie, setCookie } from "@utils/cookie";
 import { decodeAccessToken } from "@utils/token";
 
-interface ReissueTokenState {
+interface TokenState {
   status: Status;
   message: string;
   error: string;
   token: string | null | undefined;
   profileImg: string | null | undefined;
   username: string;
+  role: string;
 }
 
-const initialState: ReissueTokenState = {
+const initialState: TokenState = {
   status: "idle",
   message: "",
   error: "",
   token: "",
   profileImg: null,
   username: "",
+  role: "USER",
 };
 
 const TokenSlice = createSlice<
-  ReissueTokenState,
-  SliceCaseReducers<ReissueTokenState>,
+  TokenState,
+  SliceCaseReducers<TokenState>,
   string,
-  SliceSelectors<ReissueTokenState>,
+  SliceSelectors<TokenState>,
   string
 >({
-  name: "reissueToken",
+  name: "token",
   initialState,
   reducers: {
-    getProfileImg: (state, action) => {
+    saveToken: (state, action) => {
       const token = getCookie(ACCESS_TOKEN);
       state.token = token;
 
@@ -46,6 +52,7 @@ const TokenSlice = createSlice<
         if (decodedToken) {
           state.profileImg = decodedToken.profileImg;
           state.username = decodedToken.name;
+          state.role = decodedToken.role;
         }
       }
     },
@@ -87,6 +94,6 @@ const TokenSlice = createSlice<
   },
 });
 
-export const { getProfileImg } = TokenSlice.actions;
+export const { saveToken } = TokenSlice.actions;
 
 export default TokenSlice;
