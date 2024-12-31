@@ -62,6 +62,11 @@ export default function Header() {
     router.push("/profile");
   };
 
+  const handleGoAdminPage = () => {
+    setOpen(false);
+    router.push("/admin");
+  };
+
   const handleLogout = () => {
     setOpen(false);
     dispatch(logout(null));
@@ -173,7 +178,7 @@ export default function Header() {
                       "transition-colors duration-100 ease-in-out",
                       "hover:bg-gainsboro hover:bg-opacity-30",
                     )}
-                    onClick={handleGoProfilePage}
+                    onClick={handleGoAdminPage}
                   >
                     관리자 관리
                   </button>
