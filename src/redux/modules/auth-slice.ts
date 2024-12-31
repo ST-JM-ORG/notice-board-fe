@@ -132,7 +132,7 @@ const AuthSlice = createSlice<
         state.login.status = "rejected";
 
         if (action.payload) {
-          state.login.error = action.payload.response.result.message;
+          state.login.error = action.payload.result.message;
         }
       });
 
@@ -178,9 +178,7 @@ const AuthSlice = createSlice<
       .addCase(signUp.rejected, (state, action) => {
         if (action.payload) {
           const {
-            response: {
-              result: { code, message },
-            },
+            result: { code, message },
           } = action.payload;
 
           if (["E001", "E003", "E008", "E110"].includes(code)) {
