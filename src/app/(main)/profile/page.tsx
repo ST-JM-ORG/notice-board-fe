@@ -1,9 +1,11 @@
 "use client";
 
 import React, { useState } from "react";
+import { AiTwotoneDelete } from "react-icons/ai";
 import { FaUser } from "react-icons/fa";
 import { RiLockPasswordLine } from "react-icons/ri";
 
+import DeleteUser from "@app/(main)/profile/delete-user";
 import UpdateUserInfo from "@app/(main)/profile/update-user-info";
 import UpdateUserPw from "@app/(main)/profile/update-user-pw";
 
@@ -24,6 +26,7 @@ export default function Page() {
         items={[
           { icon: <FaUser />, text: "프로필" },
           { icon: <RiLockPasswordLine />, text: "비밀번호 변경" },
+          { icon: <AiTwotoneDelete />, text: "회원탈퇴" },
         ]}
       />
 
@@ -33,6 +36,7 @@ export default function Page() {
       >
         {tabIndex === 0 && <UpdateUserInfo />}
         {tabIndex === 1 && <UpdateUserPw />}
+        {tabIndex === 2 && <DeleteUser />}
       </div>
     </div>
   );

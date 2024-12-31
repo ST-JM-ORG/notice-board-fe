@@ -30,7 +30,7 @@ export const signUp = createAsyncThunk<
         data: null,
         result: {
           status: 500,
-          code: "ERR500",
+          code: "E500",
           message: "서버에 에러가 발생했습니다. 잠시 후 다시 시도해주세요.",
         },
       });
@@ -113,7 +113,7 @@ export const logout = createAsyncThunk<
         data: null,
         result: {
           status: 500,
-          code: "ERR500",
+          code: "E500",
           message: "서버에 에러가 발생했습니다. 잠시 후 다시 시도해주세요.",
         },
       });
@@ -143,7 +143,7 @@ export const reissueToken = createAsyncThunk<
         data: null,
         result: {
           status: 500,
-          code: "ERR500",
+          code: "E500",
           message: "서버에 에러가 발생했습니다. 잠시 후 다시 시도해주세요.",
         },
       });

@@ -5,13 +5,21 @@ import {
   SliceSelectors,
 } from "@reduxjs/toolkit";
 
+import { ACCESS_TOKEN, REFRESH_TOKEN } from "@constants/const";
 import { ERROR_CODE, ERROR_MESSAGE, ErrorType } from "@constants/error-code";
 import { SUCCESS_CODE, SuccessType } from "@constants/success-code";
 import { Status } from "@constants/type";
 
 import { SingleUserType } from "@models/user-response";
 
-import { getUser, updatePw, updateUser } from "@redux/apis/user-api";
+import {
+  deleteUser,
+  getUser,
+  updatePw,
+  updateUser,
+} from "@redux/apis/user-api";
+
+import { removeCookie } from "@utils/cookie";
 
 interface UserState {
   getUser: {
@@ -30,6 +38,12 @@ interface UserState {
     type: SuccessType | ErrorType | "InternalServerError" | null;
   };
   changePw: {
+    status: Status;
+    message: string;
+    error: string;
+    code: string;
+  };
+  deleteUser: {
     status: Status;
     message: string;
     error: string;
@@ -54,6 +68,12 @@ const initialState: UserState = {
     type: null,
   },
   changePw: {
+    status: "idle",
+    message: "",
+    error: "",
+    code: "",
+  },
+  deleteUser: {
     status: "idle",
     message: "",
     error: "",
@@ -195,6 +215,37 @@ const UserSlice = createSlice<
           state.changePw.error =
             action.payload?.result.message || ERROR_MESSAGE["E500"];
         }
+      });
+
+    // 회원탈퇴
+    builder
+      .addCase(deleteUser.pending, (state, action) => {
+        state.deleteUser.status = "pending";
+        state.deleteUser.message = "";
+        state.deleteUser.error = "";
+        state.deleteUser.code = "";
+      })
+      .addCase(deleteUser.fulfilled, (state, action) => {
+        const {
+          payload: {
+            result: { code, message },
+          },
+        } = action;
+
+        state.deleteUser.status = "fulfilled";
+        state.deleteUser.message = message;
+        state.deleteUser.code = code;
+
+        removeCookie(ACCESS_TOKEN);
+        removeCookie(REFRESH_TOKEN);
+      })
+      .addCase(deleteUser.rejected, (state, action) => {
+        const { payload } = action;
+
+        state.deleteUser.status = "rejected";
+        state.deleteUser.error =
+          payload?.result.message || ERROR_MESSAGE["E500"];
+        state.deleteUser.code = payload?.result.code || "E500";
       });
   },
 });

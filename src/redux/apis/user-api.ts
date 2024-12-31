@@ -28,7 +28,7 @@ export const getUser = createAsyncThunk<
           data: null,
           result: {
             status: 500,
-            code: "ERR500",
+            code: "E500",
             message: "서버에 에러가 발생했습니다. 잠시 후 다시 시도해주세요.",
           },
         },
@@ -62,7 +62,7 @@ export const updateUser = createAsyncThunk<
           data: null,
           result: {
             status: 500,
-            code: "ERR500",
+            code: "E500",
             message: "서버에 에러가 발생했습니다. 잠시 후 다시 시도해주세요.",
           },
         },
@@ -90,7 +90,31 @@ export const updatePw = createAsyncThunk<
         data: null,
         result: {
           status: 500,
-          code: "ERR500",
+          code: "E500",
+          message: "서버에 에러가 발생했습니다. 잠시 후 다시 시도해주세요.",
+        },
+      });
+    }
+  }
+});
+
+export const deleteUser = createAsyncThunk<
+  ApiResponse<boolean>,
+  null,
+  { rejectValue: ApiResponse<null | undefined> }
+>("user/delete", async (_, thunkAPI) => {
+  try {
+    const response = await instance.delete("/user/me");
+    return response.data;
+  } catch (e) {
+    if (axios.isAxiosError(e) && e.response) {
+      return thunkAPI.rejectWithValue(e.response.data);
+    } else {
+      return thunkAPI.rejectWithValue({
+        data: null,
+        result: {
+          status: 500,
+          code: "E500",
           message: "서버에 에러가 발생했습니다. 잠시 후 다시 시도해주세요.",
         },
       });
