@@ -27,11 +27,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko">
-      <body className={`${pretendard.variable} font-pretendard antialiased`}>
+      <body
+        className={`${pretendard.variable} relative font-pretendard antialiased`}
+      >
         <ReduxProvider>
           <ToastProvider>{children}</ToastProvider>
         </ReduxProvider>
         <div id="noti"></div>
+        <div id="modal"></div>
       </body>
     </html>
   );
