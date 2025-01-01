@@ -1,4 +1,8 @@
+import { jwtDecode, JwtPayload } from "jwt-decode";
+
 import { NextRequest, NextResponse } from "next/server";
+
+import { ACCESS_TOKEN, REFRESH_TOKEN } from "@constants/const";
 
 /**
  * 미들웨어
@@ -9,7 +13,12 @@ import { NextRequest, NextResponse } from "next/server";
  */
 export const middleware = async (request: NextRequest) => {
   const { pathname } = request.nextUrl;
-  const token: string | undefined = request.cookies.get("token")?.value;
+  const token: string | undefined = request.cookies.get(ACCESS_TOKEN)?.value;
+  const refresh: string | undefined = request.cookies.get(REFRESH_TOKEN)?.value;
+
+  if (!token || !refresh) {
+    return NextResponse.redirect(new URL("/login", request.url));
+  }
 
   if (!token && !["/login", "/sign-up"].includes(pathname)) {
     return NextResponse.redirect(new URL("/login", request.url));
@@ -17,6 +26,13 @@ export const middleware = async (request: NextRequest) => {
 
   if (token && pathname === "/login") {
     return NextResponse.redirect(new URL("/", request.url));
+  }
+
+  const decodedToken = jwtDecode<JwtPayload>(refresh);
+  const currentTime = Date.now() / 1000;
+
+  if (decodedToken.exp && decodedToken.exp < currentTime) {
+    return NextResponse.redirect(new URL("/login", request.url));
   }
 
   return NextResponse.next();
