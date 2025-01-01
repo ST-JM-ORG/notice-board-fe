@@ -155,7 +155,7 @@ const AuthSlice = createSlice<
         removeCookie(REFRESH_TOKEN);
 
         if (action.payload) {
-          state.logout.error = action.payload.response?.result.message;
+          state.logout.error = action.payload?.result.message;
         }
       });
 
@@ -223,9 +223,7 @@ const AuthSlice = createSlice<
         state.emailDupCheck.status = "rejected";
         if (action.payload) {
           const {
-            response: {
-              result: { code, message },
-            },
+            result: { code, message },
           } = action.payload;
           if (code === "E110") {
             state.emailDupCheck.type = ERROR_CODE[code];

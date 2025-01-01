@@ -5,6 +5,7 @@ import {
 } from "@reduxjs/toolkit";
 
 import { ACCESS_TOKEN, REFRESH_TOKEN } from "@constants/const";
+import { ERROR_MESSAGE } from "@constants/error-code";
 import { Status } from "@constants/type";
 
 import { reissueToken } from "@redux/apis/auth-api";
@@ -80,16 +81,10 @@ const TokenSlice = createSlice<
         }
       })
       .addCase(reissueToken.rejected, (state, action) => {
-        state.status = "rejected";
+        const { payload } = action;
 
-        if (action.payload) {
-          const {
-            response: {
-              result: { message },
-            },
-          } = action.payload;
-          state.error = message;
-        }
+        state.status = "rejected";
+        state.error = payload?.result.message || ERROR_MESSAGE["E500"];
       });
   },
 });
