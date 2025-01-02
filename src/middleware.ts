@@ -17,6 +17,9 @@ export const middleware = async (request: NextRequest) => {
   const refresh: string | undefined = request.cookies.get(REFRESH_TOKEN)?.value;
 
   if (!token || !refresh) {
+    if (pathname === "/login") {
+      return NextResponse.next();
+    }
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
@@ -32,6 +35,9 @@ export const middleware = async (request: NextRequest) => {
   const currentTime = Date.now() / 1000;
 
   if (decodedToken.exp && decodedToken.exp < currentTime) {
+    if (pathname === "login") {
+      return NextResponse.next();
+    }
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
