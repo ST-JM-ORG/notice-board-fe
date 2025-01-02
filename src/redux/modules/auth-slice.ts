@@ -1,22 +1,14 @@
-import {
-  createSlice,
-  PayloadAction,
-  SliceCaseReducers,
-  SliceSelectors,
-} from "@reduxjs/toolkit";
+import { createSlice, PayloadAction, SliceCaseReducers, SliceSelectors } from "@reduxjs/toolkit";
 
 import { ACCESS_TOKEN, REFRESH_TOKEN } from "@constants/const";
-import {
-  ERROR_CODE,
-  ErrorType,
-  Status,
-  SUCCESS_CODE,
-  SuccessType,
-} from "@constants/type";
+import { ERROR_MESSAGE } from "@constants/error-code";
+import { Status } from "@constants/type";
 
 import { emailDupCheck, login, logout, signUp } from "@redux/apis/auth-api";
 
 import { removeCookie, setCookie } from "@utils/cookie";
+
+type ResetProps = "login" | "signUp" | "emailDupCheck" | "logout";
 
 interface AuthState {
   login: {
@@ -33,13 +25,15 @@ interface AuthState {
     status: Status;
     message: string;
     error: string;
-    type: SuccessType | ErrorType | "InternalServerError" | null;
+    errorTarget: string | null;
+    code: string;
   };
   emailDupCheck: {
     status: Status;
     message: string;
     error: string;
-    type: SuccessType | ErrorType | "InternalServerError" | null;
+    errorTarget: string | null;
+    code: string;
   };
 }
 
@@ -58,13 +52,15 @@ const initialState: AuthState = {
     status: "idle",
     message: "",
     error: "",
-    type: null,
+    errorTarget: null,
+    code: "",
   },
   emailDupCheck: {
     status: "idle",
     message: "",
     error: "",
-    type: null,
+    errorTarget: null,
+    code: "",
   },
 };
 
@@ -78,11 +74,8 @@ const AuthSlice = createSlice<
   name: "auth",
   initialState,
   reducers: {
-    resetAuth: (
-      state,
-      action: PayloadAction<"login" | "signUp" | "emailDupCheck" | "logout">,
-    ) => {
-      switch (action.payload) {
+    resetAuth: (state, { payload }: PayloadAction<ResetProps>) => {
+      switch (payload) {
         case "login":
           state.login.status = "idle";
           state.login.message = "";
@@ -97,140 +90,135 @@ const AuthSlice = createSlice<
           state.signUp.status = "idle";
           state.signUp.message = "";
           state.signUp.error = "";
-          state.signUp.type = null;
+          state.signUp.code = "";
           state.emailDupCheck.status = "idle";
           state.emailDupCheck.message = "";
           state.emailDupCheck.error = "";
-          state.emailDupCheck.type = null;
+          state.emailDupCheck.code = "";
       }
     },
   },
   extraReducers: (builder) => {
     // 로그인
     builder
-      .addCase(login.pending, (state, action) => {
+      .addCase(login.pending, (state, _) => {
         state.login.status = "pending";
         state.login.message = "로그인중입니다";
         state.login.error = "";
       })
-      .addCase(login.fulfilled, (state, action) => {
+      .addCase(login.fulfilled, (state, { payload }) => {
         const {
-          payload: {
-            data,
-            result: { message },
-          },
-        } = action;
+          data,
+          result: { message },
+        } = payload;
 
         state.login.status = "fulfilled";
         state.login.message = message;
+
         if (data) {
           setCookie(ACCESS_TOKEN, data.accessToken);
           setCookie(REFRESH_TOKEN, data.refreshToken);
         }
       })
-      .addCase(login.rejected, (state, action) => {
+      .addCase(login.rejected, (state, { payload }) => {
         state.login.status = "rejected";
-
-        if (action.payload) {
-          state.login.error = action.payload.result.message;
-        }
+        state.login.error = payload?.result.message || ERROR_MESSAGE["E500"];
       });
 
     // 로그아웃
     builder
-      .addCase(logout.pending, (state, action) => {
+      .addCase(logout.pending, (state, _) => {
         state.logout.status = "pending";
         state.logout.message = "";
         state.logout.error = "";
       })
-      .addCase(logout.fulfilled, (state, action) => {
+      .addCase(logout.fulfilled, (state, { payload }) => {
         state.logout.status = "fulfilled";
-        state.logout.message = action.payload.result.message;
+        state.logout.message = payload.result.message;
         removeCookie(ACCESS_TOKEN);
         removeCookie(REFRESH_TOKEN);
       })
-      .addCase(logout.rejected, (state, action) => {
+      .addCase(logout.rejected, (state, { payload }) => {
         state.logout.status = "rejected";
         removeCookie(ACCESS_TOKEN);
         removeCookie(REFRESH_TOKEN);
 
-        if (action.payload) {
-          state.logout.error = action.payload?.result.message;
+        if (payload) {
+          state.logout.error = payload?.result.message;
         }
       });
 
     // 회원가입
     builder
-      .addCase(signUp.pending, (state, action) => {
+      .addCase(signUp.pending, (state, _) => {
         state.signUp.status = "pending";
+        state.signUp.message = "";
+        state.signUp.error = "";
+        state.signUp.errorTarget = null;
+        state.signUp.code = "";
       })
-      .addCase(signUp.fulfilled, (state, action) => {
+      .addCase(signUp.fulfilled, (state, { payload }) => {
         const {
-          payload: {
-            result: { code },
-          },
-        } = action;
+          result: { code },
+        } = payload;
 
         state.signUp.status = "fulfilled";
-        state.signUp.type = SUCCESS_CODE[code];
+        state.signUp.code = code;
         state.signUp.message = "회원가입되었습니다";
       })
-      .addCase(signUp.rejected, (state, action) => {
-        if (action.payload) {
-          const {
-            result: { code, message },
-          } = action.payload;
+      .addCase(signUp.rejected, (state, { payload }) => {
+        state.signUp.status = "rejected";
+        state.signUp.error = payload?.result.message || ERROR_MESSAGE["E500"];
 
-          if (["E001", "E003", "E008", "E110"].includes(code)) {
-            state.signUp.type = ERROR_CODE[code];
-          } else {
-            state.signUp.type = "InternalServerError";
+        if (payload) {
+          const {
+            result: { code },
+          } = payload;
+
+          switch (code) {
+            case "E003":
+              // 이미지 업로드 오류
+              state.signUp.errorTarget = "image";
+              break;
+            case "E008":
+              // 비밀번호 오류
+              state.signUp.errorTarget = "password";
+              break;
+            case "E110":
+              // 이메일 오류 (이미 사용중인 이메일 등...)
+              state.signUp.errorTarget = "email";
+              break;
+            default:
+              break;
           }
-          state.signUp.status = "rejected";
-          state.signUp.error = message;
         }
       });
 
     // 이메일 중복체크
     builder
-      .addCase(emailDupCheck.pending, (state, action) => {
+      .addCase(emailDupCheck.pending, (state, _) => {
         state.emailDupCheck.status = "pending";
+        state.emailDupCheck.message = "";
+        state.emailDupCheck.error = "";
+        state.emailDupCheck.errorTarget = "";
+        state.emailDupCheck.code = "";
       })
-      .addCase(emailDupCheck.fulfilled, (state, action) => {
+      .addCase(emailDupCheck.fulfilled, (state, { payload }) => {
         const {
-          payload: {
-            result: { status, code, message },
-          },
-        } = action;
+          result: { code, message },
+        } = payload;
 
-        if (status === 200) {
-          state.emailDupCheck.status = "fulfilled";
-          state.emailDupCheck.type = SUCCESS_CODE[code];
-          state.emailDupCheck.message = message;
-        } else if (status === 500) {
-          if (code === "E110") {
-            state.emailDupCheck.status = "rejected";
-            state.emailDupCheck.type = ERROR_CODE[code];
-            state.emailDupCheck.error = message;
-          } else {
-            state.emailDupCheck.status = "rejected";
-            state.emailDupCheck.type = ERROR_CODE[code];
-            state.emailDupCheck.error = message;
-          }
-        }
+        state.emailDupCheck.status = "fulfilled";
+        state.emailDupCheck.message = message;
+        state.emailDupCheck.code = code;
       })
-      .addCase(emailDupCheck.rejected, (state, action) => {
+      .addCase(emailDupCheck.rejected, (state, { payload }) => {
         state.emailDupCheck.status = "rejected";
-        if (action.payload) {
-          const {
-            result: { code, message },
-          } = action.payload;
-          if (code === "E110") {
-            state.emailDupCheck.type = ERROR_CODE[code];
-          } else {
-            state.emailDupCheck.type = "InternalServerError";
-          }
-          state.emailDupCheck.error = message;
+        state.emailDupCheck.error =
+          payload?.result.message || ERROR_MESSAGE["E500"];
+
+        if (payload) {
+          state.emailDupCheck.errorTarget = payload.result.target;
         }
       });
   },

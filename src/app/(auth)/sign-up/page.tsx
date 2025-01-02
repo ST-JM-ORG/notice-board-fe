@@ -67,23 +67,23 @@ const Page = () => {
   // 회원가입
   const {
     signUpStatus,
-    signUpType,
     signUpMsg,
     signUpError,
+    signUpTarget,
     emailDupCheckStatus,
-    emailDupCheckType,
     emailDupCheckMsg,
     emailDupCheckError,
+    emailDupCheckTarget,
   } = useAppSelector(
     (state) => ({
       signUpStatus: state.auth.signUp.status,
-      signUpType: state.auth.signUp.type,
       signUpMsg: state.auth.signUp.message,
       signUpError: state.auth.signUp.error,
+      signUpTarget: state.auth.signUp.errorTarget,
       emailDupCheckStatus: state.auth.emailDupCheck.status,
-      emailDupCheckType: state.auth.emailDupCheck.type,
       emailDupCheckMsg: state.auth.emailDupCheck.message,
       emailDupCheckError: state.auth.emailDupCheck.error,
+      emailDupCheckTarget: state.auth.emailDupCheck.errorTarget,
     }),
     shallowEqual,
   );
@@ -160,12 +160,12 @@ const Page = () => {
         message: emailDupCheckMsg,
       });
     } else if (emailDupCheckStatus === "rejected") {
-      if (emailDupCheckType === "AlreadyUsedEmail") {
+      if (emailDupCheckTarget === "email") {
         setError("email", { message: emailDupCheckError });
       } else {
         toast.error({
           heading: "Error",
-          message: emailDupCheckMsg,
+          message: emailDupCheckError,
         });
       }
     }
@@ -176,13 +176,15 @@ const Page = () => {
       toast.success({ heading: "Success", message: signUpMsg });
       router.push("/login");
     } else if (signUpStatus === "rejected") {
-      if (signUpType === "InvalidValue") {
+      if (signUpTarget === "password") {
         setError("pw", { message: signUpError });
         setError("pwConfirm", { message: signUpError });
-      } else if (signUpType === "AlreadyUsedEmail") {
+      } else if (signUpTarget === "email") {
         setError("email", { message: signUpError });
-      } else if (signUpType === "ImageUploadError") {
+      } else if (signUpTarget === "image") {
         setError("file", { message: signUpError });
+      } else {
+        toast.error({ heading: "Error", message: signUpError });
       }
     }
   }, [signUpStatus]);
