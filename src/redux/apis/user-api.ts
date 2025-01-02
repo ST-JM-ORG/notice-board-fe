@@ -1,6 +1,8 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
+import { ERROR_RESPONSE } from "@constants/const";
+
 import { ApiResponse } from "@models/api-response";
 import { SingleUserType } from "@models/user-response";
 
@@ -9,7 +11,7 @@ import instance from "@utils/instance";
 export const getUser = createAsyncThunk<
   ApiResponse<SingleUserType>,
   null,
-  { rejectValue: ApiResponse<null | undefined> }
+  { rejectValue: ApiResponse }
 >("user/me", async (_, thunkAPI) => {
   try {
     const response = await instance.get("/user/me");
@@ -18,14 +20,7 @@ export const getUser = createAsyncThunk<
     if (axios.isAxiosError(e) && e.response) {
       return thunkAPI.rejectWithValue(e.response.data);
     } else {
-      return thunkAPI.rejectWithValue({
-        data: null,
-        result: {
-          status: 500,
-          code: "E500",
-          message: "서버에 에러가 발생했습니다. 잠시 후 다시 시도해주세요.",
-        },
-      });
+      return thunkAPI.rejectWithValue(ERROR_RESPONSE);
     }
   }
 });
@@ -33,7 +28,7 @@ export const getUser = createAsyncThunk<
 export const updateUser = createAsyncThunk<
   ApiResponse<boolean>,
   { formData: FormData },
-  { rejectValue: ApiResponse<null | undefined> }
+  { rejectValue: ApiResponse }
 >("user/update", async ({ formData }, thunkAPI) => {
   try {
     const response = await instance.put("/user/me", formData, {
@@ -46,14 +41,7 @@ export const updateUser = createAsyncThunk<
     if (axios.isAxiosError(e) && e.response) {
       return thunkAPI.rejectWithValue(e.response.data);
     } else {
-      return thunkAPI.rejectWithValue({
-        data: null,
-        result: {
-          status: 500,
-          code: "E500",
-          message: "서버에 에러가 발생했습니다. 잠시 후 다시 시도해주세요.",
-        },
-      });
+      return thunkAPI.rejectWithValue(ERROR_RESPONSE);
     }
   }
 });
@@ -61,7 +49,7 @@ export const updateUser = createAsyncThunk<
 export const updatePw = createAsyncThunk<
   ApiResponse<boolean>,
   { currPw: string; newPw: string },
-  { rejectValue: ApiResponse<null | undefined> }
+  { rejectValue: ApiResponse }
 >("user/changePw", async ({ currPw, newPw }, thunkAPI) => {
   try {
     const response = await instance.put("/user/me/password", {
@@ -73,14 +61,7 @@ export const updatePw = createAsyncThunk<
     if (axios.isAxiosError(e) && e.response) {
       return thunkAPI.rejectWithValue(e.response.data);
     } else {
-      return thunkAPI.rejectWithValue({
-        data: null,
-        result: {
-          status: 500,
-          code: "E500",
-          message: "서버에 에러가 발생했습니다. 잠시 후 다시 시도해주세요.",
-        },
-      });
+      return thunkAPI.rejectWithValue(ERROR_RESPONSE);
     }
   }
 });
@@ -88,7 +69,7 @@ export const updatePw = createAsyncThunk<
 export const deleteUser = createAsyncThunk<
   ApiResponse<boolean>,
   null,
-  { rejectValue: ApiResponse<null | undefined> }
+  { rejectValue: ApiResponse }
 >("user/delete", async (_, thunkAPI) => {
   try {
     const response = await instance.delete("/user/me");
@@ -97,14 +78,7 @@ export const deleteUser = createAsyncThunk<
     if (axios.isAxiosError(e) && e.response) {
       return thunkAPI.rejectWithValue(e.response.data);
     } else {
-      return thunkAPI.rejectWithValue({
-        data: null,
-        result: {
-          status: 500,
-          code: "E500",
-          message: "서버에 에러가 발생했습니다. 잠시 후 다시 시도해주세요.",
-        },
-      });
+      return thunkAPI.rejectWithValue(ERROR_RESPONSE);
     }
   }
 });

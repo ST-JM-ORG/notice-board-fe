@@ -1,7 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
-import { REFRESH_TOKEN } from "@constants/const";
+import { ERROR_RESPONSE, REFRESH_TOKEN } from "@constants/const";
 
 import { ApiResponse } from "@models/api-response";
 
@@ -9,9 +9,9 @@ import { getCookie } from "@utils/cookie";
 import instance from "@utils/instance";
 
 export const signUp = createAsyncThunk<
-  ApiResponse<null>,
+  ApiResponse<boolean>,
   { formData: FormData },
-  { rejectValue: ApiResponse<null> }
+  { rejectValue: ApiResponse }
 >("auth/signUp", async (data, thunkAPI) => {
   const { formData } = data;
 
@@ -26,14 +26,7 @@ export const signUp = createAsyncThunk<
     if (axios.isAxiosError(e) && e.response) {
       return thunkAPI.rejectWithValue(e.response.data);
     } else {
-      return thunkAPI.rejectWithValue({
-        data: null,
-        result: {
-          status: 500,
-          code: "E500",
-          message: "서버에 에러가 발생했습니다. 잠시 후 다시 시도해주세요.",
-        },
-      });
+      return thunkAPI.rejectWithValue(ERROR_RESPONSE);
     }
   }
 });
@@ -41,7 +34,7 @@ export const signUp = createAsyncThunk<
 export const emailDupCheck = createAsyncThunk<
   ApiResponse<null>,
   { email: string },
-  { rejectValue: ApiResponse<null> }
+  { rejectValue: ApiResponse }
 >("auth/emailDupCheck", async (data, thunkAPI) => {
   const { email } = data;
 
@@ -52,14 +45,7 @@ export const emailDupCheck = createAsyncThunk<
     if (axios.isAxiosError(e) && e.response) {
       return thunkAPI.rejectWithValue(e.response.data);
     } else {
-      return thunkAPI.rejectWithValue({
-        data: null,
-        result: {
-          status: 500,
-          code: "E500",
-          message: "서버에 에러가 발생했습니다. 잠시 후 다시 시도해주세요.",
-        },
-      });
+      return thunkAPI.rejectWithValue(ERROR_RESPONSE);
     }
   }
 });
@@ -67,7 +53,7 @@ export const emailDupCheck = createAsyncThunk<
 export const login = createAsyncThunk<
   ApiResponse<{ accessToken: string; refreshToken: string }>,
   { email: string; pw: string },
-  { rejectValue: ApiResponse<null> }
+  { rejectValue: ApiResponse }
 >("auth/login", async ({ email, pw }, thunkAPI) => {
   try {
     const response = await instance.post("/auth/login", {
@@ -79,14 +65,7 @@ export const login = createAsyncThunk<
     if (axios.isAxiosError(e) && e.response) {
       return thunkAPI.rejectWithValue(e.response.data);
     } else {
-      return thunkAPI.rejectWithValue({
-        data: null,
-        result: {
-          status: 500,
-          code: "E500",
-          message: "서버에 에러가 발생했습니다. 잠시 후 다시 시도해주세요.",
-        },
-      });
+      return thunkAPI.rejectWithValue(ERROR_RESPONSE);
     }
   }
 });
@@ -94,7 +73,7 @@ export const login = createAsyncThunk<
 export const logout = createAsyncThunk<
   ApiResponse<boolean | null | undefined>,
   null,
-  { rejectValue: ApiResponse<boolean | null | undefined> }
+  { rejectValue: ApiResponse }
 >("auth/logout", async (_, thunkAPI) => {
   const refreshToken = getCookie(REFRESH_TOKEN);
 
@@ -109,14 +88,7 @@ export const logout = createAsyncThunk<
     if (axios.isAxiosError(e) && e.response) {
       return thunkAPI.rejectWithValue(e.response.data);
     } else {
-      return thunkAPI.rejectWithValue({
-        data: null,
-        result: {
-          status: 500,
-          code: "E500",
-          message: "서버에 에러가 발생했습니다. 잠시 후 다시 시도해주세요.",
-        },
-      });
+      return thunkAPI.rejectWithValue(ERROR_RESPONSE);
     }
   }
 });
@@ -124,7 +96,7 @@ export const logout = createAsyncThunk<
 export const reissueToken = createAsyncThunk<
   ApiResponse<{ accessToken: string; refreshToken: string }>,
   null,
-  { rejectValue: ApiResponse<null> }
+  { rejectValue: ApiResponse }
 >("auth/reissueToken", async (_, thunkAPI) => {
   const refreshToken = getCookie(REFRESH_TOKEN);
 
@@ -139,14 +111,7 @@ export const reissueToken = createAsyncThunk<
     if (axios.isAxiosError(e) && e.response) {
       return thunkAPI.rejectWithValue(e.response.data);
     } else {
-      return thunkAPI.rejectWithValue({
-        data: null,
-        result: {
-          status: 500,
-          code: "E500",
-          message: "서버에 에러가 발생했습니다. 잠시 후 다시 시도해주세요.",
-        },
-      });
+      return thunkAPI.rejectWithValue(ERROR_RESPONSE);
     }
   }
 });
