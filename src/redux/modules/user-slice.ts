@@ -173,6 +173,14 @@ const UserSlice = createSlice<
       })
       .addCase(updateUser.rejected, (state, action) => {
         state.updateUser.status = "rejected";
+
+        if (action.payload?.result) {
+          const { message } = action.payload.result;
+          state.updateUser.error = message;
+        } else {
+          state.updateUser.error =
+            action.payload?.result.message || ERROR_MESSAGE["E500"];
+        }
       });
 
     // 비밀번호 수정
