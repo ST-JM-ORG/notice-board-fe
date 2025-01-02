@@ -13,3 +13,10 @@ export const createUrlQueryStr = (params: CreateUrlQueryStr[]): string =>
   params.length
     ? `?${params.map(({ paramKey, paramValue }) => createQueryParam(paramKey, paramValue)).join("&")}`
     : "";
+
+export const createRowNum = (
+  pageSize: number,
+  pageNo: number,
+  totalCount: number,
+  index: number,
+) => totalCount - (pageNo - 1) * pageSize - index;

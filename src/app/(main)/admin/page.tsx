@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { IoPerson } from "react-icons/io5";
+import { shallowEqual } from "react-redux";
 
 import DataTable from "@components/data-table";
 import DataTableCell from "@components/data-table-cell";
@@ -11,19 +12,26 @@ import { getAdminUserList } from "@redux/apis/admin-api";
 import { useAppDispatch, useAppSelector, useThunkDispatch } from "@redux/hook";
 import { resetAdmin } from "@redux/modules/admin-slice";
 
+import { createRowNum } from "@utils/query";
+
 export default function Page() {
   const appDispatch = useAppDispatch();
   const dispatch = useThunkDispatch();
 
-  const { adminUser } = useAppSelector((state) => ({
-    adminUser: state.admin.getAdminUser.adminUser,
-  }));
+  const { adminUser, totalCount, pageNo } = useAppSelector(
+    (state) => ({
+      adminUser: state.admin.getAdminUser.adminUser,
+      totalCount: state.admin.getAdminUser.totalCount,
+      pageNo: state.admin.getAdminUser.pageNo,
+    }),
+    shallowEqual,
+  );
 
-  const [pageNo, setPageNo] = useState<number>(1);
+  const [page, setPage] = useState<number>(1);
 
   useEffect(() => {
-    dispatch(getAdminUserList({ pageNo }));
-  }, [dispatch, pageNo]);
+    dispatch(getAdminUserList({ pageNo: page }));
+  }, [dispatch, page]);
 
   useEffect(() => {
     return () => {
@@ -47,12 +55,13 @@ export default function Page() {
       >
         {adminUser &&
           adminUser.map(
-            ({ id, email, name, contact, profileImg, adminYn }, index) => (
+            ({ email, name, contact, profileImg, adminYn }, index) => (
               <DataTableRow key={index}>
-                <DataTableCell>{id}</DataTableCell>
+                <DataTableCell>
+                  {createRowNum(10, page, totalCount, index)}
+                </DataTableCell>
                 <DataTableCell className="flex items-center justify-center">
                   {profileImg ? (
-                    // eslint-disable-next-line @next/next/no-img-element
                     <img
                       alt="Profile Image"
                       src={process.env.NEXT_PUBLIC_BASE_URL + profileImg}

@@ -11,7 +11,11 @@ export default function DataTableRow(props: Props) {
 
   return (
     <tr
-      className={cn("border-b-1 border-b-silver-sand text-center", className)}
+      className={cn(
+        "border-b-1 border-b-silver-sand text-center",
+        "hover:cursor-pointer hover:bg-blue-50",
+        className,
+      )}
     >
       {children}
     </tr>
