@@ -7,6 +7,7 @@ import { shallowEqual } from "react-redux";
 import DataTable from "@components/data-table";
 import DataTableCell from "@components/data-table-cell";
 import DataTableRow from "@components/data-table-row";
+import Pagination from "@components/pagination";
 
 import { getAdminUserList } from "@redux/apis/admin-api";
 import { useAppDispatch, useAppSelector, useThunkDispatch } from "@redux/hook";
@@ -18,20 +19,19 @@ export default function Page() {
   const appDispatch = useAppDispatch();
   const dispatch = useThunkDispatch();
 
-  const { adminUser, totalCount, pageNo } = useAppSelector(
+  const { adminUser, totalCount } = useAppSelector(
     (state) => ({
       adminUser: state.admin.getAdminUser.adminUser,
       totalCount: state.admin.getAdminUser.totalCount,
-      pageNo: state.admin.getAdminUser.pageNo,
     }),
     shallowEqual,
   );
 
-  const [page, setPage] = useState<number>(1);
+  const [pageNo, setPageNo] = useState<number>(1);
 
   useEffect(() => {
-    dispatch(getAdminUserList({ pageNo: page }));
-  }, [dispatch, page]);
+    dispatch(getAdminUserList({ pageNo }));
+  }, [dispatch, pageNo]);
 
   useEffect(() => {
     return () => {
@@ -58,7 +58,7 @@ export default function Page() {
             ({ email, name, contact, profileImg, adminYn }, index) => (
               <DataTableRow key={index}>
                 <DataTableCell>
-                  {createRowNum(10, page, totalCount, index)}
+                  {createRowNum(10, pageNo, totalCount, index)}
                 </DataTableCell>
                 <DataTableCell className="flex items-center justify-center">
                   {profileImg ? (
@@ -81,6 +81,12 @@ export default function Page() {
             ),
           )}
       </DataTable>
+      <Pagination
+        pageNo={pageNo}
+        pageSize={10}
+        totalCount={totalCount}
+        className="mt-10"
+      />
     </>
   );
 }
