@@ -13,32 +13,33 @@ import { ACCESS_TOKEN, REFRESH_TOKEN } from "@constants/const";
  */
 export const middleware = async (request: NextRequest) => {
   const { pathname } = request.nextUrl;
-  const token: string | undefined = request.cookies.get(ACCESS_TOKEN)?.value;
-  const refresh: string | undefined = request.cookies.get(REFRESH_TOKEN)?.value;
+  const accessToken = request.cookies.get(ACCESS_TOKEN)?.value;
+  const refreshToken = request.cookies.get(REFRESH_TOKEN)?.value;
 
-  if (!token || !refresh) {
-    if (pathname === "/login") {
-      return NextResponse.next();
-    }
+  if (
+    (!accessToken && !["/login", "/sign-up"].includes(pathname)) ||
+    (!refreshToken && !["/login", "/sign-up"].includes(pathname))
+  ) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
-  if (!token && !["/login", "/sign-up"].includes(pathname)) {
-    return NextResponse.redirect(new URL("/login", request.url));
-  }
-
-  if (token && pathname === "/login") {
+  if (
+    (accessToken && pathname === "/login") ||
+    (refreshToken && pathname === "/login")
+  ) {
     return NextResponse.redirect(new URL("/", request.url));
   }
 
-  const decodedToken = jwtDecode<JwtPayload>(refresh);
-  const currentTime = Date.now() / 1000;
+  if (refreshToken) {
+    const decodedToken = jwtDecode<JwtPayload>(refreshToken);
+    const currentTime = Date.now() / 1000;
 
-  if (decodedToken.exp && decodedToken.exp < currentTime) {
-    if (pathname === "login") {
-      return NextResponse.next();
+    if (decodedToken.exp && decodedToken.exp < currentTime) {
+      if (pathname === "login") {
+        return NextResponse.next();
+      }
+      return NextResponse.redirect(new URL("/login", request.url));
     }
-    return NextResponse.redirect(new URL("/login", request.url));
   }
 
   return NextResponse.next();
