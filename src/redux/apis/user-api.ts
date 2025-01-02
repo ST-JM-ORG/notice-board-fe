@@ -10,27 +10,21 @@ import instance from "@utils/instance";
 export const getUser = createAsyncThunk<
   ApiResponse<SingleUserType>,
   null,
-  { rejectValue: AxiosErrorType }
->("user/me", async (data, thunkAPI) => {
+  { rejectValue: ApiResponse<null> }
+>("user/me", async (_, thunkAPI) => {
   try {
     const response = await instance.get("/user/me");
     return response.data;
   } catch (e) {
     if (axios.isAxiosError(e) && e.response) {
-      return thunkAPI.rejectWithValue({
-        status: e.status ? e.status : 500,
-        response: e.response.data,
-      });
+      return thunkAPI.rejectWithValue(e.response.data);
     } else {
       return thunkAPI.rejectWithValue({
-        status: 500,
-        response: {
-          data: null,
-          result: {
-            status: 500,
-            code: "E500",
-            message: "서버에 에러가 발생했습니다. 잠시 후 다시 시도해주세요.",
-          },
+        data: null,
+        result: {
+          status: 500,
+          code: "E500",
+          message: "서버에 에러가 발생했습니다. 잠시 후 다시 시도해주세요.",
         },
       });
     }
