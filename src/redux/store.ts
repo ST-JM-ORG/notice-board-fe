@@ -1,12 +1,8 @@
-import {
-  Action,
-  configureStore,
-  ReducerType,
-  ThunkDispatch,
-} from "@reduxjs/toolkit";
+import { Action, configureStore, ReducerType, ThunkDispatch } from "@reduxjs/toolkit";
 import { combineReducers } from "redux";
 import logger from "redux-logger";
 
+import AdminSlice from "@redux/modules/admin-slice";
 import AuthSlice from "@redux/modules/auth-slice";
 import TokenSlice from "@redux/modules/token-slice";
 import UserSlice from "@redux/modules/user-slice";
@@ -15,6 +11,7 @@ const reducer = combineReducers({
   token: TokenSlice.reducer,
   auth: AuthSlice.reducer,
   user: UserSlice.reducer,
+  admin: AdminSlice.reducer,
 });
 
 const store = configureStore({
