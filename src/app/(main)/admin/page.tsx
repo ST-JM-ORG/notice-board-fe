@@ -1,10 +1,10 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import { IoPerson } from "react-icons/io5";
 import { shallowEqual } from "react-redux";
 
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 import DataTable from "@/components/data-table";
 import DataTableCell from "@/components/data-table-cell";
@@ -17,11 +17,18 @@ import { resetAdmin } from "@/redux/modules/admin-slice";
 
 import { createRowNum } from "@/utils/query";
 
-export default function Page() {
+interface Props {
+  searchParams: Promise<{ p: string | undefined }>;
+}
+
+export default function Page(props: Props) {
+  const { searchParams } = props;
+
+  const { p } = use(searchParams);
+
   const router = useRouter();
   const dispatch = useThunkDispatch();
   const appDispatch = useAppDispatch();
-  const searchParams = useSearchParams();
 
   const { adminUser, totalCount, totalPageCount } = useAppSelector(
     (state) => ({
@@ -34,15 +41,17 @@ export default function Page() {
 
   const [pageNo, setPageNo] = useState<number>(1);
 
+  const handleAdminUserDetail = (id: number) => {
+    router.push(`/admin/${id}`);
+  };
+
   const handlePaging = (value: number) => {
     router.push(`/admin?p=${value}`);
   };
 
   useEffect(() => {
-    const pageNoQuery = searchParams.get("p");
-    const p = pageNoQuery ? Number(pageNoQuery) : 1;
-    setPageNo(p);
-  }, [searchParams]);
+    setPageNo(p ? Number(p) : 1);
+  }, [p]);
 
   useEffect(() => {
     dispatch(getAdminUserList({ pageNo }));
@@ -70,8 +79,11 @@ export default function Page() {
       >
         {adminUser &&
           adminUser.map(
-            ({ email, name, contact, profileImg, adminYn }, index) => (
-              <DataTableRow key={index}>
+            ({ id, email, name, contact, profileImg, adminYn }, index) => (
+              <DataTableRow
+                key={index}
+                onClick={() => handleAdminUserDetail(id)}
+              >
                 <DataTableCell>
                   {createRowNum(10, pageNo, totalCount, index)}
                 </DataTableCell>

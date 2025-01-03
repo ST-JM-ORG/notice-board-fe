@@ -4,10 +4,11 @@ import { cn } from "@/utils/classname";
 
 interface Props extends PropsWithChildren {
   className?: string;
+  onClick?: () => void;
 }
 
 export default function DataTableRow(props: Props) {
-  const { className, children } = props;
+  const { className, onClick, children } = props;
 
   return (
     <tr
@@ -16,6 +17,7 @@ export default function DataTableRow(props: Props) {
         "hover:cursor-pointer hover:bg-blue-50",
         className,
       )}
+      onClick={onClick}
     >
       {children}
     </tr>
