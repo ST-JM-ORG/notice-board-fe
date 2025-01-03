@@ -1,6 +1,6 @@
 import React, { ChangeEvent, FocusEvent } from "react";
 
-import { cn } from "@utils/classname";
+import { cn } from "@/utils/classname";
 
 interface Props {
   id?: string;
@@ -44,15 +44,14 @@ const Input = (props: Props) => {
             pb-8 pt-20 transition-colors duration-200 ease-in-out`,
             "focus:border-azure focus:border-1 focus:outline-none",
             "dark:bg-sonic-silver dark:text-white",
-            disabled ? "text-silver-sand": "text-black"
+            disabled ? "text-silver-sand" : "text-black",
           )}
         />
         <label
           htmlFor="input"
           className={cn(
             `pointer-events-none absolute bottom-0 left-10 top-0 flex items-center text-15
-            text-sonic-silver`,
-            "transition-all duration-200 ease-in-out",
+            text-sonic-silver transition-all duration-200 ease-in-out`,
             `peer-focus:text-azure peer-focus:-translate-y-20p peer-focus:text-12
             peer-[:not(input[value=''])]:-translate-y-20p
             peer-[:not(input[value=''])]:text-12`,
@@ -60,7 +59,7 @@ const Input = (props: Props) => {
         >
           <div
             className={cn(
-              "text-sonic-silver bg-transparent px-5",
+              "bg-transparent px-5 text-sonic-silver",
               "dark:text-anti-flash-white",
             )}
           >

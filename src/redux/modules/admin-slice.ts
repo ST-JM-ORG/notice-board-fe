@@ -1,11 +1,11 @@
 import { createSlice, PayloadAction, SliceCaseReducers, SliceSelectors } from "@reduxjs/toolkit";
 
-import { ERROR_MESSAGE } from "@constants/error-code";
-import { Status } from "@constants/type";
+import { ERROR_MESSAGE } from "@/constants/error-code";
+import { Status } from "@/constants/type";
 
-import { AdminUserProps } from "@models/admin-response";
+import { AdminUserProps } from "@/models/admin-response";
 
-import { getAdminUserList } from "@redux/apis/admin-api";
+import { getAdminUserList } from "@/redux/apis/admin-api";
 
 type ResetProps = "getList";
 

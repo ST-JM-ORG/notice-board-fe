@@ -1,14 +1,8 @@
-import {
-  createContext,
-  PropsWithChildren,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import { createContext, PropsWithChildren, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { nanoid } from "nanoid";
 
-import ToastContainer from "@context/toast-container";
+import ToastContainer from "@/context/toast-container";
 
 // const TOAST_MAX_COUNT = 5;
 

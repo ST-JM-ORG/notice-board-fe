@@ -2,10 +2,10 @@ import React, { PropsWithChildren, useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { IoMdClose } from "react-icons/io";
 
-import useOutsideClick from "@hook/use-outside-click";
+import useOutsideClick from "@/hook/use-outside-click";
 
-import { cn } from "@utils/classname";
-import { pxToRem } from "@utils/size";
+import { cn } from "@/utils/classname";
+import { pxToRem } from "@/utils/size";
 
 interface Props extends PropsWithChildren {
   title?: string;

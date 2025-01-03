@@ -1,9 +1,9 @@
 import axios from "axios";
 
-import { ACCESS_TOKEN, REFRESH_TOKEN } from "@constants/const";
+import { ACCESS_TOKEN, REFRESH_TOKEN } from "@/constants/const";
 
-import { getCookie, setCookie } from "@utils/cookie";
-import { isRefreshTokenExpired } from "@utils/token";
+import { getCookie, setCookie } from "@/utils/cookie";
+import { isRefreshTokenExpired } from "@/utils/token";
 
 const instance = axios.create({
   baseURL: process.env.NEXT_PUBLIC_BASE_URL,

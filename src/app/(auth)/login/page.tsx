@@ -7,16 +7,16 @@ import { shallowEqual } from "react-redux";
 
 import { useRouter } from "next/navigation";
 
-import Button from "@components/button";
-import Input from "@components/input";
+import Button from "@/components/button";
+import Input from "@/components/input";
 
-import useToastContext from "@hook/use-toast-context";
+import useToastContext from "@/hook/use-toast-context";
 
-import { login } from "@redux/apis/auth-api";
-import { useAppDispatch, useAppSelector, useThunkDispatch } from "@redux/hook";
-import { resetAuth } from "@redux/modules/auth-slice";
+import { login } from "@/redux/apis/auth-api";
+import { useAppDispatch, useAppSelector, useThunkDispatch } from "@/redux/hook";
+import { resetAuth } from "@/redux/modules/auth-slice";
 
-import { cn } from "@utils/classname";
+import { cn } from "@/utils/classname";
 
 interface LoginForm {
   email: string;

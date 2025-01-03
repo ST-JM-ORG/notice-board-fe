@@ -1,12 +1,12 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
-import { ERROR_RESPONSE } from "@constants/const";
+import { ERROR_RESPONSE } from "@/constants/const";
 
-import { ApiResponse } from "@models/api-response";
-import { SingleUserType } from "@models/user-response";
+import { ApiResponse } from "@/models/api-response";
+import { SingleUserType } from "@/models/user-response";
 
-import instance from "@utils/instance";
+import instance from "@/utils/instance";
 
 export const getUser = createAsyncThunk<
   ApiResponse<SingleUserType>,

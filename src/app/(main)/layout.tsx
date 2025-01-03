@@ -1,6 +1,6 @@
 import React, { PropsWithChildren } from "react";
 
-import Header from "@components/header";
+import Header from "@/components/header";
 
 export default function Layout(props: PropsWithChildren) {
   const { children } = props;

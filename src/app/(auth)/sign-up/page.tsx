@@ -7,20 +7,20 @@ import { shallowEqual } from "react-redux";
 
 import { useRouter } from "next/navigation";
 
-import Button from "@components/button";
-import Input from "@components/input";
-import ProfileUploader from "@components/profile-uploader";
+import Button from "@/components/button";
+import Input from "@/components/input";
+import ProfileUploader from "@/components/profile-uploader";
 
-import { profileImgWhiteList } from "@constants/mime";
-import { EmailRegex, PwRegex } from "@constants/regex";
+import { profileImgWhiteList } from "@/constants/mime";
+import { EmailRegex, PwRegex } from "@/constants/regex";
 
-import useToastContext from "@hook/use-toast-context";
+import useToastContext from "@/hook/use-toast-context";
 
-import { emailDupCheck, signUp } from "@redux/apis/auth-api";
-import { useAppDispatch, useAppSelector, useThunkDispatch } from "@redux/hook";
-import { resetAuth } from "@redux/modules/auth-slice";
+import { emailDupCheck, signUp } from "@/redux/apis/auth-api";
+import { useAppDispatch, useAppSelector, useThunkDispatch } from "@/redux/hook";
+import { resetAuth } from "@/redux/modules/auth-slice";
 
-import { encodeFileToBase64 } from "@utils/file-encoder";
+import { encodeFileToBase64 } from "@/utils/file-encoder";
 
 interface SignUpForm {
   email: string;

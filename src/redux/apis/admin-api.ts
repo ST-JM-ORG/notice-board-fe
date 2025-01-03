@@ -1,13 +1,13 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
-import { ERROR_RESPONSE } from "@constants/const";
+import { ERROR_RESPONSE } from "@/constants/const";
 
-import { AdminUserResponse } from "@models/admin-response";
-import { ApiResponse } from "@models/api-response";
+import { AdminUserResponse } from "@/models/admin-response";
+import { ApiResponse } from "@/models/api-response";
 
-import instance from "@utils/instance";
-import { createUrlQueryStr } from "@utils/query";
+import instance from "@/utils/instance";
+import { createUrlQueryStr } from "@/utils/query";
 
 /**
  * SearchType: ALL, EMAIL, NAME, CONTACT

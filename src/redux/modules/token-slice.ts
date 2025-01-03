@@ -1,17 +1,13 @@
-import {
-  createSlice,
-  SliceCaseReducers,
-  SliceSelectors,
-} from "@reduxjs/toolkit";
+import { createSlice, SliceCaseReducers, SliceSelectors } from "@reduxjs/toolkit";
 
-import { ACCESS_TOKEN, REFRESH_TOKEN } from "@constants/const";
-import { ERROR_MESSAGE } from "@constants/error-code";
-import { Status } from "@constants/type";
+import { ACCESS_TOKEN, REFRESH_TOKEN } from "@/constants/const";
+import { ERROR_MESSAGE } from "@/constants/error-code";
+import { Status } from "@/constants/type";
 
-import { reissueToken } from "@redux/apis/auth-api";
+import { reissueToken } from "@/redux/apis/auth-api";
 
-import { getCookie, setCookie } from "@utils/cookie";
-import { decodeAccessToken } from "@utils/token";
+import { getCookie, setCookie } from "@/utils/cookie";
+import { decodeAccessToken } from "@/utils/token";
 
 interface TokenState {
   status: Status;

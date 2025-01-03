@@ -1,6 +1,6 @@
 import React, { cloneElement, ReactElement, useEffect, useState } from "react";
 
-import { cn } from "@utils/classname";
+import { cn } from "@/utils/classname";
 
 interface Props {
   tabIndex: number;

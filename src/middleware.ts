@@ -2,7 +2,7 @@ import { jwtDecode, JwtPayload } from "jwt-decode";
 
 import { NextRequest, NextResponse } from "next/server";
 
-import { ACCESS_TOKEN, REFRESH_TOKEN } from "@constants/const";
+import { ACCESS_TOKEN, REFRESH_TOKEN } from "@/constants/const";
 
 /**
  * 미들웨어

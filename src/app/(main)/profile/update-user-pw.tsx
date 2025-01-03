@@ -2,16 +2,16 @@ import React, { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { shallowEqual } from "react-redux";
 
-import Button from "@components/button";
-import Input from "@components/input";
+import Button from "@/components/button";
+import Input from "@/components/input";
 
-import { PwRegex } from "@constants/regex";
+import { PwRegex } from "@/constants/regex";
 
-import useToastContext from "@hook/use-toast-context";
+import useToastContext from "@/hook/use-toast-context";
 
-import { updatePw } from "@redux/apis/user-api";
-import { useAppDispatch, useAppSelector, useThunkDispatch } from "@redux/hook";
-import { resetAuth } from "@redux/modules/auth-slice";
+import { updatePw } from "@/redux/apis/user-api";
+import { useAppDispatch, useAppSelector, useThunkDispatch } from "@/redux/hook";
+import { resetAuth } from "@/redux/modules/auth-slice";
 
 interface UserPwForm {
   currPw: string;

@@ -3,13 +3,13 @@ import { shallowEqual } from "react-redux";
 
 import { useRouter } from "next/navigation";
 
-import Button from "@components/button";
-import Modal from "@components/modal";
+import Button from "@/components/button";
+import Modal from "@/components/modal";
 
-import useToastContext from "@hook/use-toast-context";
+import useToastContext from "@/hook/use-toast-context";
 
-import { deleteUser } from "@redux/apis/user-api";
-import { useAppSelector, useThunkDispatch } from "@redux/hook";
+import { deleteUser } from "@/redux/apis/user-api";
+import { useAppSelector, useThunkDispatch } from "@/redux/hook";
 
 export default function DeleteUser() {
   const router = useRouter();

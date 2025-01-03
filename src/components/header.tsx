@@ -6,15 +6,15 @@ import { shallowEqual } from "react-redux";
 
 import { useRouter } from "next/navigation";
 
-import useOutsideClick from "@hook/use-outside-click";
+import useOutsideClick from "@/hook/use-outside-click";
 
-import { logout } from "@redux/apis/auth-api";
-import { useAppDispatch, useAppSelector, useThunkDispatch } from "@redux/hook";
-import { resetAuth } from "@redux/modules/auth-slice";
-import { saveToken } from "@redux/modules/token-slice";
+import { logout } from "@/redux/apis/auth-api";
+import { useAppDispatch, useAppSelector, useThunkDispatch } from "@/redux/hook";
+import { resetAuth } from "@/redux/modules/auth-slice";
+import { saveToken } from "@/redux/modules/token-slice";
 
-import { cn } from "@utils/classname";
-import { pxToRem } from "@utils/size";
+import { cn } from "@/utils/classname";
+import { pxToRem } from "@/utils/size";
 
 export default function Header() {
   const router = useRouter();

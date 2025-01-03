@@ -4,16 +4,16 @@ import React, { useEffect, useState } from "react";
 import { IoPerson } from "react-icons/io5";
 import { shallowEqual } from "react-redux";
 
-import DataTable from "@components/data-table";
-import DataTableCell from "@components/data-table-cell";
-import DataTableRow from "@components/data-table-row";
-import Pagination from "@components/pagination";
+import DataTable from "@/components/data-table";
+import DataTableCell from "@/components/data-table-cell";
+import DataTableRow from "@/components/data-table-row";
+import Pagination from "@/components/pagination";
 
-import { getAdminUserList } from "@redux/apis/admin-api";
-import { useAppDispatch, useAppSelector, useThunkDispatch } from "@redux/hook";
-import { resetAdmin } from "@redux/modules/admin-slice";
+import { getAdminUserList } from "@/redux/apis/admin-api";
+import { useAppDispatch, useAppSelector, useThunkDispatch } from "@/redux/hook";
+import { resetAdmin } from "@/redux/modules/admin-slice";
 
-import { createRowNum } from "@utils/query";
+import { createRowNum } from "@/utils/query";
 
 export default function Page() {
   const appDispatch = useAppDispatch();

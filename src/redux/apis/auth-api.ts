@@ -1,12 +1,12 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
-import { ERROR_RESPONSE, REFRESH_TOKEN } from "@constants/const";
+import { ERROR_RESPONSE, REFRESH_TOKEN } from "@/constants/const";
 
-import { ApiResponse } from "@models/api-response";
+import { ApiResponse } from "@/models/api-response";
 
-import { getCookie } from "@utils/cookie";
-import instance from "@utils/instance";
+import { getCookie } from "@/utils/cookie";
+import instance from "@/utils/instance";
 
 export const signUp = createAsyncThunk<
   ApiResponse<boolean>,

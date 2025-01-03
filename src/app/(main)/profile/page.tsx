@@ -5,11 +5,11 @@ import { AiTwotoneDelete } from "react-icons/ai";
 import { FaUser } from "react-icons/fa";
 import { RiLockPasswordLine } from "react-icons/ri";
 
-import DeleteUser from "@app/(main)/profile/delete-user";
-import UpdateUserInfo from "@app/(main)/profile/update-user-info";
-import UpdateUserPw from "@app/(main)/profile/update-user-pw";
+import DeleteUser from "@/app/(main)/profile/delete-user";
+import UpdateUserInfo from "@/app/(main)/profile/update-user-info";
+import UpdateUserPw from "@/app/(main)/profile/update-user-pw";
 
-import TabBar from "@components/tab-bar";
+import TabBar from "@/components/tab-bar";
 
 export default function Page() {
   const [tabIndex, setTabIndex] = useState<number>(0);

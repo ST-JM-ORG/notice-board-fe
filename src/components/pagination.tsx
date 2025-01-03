@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-import { cn } from "@utils/classname";
+import { cn } from "@/utils/classname";
 
 const SHOW_PAGE_GROUP_COUNT: number = 10;
 

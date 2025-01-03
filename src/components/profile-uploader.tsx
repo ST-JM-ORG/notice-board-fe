@@ -1,7 +1,7 @@
 import React, { ChangeEvent } from "react";
 
-import { cn } from "@utils/classname";
-import { pxToRem } from "@utils/size";
+import { cn } from "@/utils/classname";
+import { pxToRem } from "@/utils/size";
 
 interface Props {
   size: number;

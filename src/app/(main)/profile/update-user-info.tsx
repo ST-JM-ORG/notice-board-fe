@@ -4,20 +4,20 @@ import { shallowEqual } from "react-redux";
 
 import { useRouter } from "next/navigation";
 
-import Button from "@components/button";
-import Input from "@components/input";
-import ProfileUploader from "@components/profile-uploader";
+import Button from "@/components/button";
+import Input from "@/components/input";
+import ProfileUploader from "@/components/profile-uploader";
 
-import { profileImgWhiteList } from "@constants/mime";
+import { profileImgWhiteList } from "@/constants/mime";
 
-import useToastContext from "@hook/use-toast-context";
+import useToastContext from "@/hook/use-toast-context";
 
-import { reissueToken } from "@redux/apis/auth-api";
-import { getUser, updateUser } from "@redux/apis/user-api";
-import { useAppDispatch, useAppSelector, useThunkDispatch } from "@redux/hook";
-import { resetUser } from "@redux/modules/user-slice";
+import { reissueToken } from "@/redux/apis/auth-api";
+import { getUser, updateUser } from "@/redux/apis/user-api";
+import { useAppDispatch, useAppSelector, useThunkDispatch } from "@/redux/hook";
+import { resetUser } from "@/redux/modules/user-slice";
 
-import { encodeFileToBase64 } from "@utils/file-encoder";
+import { encodeFileToBase64 } from "@/utils/file-encoder";
 
 interface UserInfoForm {
   email: string;
