@@ -3,8 +3,8 @@ import { ReactNode } from "react";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 
-import ReduxProvider from "@provider/redux-provider";
-import ToastProvider from "@provider/toast-provider";
+import ReduxProvider from "@/provider/redux-provider";
+import ToastProvider from "@/provider/toast-provider";
 
 import "./globals.css";
 

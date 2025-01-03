@@ -17,6 +17,7 @@ interface AdminState {
     code: string;
     adminUser: AdminUserProps[];
     totalCount: number;
+    totalPageCount: number;
     pageSize: number;
     pageNo: number;
   };
@@ -30,6 +31,7 @@ const initialState: AdminState = {
     code: "",
     adminUser: [],
     totalCount: 0,
+    totalPageCount: 0,
     pageSize: 10,
     pageNo: 1,
   },
@@ -48,14 +50,17 @@ const AdminSlice = createSlice<
     resetAdmin: (state, { payload }: PayloadAction<ResetProps>) => {
       switch (payload) {
         case "getList":
-          state.getAdminUser.status = "idle";
-          state.getAdminUser.message = "";
-          state.getAdminUser.error = "";
-          state.getAdminUser.code = "";
-          state.getAdminUser.adminUser = [];
-          state.getAdminUser.totalCount = 0;
-          state.getAdminUser.pageSize = 10;
-          state.getAdminUser.pageNo = 1;
+          state.getAdminUser = {
+            status: "idle",
+            message: "",
+            error: "",
+            code: "",
+            adminUser: [],
+            totalCount: 0,
+            totalPageCount: 0,
+            pageSize: 10,
+            pageNo: 1,
+          };
           break;
       }
     },
@@ -63,14 +68,17 @@ const AdminSlice = createSlice<
   extraReducers: (builder) => {
     builder
       .addCase(getAdminUserList.pending, (state, _) => {
-        state.getAdminUser.status = "pending";
-        state.getAdminUser.message = "";
-        state.getAdminUser.error = "";
-        state.getAdminUser.code = "";
-        state.getAdminUser.adminUser = [];
-        state.getAdminUser.totalCount = 0;
-        state.getAdminUser.pageSize = 10;
-        state.getAdminUser.pageNo = 1;
+        state.getAdminUser = {
+          status: "pending",
+          message: "",
+          error: "",
+          code: "",
+          adminUser: [],
+          totalCount: 0,
+          totalPageCount: 0,
+          pageSize: 10,
+          pageNo: 1,
+        };
       })
       .addCase(getAdminUserList.fulfilled, (state, { payload }) => {
         const {
@@ -78,19 +86,25 @@ const AdminSlice = createSlice<
           result: { code, message },
         } = payload;
 
-        state.getAdminUser.status = "fulfilled";
-        state.getAdminUser.message = message;
-        state.getAdminUser.code = code;
-        state.getAdminUser.adminUser = data;
-        state.getAdminUser.totalCount = total;
-        state.getAdminUser.pageSize = size;
-        state.getAdminUser.pageNo = page;
+        state.getAdminUser = {
+          ...state.getAdminUser,
+          status: "fulfilled",
+          message: message,
+          code: code,
+          adminUser: data,
+          totalCount: total,
+          totalPageCount: Math.ceil(total / size),
+          pageSize: size,
+          pageNo: page,
+        };
       })
       .addCase(getAdminUserList.rejected, (state, { payload }) => {
-        state.getAdminUser.status = "rejected";
-        state.getAdminUser.message =
-          payload?.result.message || ERROR_MESSAGE["E500"];
-        state.getAdminUser.code = payload?.result.code || "E500";
+        state.getAdminUser = {
+          ...state.getAdminUser,
+          status: "rejected",
+          message: payload?.result.message || ERROR_MESSAGE["E500"],
+          code: payload?.result.code || "E500",
+        };
       });
   },
 });

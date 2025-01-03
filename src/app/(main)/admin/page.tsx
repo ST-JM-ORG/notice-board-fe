@@ -4,6 +4,8 @@ import React, { useEffect, useState } from "react";
 import { IoPerson } from "react-icons/io5";
 import { shallowEqual } from "react-redux";
 
+import { useRouter, useSearchParams } from "next/navigation";
+
 import DataTable from "@/components/data-table";
 import DataTableCell from "@/components/data-table-cell";
 import DataTableRow from "@/components/data-table-row";
@@ -16,18 +18,31 @@ import { resetAdmin } from "@/redux/modules/admin-slice";
 import { createRowNum } from "@/utils/query";
 
 export default function Page() {
-  const appDispatch = useAppDispatch();
+  const router = useRouter();
   const dispatch = useThunkDispatch();
+  const appDispatch = useAppDispatch();
+  const searchParams = useSearchParams();
 
-  const { adminUser, totalCount } = useAppSelector(
+  const { adminUser, totalCount, totalPageCount } = useAppSelector(
     (state) => ({
       adminUser: state.admin.getAdminUser.adminUser,
       totalCount: state.admin.getAdminUser.totalCount,
+      totalPageCount: state.admin.getAdminUser.totalPageCount,
     }),
     shallowEqual,
   );
 
   const [pageNo, setPageNo] = useState<number>(1);
+
+  const handlePaging = (value: number) => {
+    router.push(`/admin?p=${value}`);
+  };
+
+  useEffect(() => {
+    const pageNoQuery = searchParams.get("p");
+    const p = pageNoQuery ? Number(pageNoQuery) : 1;
+    setPageNo(p);
+  }, [searchParams]);
 
   useEffect(() => {
     dispatch(getAdminUserList({ pageNo }));
@@ -83,8 +98,8 @@ export default function Page() {
       </DataTable>
       <Pagination
         pageNo={pageNo}
-        pageSize={10}
-        totalCount={totalCount}
+        totalPage={totalPageCount}
+        onClick={handlePaging}
         className="mt-10"
       />
     </>
