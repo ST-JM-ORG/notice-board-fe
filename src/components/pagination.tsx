@@ -85,10 +85,10 @@ export default function Pagination(props: Props) {
       )}
     >
       <PagingButton onClick={handlePrevGroup}>
-        <FaAngleDoubleLeft />
+        <FaAngleDoubleLeft className="text-sonic-silver" />
       </PagingButton>
       <PagingButton onClick={handlePrevPage}>
-        <FaAngleLeft />
+        <FaAngleLeft className="text-sonic-silver" />
       </PagingButton>
 
       {Array.from(
@@ -112,10 +112,10 @@ export default function Pagination(props: Props) {
       )}
 
       <PagingButton onClick={handleNextPage}>
-        <FaAngleRight />
+        <FaAngleRight className="text-sonic-silver" />
       </PagingButton>
       <PagingButton onClick={handleNextGroup}>
-        <FaAngleDoubleRight />
+        <FaAngleDoubleRight className="text-sonic-silver" />
       </PagingButton>
     </div>
   );
