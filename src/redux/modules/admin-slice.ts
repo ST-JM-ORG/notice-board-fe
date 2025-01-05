@@ -1,11 +1,16 @@
-import { createSlice, PayloadAction, SliceCaseReducers, SliceSelectors } from "@reduxjs/toolkit";
+import {
+  createSlice,
+  PayloadAction,
+  SliceCaseReducers,
+  SliceSelectors,
+} from "@reduxjs/toolkit";
 
 import { ERROR_MESSAGE } from "@/constants/error-code";
 import { Status } from "@/constants/type";
 
 import { AdminUserProps } from "@/models/admin-response";
 
-import { getAdminUserList } from "@/redux/apis/admin-api";
+import { getAdminUserDetail, getAdminUserList } from "@/redux/apis/admin-api";
 
 type ResetProps = "getList";
 
@@ -21,6 +26,13 @@ interface AdminState {
     pageSize: number;
     pageNo: number;
   };
+  detail: {
+    status: Status;
+    message: string;
+    error: string;
+    code: string;
+    data: AdminUserProps | null;
+  };
 }
 
 const initialState: AdminState = {
@@ -34,6 +46,13 @@ const initialState: AdminState = {
     totalPageCount: 0,
     pageSize: 10,
     pageNo: 1,
+  },
+  detail: {
+    status: "idle",
+    message: "",
+    error: "",
+    code: "",
+    data: null,
   },
 };
 
@@ -69,11 +88,11 @@ const AdminSlice = createSlice<
     builder
       .addCase(getAdminUserList.pending, (state, _) => {
         state.getAdminUser = {
+          ...state.getAdminUser,
           status: "pending",
           message: "",
           error: "",
           code: "",
-          adminUser: [],
           totalCount: 0,
           totalPageCount: 0,
           pageSize: 10,
@@ -91,7 +110,7 @@ const AdminSlice = createSlice<
           status: "fulfilled",
           message: message,
           code: code,
-          adminUser: data,
+          adminUser: [...data],
           totalCount: total,
           totalPageCount: Math.ceil(total / size),
           pageSize: size,
@@ -103,6 +122,33 @@ const AdminSlice = createSlice<
           ...state.getAdminUser,
           status: "rejected",
           message: payload?.result.message || ERROR_MESSAGE["E500"],
+          code: payload?.result.code || "E500",
+        };
+      });
+
+    // 상세조회
+    builder
+      .addCase(getAdminUserDetail.pending, (state, { payload }) => {
+        state.detail = {
+          status: "pending",
+          message: "",
+          error: "",
+          code: "",
+          data: null,
+        };
+      })
+      .addCase(getAdminUserDetail.fulfilled, (state, { payload }) => {
+        const {
+          data,
+          result: { code, message },
+        } = payload;
+
+        state.detail = { ...state.detail, message, code, data };
+      })
+      .addCase(getAdminUserDetail.rejected, (state, { payload }) => {
+        state.detail = {
+          ...state.detail,
+          error: payload?.result.message || ERROR_MESSAGE["E500"],
           code: payload?.result.code || "E500",
         };
       });

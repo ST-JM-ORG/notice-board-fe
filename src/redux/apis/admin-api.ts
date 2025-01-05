@@ -3,7 +3,7 @@ import axios from "axios";
 
 import { ERROR_RESPONSE } from "@/constants/const";
 
-import { AdminUserResponse } from "@/models/admin-response";
+import { AdminUserProps, AdminUserResponse } from "@/models/admin-response";
 import { ApiResponse } from "@/models/api-response";
 
 import instance from "@/utils/instance";
@@ -46,3 +46,20 @@ export const getAdminUserList = createAsyncThunk<
     }
   },
 );
+
+export const getAdminUserDetail = createAsyncThunk<
+  ApiResponse<AdminUserProps>,
+  { id: string },
+  { rejectValue: ApiResponse }
+>("admin/userDetail", async ({ id }, thunkAPI) => {
+  try {
+    const response = await instance.get(`/admin/user/${id}`);
+    return response.data;
+  } catch (e) {
+    if (axios.isAxiosError(e) && e.response) {
+      return thunkAPI.rejectWithValue(e.response.data);
+    } else {
+      return thunkAPI.rejectWithValue(ERROR_RESPONSE);
+    }
+  }
+});
