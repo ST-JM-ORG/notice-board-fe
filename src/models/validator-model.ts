@@ -97,6 +97,9 @@ export class AdminDetailForm {
   mime: string | undefined | null;
 
   @IsOptional()
+  isProfileDel: boolean;
+
+  @IsOptional()
   permission: string | number;
 }
 

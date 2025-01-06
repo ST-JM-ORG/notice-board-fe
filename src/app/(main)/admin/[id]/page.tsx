@@ -45,6 +45,7 @@ export default function Page(props: Props) {
         file: null,
         fileName: null,
         mime: null, //  jpg, jpeg, png, gif, bmp
+        isProfileDel: false,
         permission: 0,
       },
     });
@@ -91,11 +92,13 @@ export default function Page(props: Props) {
         } else {
           clearErrors("file");
           const encodedFile = await encodeFileToBase64(file);
+
           if (typeof encodedFile === "string") {
             setValue("originFile", file);
             setValue("file", encodedFile);
             setValue("fileName", file.name);
             setValue("mime", file.type);
+            setValue("isProfileDel", true);
           }
         }
       }
@@ -104,9 +107,12 @@ export default function Page(props: Props) {
 
   const handleRemoveProfile = () => {
     clearErrors("file");
+    setValue("originFile", null);
     setValue("file", null);
     setValue("fileName", null);
     setValue("mime", null);
+    setValue("isProfileDel", true);
+    setDefaultImg(null);
   };
 
   const handleChangePermission = (e: ChangeEvent<HTMLInputElement>) => {
@@ -116,14 +122,19 @@ export default function Page(props: Props) {
   const handleChangeUserInfo = () => {
     const formData = new FormData();
 
+    const name = getValues("name");
+    const phoneNum = getValues("phoneNumber");
     const file = getValues("originFile");
+    const isProfileDel = getValues("isProfileDel");
+    const permission = getValues("permission");
+
     if (file) {
       formData.append("profileImg", file);
     }
-    formData.append("name", getValues("name"));
-    formData.append("contact", getValues("phoneNumber"));
-    formData.append("profileDelYn", file ? "N" : "Y");
-    formData.append("adminYn", getValues("permission") ? "Y" : "N");
+    formData.append("name", name);
+    formData.append("contact", phoneNum);
+    formData.append("profileDelYn", isProfileDel ? "Y" : "N");
+    formData.append("adminYn", permission ? "Y" : "N");
 
     dispatch(updateAdminUser({ id, formData }));
   };
