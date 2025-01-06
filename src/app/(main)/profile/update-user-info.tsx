@@ -45,10 +45,10 @@ export default function UpdateUserInfo() {
       },
     });
 
-  const appDispatch = useAppDispatch();
-  const dispatch = useThunkDispatch();
   const toast = useToastContext();
   const router = useRouter();
+  const dispatch = useThunkDispatch();
+  const appDispatch = useAppDispatch();
 
   // Get user
   const { status, error, user, updateStatus, updateMsg, updateError } =
@@ -64,7 +64,7 @@ export default function UpdateUserInfo() {
       shallowEqual,
     );
 
-  const [defaultImg, setDefaultImg] = useState<string>("");
+  const [defaultImg, setDefaultImg] = useState<string | null>(null);
 
   const handleChangeFile = async (e: ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
@@ -109,11 +109,6 @@ export default function UpdateUserInfo() {
     formData.append("contact", getValues("phoneNumber"));
     formData.append("profileDelYn", file ? "false" : "true");
 
-    // FormData의 key 확인
-    for (const [key, value] of formData.entries()) {
-      console.log(key + ": " + value);
-    }
-
     dispatch(updateUser({ formData }));
   };
 
@@ -127,7 +122,9 @@ export default function UpdateUserInfo() {
       setValue("name", user ? user.name : "");
       setValue("phoneNumber", user ? user.contact : "");
       if (user) {
-        setDefaultImg(user.profileImg);
+        setDefaultImg(process.env.NEXT_PUBLIC_BASE_URL + user.profileImg);
+      } else {
+        setDefaultImg(null);
       }
     } else if (status === "rejected") {
       toast.error({ heading: "Error", message: error });
@@ -162,11 +159,7 @@ export default function UpdateUserInfo() {
               <div className="flex flex-col items-center justify-center space-y-2">
                 <ProfileUploader
                   size={250}
-                  defaultImg={
-                    defaultImg
-                      ? process.env.NEXT_PUBLIC_BASE_URL + defaultImg
-                      : null
-                  }
+                  defaultImg={defaultImg}
                   file={value}
                   onChange={handleChangeFile}
                 />

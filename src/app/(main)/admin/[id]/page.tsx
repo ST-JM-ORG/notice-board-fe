@@ -1,7 +1,11 @@
 "use client";
 
-import React, { ChangeEvent, use, useState } from "react";
+import React, { ChangeEvent, use, useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
+import { shallowEqual } from "react-redux";
+import { classValidatorResolver } from "@hookform/resolvers/class-validator";
+
+import { useRouter } from "next/navigation";
 
 import Button from "@/components/button";
 import Input from "@/components/input";
@@ -9,23 +13,18 @@ import ProfileUploader from "@/components/profile-uploader";
 
 import { profileImgWhiteList } from "@/constants/mime";
 
-import { updateUser } from "@/redux/apis/user-api";
-import { useThunkDispatch } from "@/redux/hook";
+import useToastContext from "@/hook/use-toast-context";
+
+import { UserDetailForm } from "@/models/validator-model";
+
+import { getAdminUserDetail, updateAdminUser } from "@/redux/apis/admin-api";
+import { useAppDispatch, useAppSelector, useThunkDispatch } from "@/redux/hook";
+import { resetAdmin } from "@/redux/modules/admin-slice";
 
 import { encodeFileToBase64 } from "@/utils/file-encoder";
 
 interface Props {
   params: Promise<{ id: string }>;
-}
-
-interface UserDetailForm {
-  email: string;
-  name: string;
-  phoneNumber: string;
-  originFile: File | null;
-  file?: string | null | undefined;
-  fileName?: string | null | undefined;
-  mime?: string | null | undefined;
 }
 
 export default function Page(props: Props) {
@@ -35,6 +34,7 @@ export default function Page(props: Props) {
     useForm<UserDetailForm>({
       mode: "onChange",
       reValidateMode: "onChange",
+      resolver: classValidatorResolver(UserDetailForm),
       defaultValues: {
         email: "",
         name: "",
@@ -47,9 +47,32 @@ export default function Page(props: Props) {
     });
 
   const { id } = use(params);
-  const dispatch = useThunkDispatch();
 
-  const [defaultImg, setDefaultImg] = useState<string>("");
+  const toast = useToastContext();
+  const router = useRouter();
+  const dispatch = useThunkDispatch();
+  const appDispatch = useAppDispatch();
+
+  const [defaultImg, setDefaultImg] = useState<string | null>(null);
+
+  const {
+    updateStatus,
+    updateMsg,
+    updateError,
+    detailStatus,
+    detailError,
+    user,
+  } = useAppSelector(
+    (state) => ({
+      updateStatus: state.admin.update.status,
+      updateMsg: state.admin.update.message,
+      updateError: state.admin.update.error,
+      detailStatus: state.admin.detail.status,
+      detailError: state.admin.detail.error,
+      user: state.admin.detail.user,
+    }),
+    shallowEqual,
+  );
 
   const handleChangeFile = async (e: ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
@@ -93,14 +116,44 @@ export default function Page(props: Props) {
     formData.append("name", getValues("name"));
     formData.append("contact", getValues("phoneNumber"));
     formData.append("profileDelYn", file ? "false" : "true");
+    formData.append("adminYn", user && user.adminYn ? "true" : "false");
 
-    // FormData의 key 확인
-    for (const [key, value] of formData.entries()) {
-      console.log(key + ": " + value);
-    }
-
-    dispatch(updateUser({ formData }));
+    dispatch(updateAdminUser({ id, formData }));
   };
+
+  useEffect(() => {
+    dispatch(getAdminUserDetail({ id }));
+  }, [dispatch, id]);
+
+  useEffect(() => {
+    if (detailStatus === "fulfilled") {
+      setValue("email", user ? user.email : "");
+      setValue("name", user ? user.name : "");
+      setValue("phoneNumber", user ? user.contact : "");
+
+      if (user && user.profileImg) {
+        setDefaultImg(process.env.NEXT_PUBLIC_BASE_URL + user.profileImg);
+      } else {
+        setDefaultImg(null);
+      }
+    } else if (detailStatus === "rejected") {
+      toast.error({ heading: "Error", message: detailError });
+    }
+  }, [detailStatus]);
+
+  useEffect(() => {
+    if (updateStatus === "fulfilled") {
+      toast.success({ heading: "Success", message: updateMsg });
+    } else if (updateStatus === "rejected") {
+      toast.error({ heading: "Error", message: updateError });
+    }
+  }, [updateStatus]);
+
+  useEffect(() => {
+    return () => {
+      appDispatch(resetAdmin("update"));
+    };
+  }, [appDispatch]);
 
   return (
     <form onSubmit={handleSubmit(handleChangeUserInfo)} className="flex">
@@ -111,11 +164,7 @@ export default function Page(props: Props) {
           <div className="flex flex-col items-center justify-center space-y-2">
             <ProfileUploader
               size={250}
-              defaultImg={
-                defaultImg
-                  ? process.env.NEXT_PUBLIC_BASE_URL + defaultImg
-                  : null
-              }
+              defaultImg={defaultImg}
               file={value}
               onChange={handleChangeFile}
             />
@@ -151,9 +200,8 @@ export default function Page(props: Props) {
                 type="text"
                 className="w-full rounded-b-none"
                 text="이메일"
-                required={true}
+                required
                 value={value}
-                onChange={() => {}}
                 disabled={true}
               />
             )}
@@ -171,7 +219,7 @@ export default function Page(props: Props) {
                 className="rounded-t-none"
                 text="이름"
                 helperText={error && error.message}
-                required={true}
+                required
                 {...field}
               />
             )}
@@ -192,9 +240,11 @@ export default function Page(props: Props) {
           />
         </div>
 
-        <div className="flex justify-end">
-          <Button>취소</Button>
-          <Button>수정</Button>
+        <div className="mt-20 flex justify-end space-x-1">
+          <Button type="button" onClick={() => router.push("/admin")}>
+            취소
+          </Button>
+          <Button type="submit">수정</Button>
         </div>
       </div>
     </form>

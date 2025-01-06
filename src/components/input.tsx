@@ -8,7 +8,7 @@ interface Props {
   type?: string;
   text: string;
   value: string;
-  onChange: (e: ChangeEvent<HTMLInputElement>) => void;
+  onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
   onBlur?: (e: FocusEvent<HTMLInputElement>) => void;
   helperText?: string | undefined | null;
   required?: boolean;

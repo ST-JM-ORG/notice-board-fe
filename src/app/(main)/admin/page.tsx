@@ -30,11 +30,11 @@ export default function Page(props: Props) {
   const dispatch = useThunkDispatch();
   const appDispatch = useAppDispatch();
 
-  const { adminUser, totalCount, totalPageCount } = useAppSelector(
+  const { users, totalCount, totalPageCount } = useAppSelector(
     (state) => ({
-      adminUser: state.admin.getAdminUser.adminUser,
-      totalCount: state.admin.getAdminUser.totalCount,
-      totalPageCount: state.admin.getAdminUser.totalPageCount,
+      users: state.admin.userList.users,
+      totalCount: state.admin.userList.totalCount,
+      totalPageCount: state.admin.userList.totalPageCount,
     }),
     shallowEqual,
   );
@@ -77,8 +77,8 @@ export default function Page(props: Props) {
           ],
         }}
       >
-        {adminUser &&
-          adminUser.map(
+        {users &&
+          users.map(
             ({ id, email, name, contact, profileImg, adminYn }, index) => (
               <DataTableRow
                 key={index}
@@ -90,7 +90,7 @@ export default function Page(props: Props) {
                 <DataTableCell className="flex items-center justify-center">
                   {profileImg ? (
                     <img
-                      alt="Profile Image"
+                      alt="Profile image"
                       src={process.env.NEXT_PUBLIC_BASE_URL + profileImg}
                       className="h-50 w-50 rounded-1/2"
                     />

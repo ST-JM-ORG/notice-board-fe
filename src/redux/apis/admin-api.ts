@@ -63,3 +63,24 @@ export const getAdminUserDetail = createAsyncThunk<
     }
   }
 });
+
+export const updateAdminUser = createAsyncThunk<
+  ApiResponse,
+  { id: string; formData: FormData },
+  { rejectValue: ApiResponse }
+>("admin/update", async ({ id, formData }, thunkAPI) => {
+  try {
+    const response = await instance.put(`/admin/user/${id}`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    return response.data;
+  } catch (e) {
+    if (axios.isAxiosError(e) && e.response) {
+      return thunkAPI.rejectWithValue(e.response.data);
+    } else {
+      return thunkAPI.rejectWithValue(ERROR_RESPONSE);
+    }
+  }
+});

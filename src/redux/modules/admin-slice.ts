@@ -1,26 +1,21 @@
-import {
-  createSlice,
-  PayloadAction,
-  SliceCaseReducers,
-  SliceSelectors,
-} from "@reduxjs/toolkit";
+import { createSlice, PayloadAction, SliceCaseReducers, SliceSelectors } from "@reduxjs/toolkit";
 
 import { ERROR_MESSAGE } from "@/constants/error-code";
 import { Status } from "@/constants/type";
 
 import { AdminUserProps } from "@/models/admin-response";
 
-import { getAdminUserDetail, getAdminUserList } from "@/redux/apis/admin-api";
+import { getAdminUserDetail, getAdminUserList, updateAdminUser } from "@/redux/apis/admin-api";
 
-type ResetProps = "getList";
+type ResetProps = "getList" | "update";
 
 interface AdminState {
-  getAdminUser: {
+  userList: {
     status: Status;
     message: string;
     error: string;
     code: string;
-    adminUser: AdminUserProps[];
+    users: AdminUserProps[];
     totalCount: number;
     totalPageCount: number;
     pageSize: number;
@@ -31,17 +26,23 @@ interface AdminState {
     message: string;
     error: string;
     code: string;
-    data: AdminUserProps | null;
+    user: AdminUserProps | null;
+  };
+  update: {
+    status: Status;
+    message: string;
+    error: string;
+    code: string;
   };
 }
 
 const initialState: AdminState = {
-  getAdminUser: {
+  userList: {
     status: "idle",
     message: "",
     error: "",
     code: "",
-    adminUser: [],
+    users: [],
     totalCount: 0,
     totalPageCount: 0,
     pageSize: 10,
@@ -52,7 +53,13 @@ const initialState: AdminState = {
     message: "",
     error: "",
     code: "",
-    data: null,
+    user: null,
+  },
+  update: {
+    status: "idle",
+    message: "",
+    error: "",
+    code: "",
   },
 };
 
@@ -69,17 +76,20 @@ const AdminSlice = createSlice<
     resetAdmin: (state, { payload }: PayloadAction<ResetProps>) => {
       switch (payload) {
         case "getList":
-          state.getAdminUser = {
+          state.userList = {
+            ...state.userList,
             status: "idle",
             message: "",
             error: "",
             code: "",
-            adminUser: [],
             totalCount: 0,
             totalPageCount: 0,
             pageSize: 10,
             pageNo: 1,
           };
+          break;
+        case "update":
+          state.update = { status: "idle", message: "", error: "", code: "" };
           break;
       }
     },
@@ -87,8 +97,8 @@ const AdminSlice = createSlice<
   extraReducers: (builder) => {
     builder
       .addCase(getAdminUserList.pending, (state, _) => {
-        state.getAdminUser = {
-          ...state.getAdminUser,
+        state.userList = {
+          ...state.userList,
           status: "pending",
           message: "",
           error: "",
@@ -105,12 +115,12 @@ const AdminSlice = createSlice<
           result: { code, message },
         } = payload;
 
-        state.getAdminUser = {
-          ...state.getAdminUser,
+        state.userList = {
+          ...state.userList,
           status: "fulfilled",
           message: message,
           code: code,
-          adminUser: [...data],
+          users: [...data],
           totalCount: total,
           totalPageCount: Math.ceil(total / size),
           pageSize: size,
@@ -118,8 +128,8 @@ const AdminSlice = createSlice<
         };
       })
       .addCase(getAdminUserList.rejected, (state, { payload }) => {
-        state.getAdminUser = {
-          ...state.getAdminUser,
+        state.userList = {
+          ...state.userList,
           status: "rejected",
           message: payload?.result.message || ERROR_MESSAGE["E500"],
           code: payload?.result.code || "E500",
@@ -128,13 +138,13 @@ const AdminSlice = createSlice<
 
     // 상세조회
     builder
-      .addCase(getAdminUserDetail.pending, (state, { payload }) => {
+      .addCase(getAdminUserDetail.pending, (state, _) => {
         state.detail = {
           status: "pending",
           message: "",
           error: "",
           code: "",
-          data: null,
+          user: null,
         };
       })
       .addCase(getAdminUserDetail.fulfilled, (state, { payload }) => {
@@ -143,11 +153,44 @@ const AdminSlice = createSlice<
           result: { code, message },
         } = payload;
 
-        state.detail = { ...state.detail, message, code, data };
+        state.detail = {
+          ...state.detail,
+          status: "fulfilled",
+          message,
+          code,
+          user: data,
+        };
       })
       .addCase(getAdminUserDetail.rejected, (state, { payload }) => {
         state.detail = {
           ...state.detail,
+          status: "rejected",
+          error: payload?.result.message || ERROR_MESSAGE["E500"],
+          code: payload?.result.code || "E500",
+        };
+      });
+
+    // 수정
+    builder
+      .addCase(updateAdminUser.pending, (state, _) => {
+        state.update = {
+          status: "pending",
+          message: "",
+          error: "",
+          code: "",
+        };
+      })
+      .addCase(updateAdminUser.fulfilled, (state, { payload }) => {
+        const {
+          result: { message, code },
+        } = payload;
+
+        state.update = { ...state.update, status: "fulfilled", message, code };
+      })
+      .addCase(updateAdminUser.rejected, (state, { payload }) => {
+        state.update = {
+          ...state.update,
+          status: "rejected",
           error: payload?.result.message || ERROR_MESSAGE["E500"],
           code: payload?.result.code || "E500",
         };

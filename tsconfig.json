@@ -22,6 +22,9 @@
         "name": "next"
       }
     ],
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "strictPropertyInitialization": false,
     "paths": {
       "@/app/*": [
         "./src/app/*"
