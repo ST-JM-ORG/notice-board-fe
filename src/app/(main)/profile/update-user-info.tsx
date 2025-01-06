@@ -1,6 +1,7 @@
 import React, { ChangeEvent, useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { shallowEqual } from "react-redux";
+import { classValidatorResolver } from "@hookform/resolvers/class-validator";
 
 import { useRouter } from "next/navigation";
 
@@ -12,6 +13,8 @@ import { profileImgWhiteList } from "@/constants/mime";
 
 import useToastContext from "@/hook/use-toast-context";
 
+import { UserDetailForm } from "@/models/validator-model";
+
 import { reissueToken } from "@/redux/apis/auth-api";
 import { getUser, updateUser } from "@/redux/apis/user-api";
 import { useAppDispatch, useAppSelector, useThunkDispatch } from "@/redux/hook";
@@ -19,21 +22,12 @@ import { resetUser } from "@/redux/modules/user-slice";
 
 import { encodeFileToBase64 } from "@/utils/file-encoder";
 
-interface UserInfoForm {
-  email: string;
-  name: string;
-  phoneNumber: string;
-  originFile: File | null;
-  file?: string | null | undefined;
-  fileName?: string | null | undefined;
-  mime?: string | null | undefined;
-}
-
 export default function UpdateUserInfo() {
   const { control, handleSubmit, getValues, setValue, setError, clearErrors } =
-    useForm<UserInfoForm>({
+    useForm<UserDetailForm>({
       mode: "onChange",
       reValidateMode: "onChange",
+      resolver: classValidatorResolver(UserDetailForm),
       defaultValues: {
         email: "",
         name: "",
@@ -196,7 +190,7 @@ export default function UpdateUserInfo() {
                   type="text"
                   className="w-full rounded-b-none"
                   text="이메일"
-                  required={true}
+                  required
                   value={value}
                   onChange={() => {}}
                   disabled={true}
@@ -207,16 +201,13 @@ export default function UpdateUserInfo() {
             <Controller
               name="name"
               control={control}
-              rules={{
-                required: "이름을 입력해주세요",
-              }}
               render={({ field, fieldState: { error } }) => (
                 <Input
                   type="text"
                   className="rounded-t-none"
                   text="이름"
                   helperText={error && error.message}
-                  required={true}
+                  required
                   {...field}
                 />
               )}

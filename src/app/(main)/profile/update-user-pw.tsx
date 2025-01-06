@@ -1,29 +1,25 @@
 import React, { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { shallowEqual } from "react-redux";
+import { classValidatorResolver } from "@hookform/resolvers/class-validator";
 
 import Button from "@/components/button";
 import Input from "@/components/input";
 
-import { PwRegex } from "@/constants/regex";
-
 import useToastContext from "@/hook/use-toast-context";
+
+import { UpdatePwForm } from "@/models/validator-model";
 
 import { updatePw } from "@/redux/apis/user-api";
 import { useAppDispatch, useAppSelector, useThunkDispatch } from "@/redux/hook";
 import { resetAuth } from "@/redux/modules/auth-slice";
 
-interface UserPwForm {
-  currPw: string;
-  newPw: string;
-  newPwConfirm: string;
-}
-
 export default function UpdateUserPw() {
   const { control, handleSubmit, getValues, setError, watch } =
-    useForm<UserPwForm>({
+    useForm<UpdatePwForm>({
       mode: "onChange",
       reValidateMode: "onChange",
+      resolver: classValidatorResolver(UpdatePwForm),
       defaultValues: {
         currPw: "",
         newPw: "",
@@ -31,9 +27,9 @@ export default function UpdateUserPw() {
       },
     });
 
-  const appDispatch = useAppDispatch();
-  const dispatch = useThunkDispatch();
   const toast = useToastContext();
+  const dispatch = useThunkDispatch();
+  const appDispatch = useAppDispatch();
 
   const { status, message, error, code } = useAppSelector(
     (state) => ({
@@ -77,17 +73,6 @@ export default function UpdateUserPw() {
         <Controller
           name="currPw"
           control={control}
-          rules={{
-            required: "현재 비밀번호를 입력해주세요",
-            pattern: {
-              value: PwRegex,
-              message: "비밀번호 형식을 맞춰주세요",
-            },
-            minLength: {
-              value: 8,
-              message: "비밀번호는 8자 이상으로 입력해주세요",
-            },
-          }}
           render={({ field, fieldState: { error } }) => (
             <Input
               type="password"
@@ -102,17 +87,6 @@ export default function UpdateUserPw() {
         <Controller
           name="newPw"
           control={control}
-          rules={{
-            required: "변경할 비밀번호를 입력해주세요",
-            pattern: {
-              value: PwRegex,
-              message: "비밀번호 형식을 맞춰주세요",
-            },
-            minLength: {
-              value: 8,
-              message: "비밀번호는 8자 이상으로 입력해주세요",
-            },
-          }}
           render={({ field, fieldState: { error } }) => (
             <Input
               type="password"
@@ -127,19 +101,6 @@ export default function UpdateUserPw() {
         <Controller
           name="newPwConfirm"
           control={control}
-          rules={{
-            required: "변경할 비밀번호 확인을 입력해주세요",
-            pattern: {
-              value: PwRegex,
-              message: "비밀번호 형식을 맞춰주세요",
-            },
-            minLength: {
-              value: 8,
-              message: "비밀번호는 8자 이상으로 입력해주세요",
-            },
-            validate: (value) =>
-              value === watch("newPw") || "비밀번호가 일치하지 않습니다",
-          }}
           render={({ field, fieldState: { error } }) => (
             <Input
               type="password"

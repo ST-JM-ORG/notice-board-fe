@@ -4,6 +4,7 @@ import React, { ChangeEvent, useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { FaArrowRight } from "react-icons/fa";
 import { shallowEqual } from "react-redux";
+import { classValidatorResolver } from "@hookform/resolvers/class-validator";
 
 import { useRouter } from "next/navigation";
 
@@ -12,9 +13,11 @@ import Input from "@/components/input";
 import ProfileUploader from "@/components/profile-uploader";
 
 import { profileImgWhiteList } from "@/constants/mime";
-import { EmailRegex, PwRegex } from "@/constants/regex";
+import { EmailRegex } from "@/constants/regex";
 
 import useToastContext from "@/hook/use-toast-context";
+
+import { SignUpForm } from "@/models/validator-model";
 
 import { emailDupCheck, signUp } from "@/redux/apis/auth-api";
 import { useAppDispatch, useAppSelector, useThunkDispatch } from "@/redux/hook";
@@ -22,47 +25,29 @@ import { resetAuth } from "@/redux/modules/auth-slice";
 
 import { encodeFileToBase64 } from "@/utils/file-encoder";
 
-interface SignUpForm {
-  email: string;
-  pw: string;
-  pwConfirm: string;
-  name: string;
-  phoneNumber: string;
-  originFile: File | null;
-  file?: string | null | undefined;
-  fileName?: string | null | undefined;
-  mime?: string | null | undefined;
-}
-
 const Page = () => {
-  const {
-    control,
-    handleSubmit,
-    getValues,
-    setValue,
-    setError,
-    clearErrors,
-    watch,
-  } = useForm<SignUpForm>({
-    mode: "onChange",
-    reValidateMode: "onChange",
-    defaultValues: {
-      email: "",
-      pw: "",
-      pwConfirm: "",
-      name: "",
-      phoneNumber: "",
-      originFile: null,
-      file: null,
-      fileName: null,
-      mime: null, //  jpg, jpeg, png, gif, bmp
-    },
-  });
+  const { control, handleSubmit, getValues, setValue, setError, clearErrors } =
+    useForm<SignUpForm>({
+      mode: "onChange",
+      reValidateMode: "onChange",
+      resolver: classValidatorResolver(SignUpForm),
+      defaultValues: {
+        email: "",
+        pw: "",
+        pwConfirm: "",
+        name: "",
+        phoneNumber: "",
+        originFile: null,
+        file: null,
+        fileName: null,
+        mime: null, //  jpg, jpeg, png, gif, bmp
+      },
+    });
 
-  const router = useRouter();
-  const appDispatch = useAppDispatch();
-  const thunkDispatch = useThunkDispatch();
   const toast = useToastContext();
+  const router = useRouter();
+  const dispatch = useThunkDispatch();
+  const appDispatch = useAppDispatch();
 
   // 회원가입
   const {
@@ -134,7 +119,7 @@ const Page = () => {
     } else if (!EmailRegex.test(email)) {
       setError("email", { message: "이메일 형식을 맞춰주세요" });
     } else {
-      thunkDispatch(emailDupCheck({ email }));
+      dispatch(emailDupCheck({ email }));
     }
   };
 
@@ -150,7 +135,7 @@ const Page = () => {
       formData.append("profileImg", file);
     }
 
-    thunkDispatch(signUp({ formData }));
+    dispatch(signUp({ formData }));
   };
 
   useEffect(() => {
@@ -238,17 +223,6 @@ const Page = () => {
           <Controller
             name="email"
             control={control}
-            rules={{
-              required: "이메일을 입력해주세요",
-              pattern: {
-                value: EmailRegex,
-                message: "이메일 형식을 맞춰주세요",
-              },
-              validate: () =>
-                emailDupCheckStatus === "rejected"
-                  ? "이메일 중복체크를 해주세요"
-                  : true,
-            }}
             render={({ field, fieldState: { error } }) => (
               <Input
                 type="text"
@@ -273,21 +247,6 @@ const Page = () => {
         <Controller
           name="pw"
           control={control}
-          rules={{
-            required: "비밀번호를 입력해주세요",
-            pattern: {
-              value: PwRegex,
-              message: "비밀번호 형식을 맞춰주세요",
-            },
-            minLength: {
-              value: 8,
-              message: "비밀번호는 최소 8자리 이상 입력해주세요",
-            },
-            maxLength: {
-              value: 20,
-              message: "비밀번호는 최대 20글자까지 입력할 수 있습니다",
-            },
-          }}
           render={({ field, fieldState: { error } }) => (
             <Input
               type="password"
@@ -303,23 +262,6 @@ const Page = () => {
         <Controller
           name="pwConfirm"
           control={control}
-          rules={{
-            required: "비밀번호를 입력해주세요",
-            pattern: {
-              value: PwRegex,
-              message: "비밀번호 형식을 맞춰주세요",
-            },
-            minLength: {
-              value: 8,
-              message: "비밀번호 확인은 최소 8자 이상 입력해주세요",
-            },
-            maxLength: {
-              value: 20,
-              message: "비밀번호 확인은 최대 20글자까지 입력할 수 있습니다",
-            },
-            validate: (value) =>
-              value === watch("pw") || "비밀번호가 일치하지 않습니다",
-          }}
           render={({ field, fieldState: { error } }) => (
             <Input
               type="password"
@@ -335,9 +277,6 @@ const Page = () => {
         <Controller
           name="name"
           control={control}
-          rules={{
-            required: "이름을 입력해주세요",
-          }}
           render={({ field, fieldState: { error } }) => (
             <Input
               type="text"
