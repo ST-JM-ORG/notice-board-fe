@@ -271,7 +271,7 @@ export default function Page(props: Props) {
             control={control}
             render={({ field }) => (
               <div>
-                <p>권한</p>
+                <p className="text-18 text-black">권한설정</p>
                 <RadioGroup name="permission" className="flex space-x-2">
                   <RadioButton
                     label="관리자"
