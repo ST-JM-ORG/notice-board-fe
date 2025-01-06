@@ -12,7 +12,7 @@ import Button from "@/components/button";
 import Input from "@/components/input";
 import ProfileUploader from "@/components/profile-uploader";
 
-import { profileImgWhiteList } from "@/constants/mime";
+import { IMAGE_WHITELIST } from "@/constants/mime";
 import { EmailRegex } from "@/constants/regex";
 
 import useToastContext from "@/hook/use-toast-context";
@@ -84,7 +84,7 @@ const Page = () => {
       const file: File = e.target.files[0];
 
       if (file) {
-        if (!profileImgWhiteList.includes(file.type)) {
+        if (!IMAGE_WHITELIST.includes(file.type)) {
           setError("file", {
             message: "jpg, jpeg, png, gif, bmp 확장자만 허용됩니다.",
           });
