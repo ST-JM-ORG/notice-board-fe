@@ -10,12 +10,14 @@ import { useRouter } from "next/navigation";
 import Button from "@/components/button";
 import Input from "@/components/input";
 import ProfileUploader from "@/components/profile-uploader";
+import RadioButton from "@/components/radio-button";
+import RadioGroup from "@/components/radio-group";
 
 import { IMAGE_WHITELIST } from "@/constants/mime";
 
 import useToastContext from "@/hook/use-toast-context";
 
-import { UserDetailForm } from "@/models/validator-model";
+import { AdminDetailForm } from "@/models/validator-model";
 
 import { getAdminUserDetail, updateAdminUser } from "@/redux/apis/admin-api";
 import { useAppDispatch, useAppSelector, useThunkDispatch } from "@/redux/hook";
@@ -31,10 +33,10 @@ export default function Page(props: Props) {
   const { params } = props;
 
   const { control, handleSubmit, getValues, setValue, setError, clearErrors } =
-    useForm<UserDetailForm>({
+    useForm<AdminDetailForm>({
       mode: "onChange",
       reValidateMode: "onChange",
-      resolver: classValidatorResolver(UserDetailForm),
+      resolver: classValidatorResolver(AdminDetailForm),
       defaultValues: {
         email: "",
         name: "",
@@ -43,6 +45,7 @@ export default function Page(props: Props) {
         file: null,
         fileName: null,
         mime: null, //  jpg, jpeg, png, gif, bmp
+        permission: 0,
       },
     });
 
@@ -106,6 +109,10 @@ export default function Page(props: Props) {
     setValue("mime", null);
   };
 
+  const handleChangePermission = (e: ChangeEvent<HTMLInputElement>) => {
+    setValue("permission", Number(e.target.value));
+  };
+
   const handleChangeUserInfo = () => {
     const formData = new FormData();
 
@@ -115,8 +122,8 @@ export default function Page(props: Props) {
     }
     formData.append("name", getValues("name"));
     formData.append("contact", getValues("phoneNumber"));
-    formData.append("profileDelYn", file ? "false" : "true");
-    formData.append("adminYn", user && user.adminYn ? "true" : "false");
+    formData.append("profileDelYn", file ? "N" : "Y");
+    formData.append("adminYn", getValues("permission") ? "Y" : "N");
 
     dispatch(updateAdminUser({ id, formData }));
   };
@@ -130,6 +137,7 @@ export default function Page(props: Props) {
       setValue("email", user ? user.email : "");
       setValue("name", user ? user.name : "");
       setValue("phoneNumber", user ? user.contact : "");
+      setValue("permission", user && user.adminYn === "Y" ? 1 : 0);
 
       if (user && user.profileImg) {
         setDefaultImg(process.env.NEXT_PUBLIC_BASE_URL + user.profileImg);
@@ -154,6 +162,14 @@ export default function Page(props: Props) {
       appDispatch(resetAdmin("update"));
     };
   }, [appDispatch]);
+
+  if (detailStatus === "pending") {
+    return (
+      <div className="flex h-full w-full items-center justify-center">
+        Loading...
+      </div>
+    );
+  }
 
   return (
     <form onSubmit={handleSubmit(handleChangeUserInfo)} className="flex">
@@ -236,6 +252,30 @@ export default function Page(props: Props) {
                 helperText={error && error.message}
                 {...field}
               />
+            )}
+          />
+
+          <Controller
+            name="permission"
+            control={control}
+            render={({ field }) => (
+              <div>
+                <p>권한</p>
+                <RadioGroup name="permission" className="flex space-x-2">
+                  <RadioButton
+                    label="관리자"
+                    value={1}
+                    groupValue={field.value}
+                    onChange={handleChangePermission}
+                  />
+                  <RadioButton
+                    label="사용자"
+                    value={0}
+                    groupValue={field.value}
+                    onChange={handleChangePermission}
+                  />
+                </RadioGroup>
+              </div>
             )}
           />
         </div>

@@ -49,7 +49,7 @@ export class SignUpForm {
   mime: string | null | undefined;
 }
 
-// 사용자 및 관리자 수정
+// 사용자 수정
 export class UserDetailForm {
   @Matches(EmailRegex, { message: "이메일 형식을 맞춰주세요" })
   email: string;
@@ -71,6 +71,33 @@ export class UserDetailForm {
 
   @IsOptional()
   mime: string | undefined | null;
+}
+
+// 관리자 수정
+export class AdminDetailForm {
+  @Matches(EmailRegex, { message: "이메일 형식을 맞춰주세요" })
+  email: string;
+
+  @MinLength(1, { message: "이름을 입력해주세요" })
+  name: string;
+
+  @IsOptional()
+  phoneNumber: string;
+
+  @IsOptional()
+  originFile: File | undefined | null;
+
+  @IsOptional()
+  file: string | undefined | null;
+
+  @IsOptional()
+  fileName: string | undefined | null;
+
+  @IsOptional()
+  mime: string | undefined | null;
+
+  @IsOptional()
+  permission: string | number;
 }
 
 // 비밀번호 변경
