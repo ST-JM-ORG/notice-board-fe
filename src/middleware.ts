@@ -2,7 +2,11 @@ import { jwtDecode, JwtPayload } from "jwt-decode";
 
 import { NextRequest, NextResponse } from "next/server";
 
-import { ACCESS_TOKEN, MODULE_PERMISSION, REFRESH_TOKEN } from "@/constants/const";
+import {
+  ACCESS_TOKEN,
+  MODULE_PERMISSION,
+  REFRESH_TOKEN,
+} from "@/constants/const";
 
 /**
  * 미들웨어
@@ -61,33 +65,15 @@ export const middleware = async (request: NextRequest) => {
       return NextResponse.redirect(new URL("/login", request.url));
     }
 
-    const userPermission =
+    const rolePermission =
       MODULE_PERMISSION.find(({ role }) => role === decodedToken.role)
         ?.permissions || [];
 
-    const pagePermission = userPermission.find(({ url }) =>
+    const pagePermission = rolePermission.find(({ url }) =>
       pathname.startsWith(url),
     );
 
-    const access =
-      pagePermission?.canAccess.read.allowed &&
-      pathname.startsWith(pagePermission?.canAccess.read.url);
-
-    const canAccess = userPermission.some(
-      ({ canAccess: { create, read, update, detail } }) => {
-        // static routes (create, read)
-        const canAccessStatic =
-          (create.allowed && pathname.startsWith(create.url)) ||
-          (read.allowed && pathname.startsWith(read.url));
-
-        // dynamic routes (update, detail)
-        const canAccessDynamic =
-          (update.allowed && pathname === update.url) ||
-          (detail.allowed && pathname === detail.url);
-
-        return canAccessStatic || canAccessDynamic;
-      },
-    );
+    const canAccess: boolean = pagePermission?.allowed || false;
 
     if (!canAccess) {
       return NextResponse.redirect(new URL("/unauthorized", request.url));

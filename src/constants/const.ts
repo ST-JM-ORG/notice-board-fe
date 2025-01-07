@@ -20,36 +20,9 @@ export const MODULE_PERMISSION: ModulePermissionType[] = [
     roleName: "최고관리자",
     role: "SUPER_ADMIN",
     permissions: [
-      {
-        pageName: "관리자",
-        url: "/admin",
-        canAccess: {
-          create: { allowed: false, url: "" },
-          read: { allowed: true, url: "/admin" },
-          update: { allowed: true, url: "/admin" },
-          detail: { allowed: true, url: "/admin" },
-        },
-      },
-      {
-        pageName: "프로필",
-        url: "/profile",
-        canAccess: {
-          create: { allowed: false, url: "" },
-          read: { allowed: true, url: "/profile" },
-          update: { allowed: true, url: "/profile" },
-          detail: { allowed: true, url: "/profile" },
-        },
-      },
-      {
-        pageName: "홈",
-        url: "/",
-        canAccess: {
-          create: { allowed: false, url: "" },
-          read: { allowed: true, url: "/" },
-          update: { allowed: false, url: "" },
-          detail: { allowed: false, url: "" },
-        },
-      },
+      { name: "관리자", url: "/admin", allowed: true },
+      { name: "프로필", url: "/profile", allowed: true },
+      { name: "홈", url: "/", allowed: true },
     ],
   },
   {
@@ -57,36 +30,9 @@ export const MODULE_PERMISSION: ModulePermissionType[] = [
     roleName: "관리자",
     role: "ADMIN",
     permissions: [
-      {
-        pageName: "관리자",
-        url: "/admin",
-        canAccess: {
-          create: { allowed: false, url: "" },
-          read: { allowed: true, url: "/admin" },
-          update: { allowed: true, url: "/admin" },
-          detail: { allowed: true, url: "/admin" },
-        },
-      },
-      {
-        pageName: "프로필",
-        url: "/profile",
-        canAccess: {
-          create: { allowed: false, url: "" },
-          read: { allowed: true, url: "/profile" },
-          update: { allowed: true, url: "/profile" },
-          detail: { allowed: true, url: "/profile" },
-        },
-      },
-      {
-        pageName: "홈",
-        url: "/",
-        canAccess: {
-          create: { allowed: false, url: "" },
-          read: { allowed: true, url: "/" },
-          update: { allowed: false, url: "" },
-          detail: { allowed: false, url: "" },
-        },
-      },
+      { name: "관리자", url: "/admin", allowed: true },
+      { name: "프로필", url: "/profile", allowed: true },
+      { name: "홈", url: "/", allowed: true },
     ],
   },
   {
@@ -94,36 +40,9 @@ export const MODULE_PERMISSION: ModulePermissionType[] = [
     roleName: "사용자",
     role: "USER",
     permissions: [
-      {
-        pageName: "관리자",
-        url: "/admin",
-        canAccess: {
-          create: { allowed: false, url: "" },
-          read: { allowed: false, url: "" },
-          update: { allowed: false, url: "" },
-          detail: { allowed: false, url: "" },
-        },
-      },
-      {
-        pageName: "프로필",
-        url: "/profile",
-        canAccess: {
-          create: { allowed: false, url: "" },
-          read: { allowed: true, url: "/profile" },
-          update: { allowed: true, url: "/profile" },
-          detail: { allowed: true, url: "/profile" },
-        },
-      },
-      {
-        pageName: "홈",
-        url: "/",
-        canAccess: {
-          create: { allowed: false, url: "" },
-          read: { allowed: true, url: "/" },
-          update: { allowed: false, url: "" },
-          detail: { allowed: false, url: "" },
-        },
-      },
+      { name: "관리자", url: "/admin", allowed: false },
+      { name: "프로필", url: "/profile", allowed: true },
+      { name: "홈", url: "/", allowed: true },
     ],
   },
 ];

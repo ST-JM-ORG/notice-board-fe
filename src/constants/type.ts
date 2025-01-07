@@ -5,13 +5,8 @@ export type ModulePermissionType = {
   roleName: string;
   role: string;
   permissions: {
-    pageName: string;
+    name: string;
     url: string;
-    canAccess: {
-      create: { allowed: boolean; url: string };
-      read: { allowed: boolean; url: string };
-      update: { allowed: boolean; url: string };
-      detail: { allowed: boolean; url: string };
-    };
+    allowed: boolean;
   }[];
 };
