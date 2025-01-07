@@ -2,7 +2,7 @@ import { jwtDecode, JwtPayload } from "jwt-decode";
 
 import { NextRequest, NextResponse } from "next/server";
 
-import { ACCESS_TOKEN, REFRESH_TOKEN } from "@/constants/const";
+import { ACCESS_TOKEN, MODULE_PERMISSION, REFRESH_TOKEN } from "@/constants/const";
 
 /**
  * 미들웨어
@@ -13,7 +13,7 @@ import { ACCESS_TOKEN, REFRESH_TOKEN } from "@/constants/const";
  */
 export const middleware = async (request: NextRequest) => {
   const { pathname } = request.nextUrl;
-  
+
   const accessToken = request.cookies.get(ACCESS_TOKEN)?.value;
   const refreshToken = request.cookies.get(REFRESH_TOKEN)?.value;
 
@@ -36,10 +36,61 @@ export const middleware = async (request: NextRequest) => {
     const currentTime = Date.now() / 1000;
 
     if (decodedToken.exp && decodedToken.exp < currentTime) {
-      if (pathname === "login") {
+      if (pathname === "/login") {
         return NextResponse.next();
       }
       return NextResponse.redirect(new URL("/login", request.url));
+    }
+  }
+
+  if (accessToken) {
+    const decodedToken = jwtDecode<
+      JwtPayload & {
+        memberId: number;
+        name: string;
+        profileImg: string;
+        role: string;
+      }
+    >(accessToken);
+    const currentTime = Date.now() / 1000;
+
+    if (decodedToken.exp && decodedToken.exp < currentTime) {
+      if (pathname === "/login") {
+        return NextResponse.next();
+      }
+      return NextResponse.redirect(new URL("/login", request.url));
+    }
+
+    const userPermission =
+      MODULE_PERMISSION.find(({ role }) => role === decodedToken.role)
+        ?.permissions || [];
+
+    const pagePermission = userPermission.find(({ url }) =>
+      pathname.startsWith(url),
+    );
+
+    const access =
+      pagePermission?.canAccess.read.allowed &&
+      pathname.startsWith(pagePermission?.canAccess.read.url);
+
+    const canAccess = userPermission.some(
+      ({ canAccess: { create, read, update, detail } }) => {
+        // static routes (create, read)
+        const canAccessStatic =
+          (create.allowed && pathname.startsWith(create.url)) ||
+          (read.allowed && pathname.startsWith(read.url));
+
+        // dynamic routes (update, detail)
+        const canAccessDynamic =
+          (update.allowed && pathname === update.url) ||
+          (detail.allowed && pathname === detail.url);
+
+        return canAccessStatic || canAccessDynamic;
+      },
+    );
+
+    if (!canAccess) {
+      return NextResponse.redirect(new URL("/unauthorized", request.url));
     }
   }
 
