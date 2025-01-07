@@ -4,7 +4,7 @@ import { shallowEqual } from "react-redux";
 import { useRouter } from "next/navigation";
 
 import Button from "@/components/button";
-import Modal from "@/components/modal";
+import ConfirmModal from "@/components/confirm-modal";
 
 import useToastContext from "@/hook/use-toast-context";
 
@@ -54,21 +54,12 @@ export default function DeleteUser() {
         회원탈퇴
       </Button>
 
-      <Modal
-        width={400}
-        height={150}
+      <ConfirmModal
         open={modalOpen}
+        message="해당 작업은 실행 후 되돌릴 수 없습니다. 정말 삭제하시겠습니까?"
         onClose={() => setModalOpen(false)}
-        className="flex flex-col justify-between space-y-2"
-      >
-        <div>삭제하면 되돌릴 수 없습니다. 정말 삭제하시겠습니까?</div>
-        <div className="flex justify-center space-x-1">
-          <Button>취소</Button>
-          <Button className="text-red" onClick={handleDeleteUser}>
-            회원탈퇴
-          </Button>
-        </div>
-      </Modal>
+        onOk={handleDeleteUser}
+      />
     </>
   );
 }

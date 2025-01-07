@@ -25,7 +25,7 @@ export const getAdminUserList = createAsyncThunk<
   "admin/userList",
   async (
     { pageSize = 10, pageNo, searchType = "ALL", searchTerm = "" },
-    thunkAPI,
+    { rejectWithValue },
   ) => {
     const query = createUrlQueryStr([
       { paramKey: "size", paramValue: pageSize },
@@ -39,9 +39,9 @@ export const getAdminUserList = createAsyncThunk<
       return response.data;
     } catch (e) {
       if (axios.isAxiosError(e) && e.response) {
-        return thunkAPI.rejectWithValue(e.response.data);
+        return rejectWithValue(e.response.data);
       } else {
-        return thunkAPI.rejectWithValue(ERROR_RESPONSE);
+        return rejectWithValue(ERROR_RESPONSE);
       }
     }
   },
@@ -51,15 +51,15 @@ export const getAdminUserDetail = createAsyncThunk<
   ApiResponse<AdminUserProps>,
   { id: string },
   { rejectValue: ApiResponse }
->("admin/userDetail", async ({ id }, thunkAPI) => {
+>("admin/userDetail", async ({ id }, { rejectWithValue }) => {
   try {
     const response = await instance.get(`/admin/user/${id}`);
     return response.data;
   } catch (e) {
     if (axios.isAxiosError(e) && e.response) {
-      return thunkAPI.rejectWithValue(e.response.data);
+      return rejectWithValue(e.response.data);
     } else {
-      return thunkAPI.rejectWithValue(ERROR_RESPONSE);
+      return rejectWithValue(ERROR_RESPONSE);
     }
   }
 });
@@ -68,7 +68,7 @@ export const updateAdminUser = createAsyncThunk<
   ApiResponse,
   { id: string; formData: FormData },
   { rejectValue: ApiResponse }
->("admin/update", async ({ id, formData }, thunkAPI) => {
+>("admin/update", async ({ id, formData }, { rejectWithValue }) => {
   try {
     const response = await instance.put(`/admin/user/${id}`, formData, {
       headers: {
@@ -78,9 +78,26 @@ export const updateAdminUser = createAsyncThunk<
     return response.data;
   } catch (e) {
     if (axios.isAxiosError(e) && e.response) {
-      return thunkAPI.rejectWithValue(e.response.data);
+      return rejectWithValue(e.response.data);
     } else {
-      return thunkAPI.rejectWithValue(ERROR_RESPONSE);
+      return rejectWithValue(ERROR_RESPONSE);
+    }
+  }
+});
+
+export const deleteAdminUser = createAsyncThunk<
+  ApiResponse<boolean>,
+  { id: string },
+  { rejectValue: ApiResponse }
+>("admin/delete", async ({ id }, { rejectWithValue }) => {
+  try {
+    const response = await instance.delete(`/admin/user/${id}`);
+    return response.data;
+  } catch (e) {
+    if (axios.isAxiosError(e) && e.response) {
+      return rejectWithValue(e.response.data);
+    } else {
+      return rejectWithValue(ERROR_RESPONSE);
     }
   }
 });

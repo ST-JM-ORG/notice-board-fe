@@ -51,6 +51,7 @@ export default {
         celadon: "#bdecb6",
         cultured: "#f9f6f2",
         dandelion: "#fcde70",
+        "dark-pastel-green": "#11b823",
         "dark-sky-blue": "#95b8d1",
         gainsboro: "#dedede",
         "light-green": "#90ee90",

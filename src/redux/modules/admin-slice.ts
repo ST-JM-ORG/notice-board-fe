@@ -5,9 +5,9 @@ import { Status } from "@/constants/type";
 
 import { AdminUserProps } from "@/models/admin-response";
 
-import { getAdminUserDetail, getAdminUserList, updateAdminUser } from "@/redux/apis/admin-api";
+import { deleteAdminUser, getAdminUserDetail, getAdminUserList, updateAdminUser } from "@/redux/apis/admin-api";
 
-type ResetProps = "getList" | "update";
+type ResetProps = "getList" | "detail" | "update" | "delete";
 
 interface AdminState {
   userList: {
@@ -29,6 +29,12 @@ interface AdminState {
     user: AdminUserProps | null;
   };
   update: {
+    status: Status;
+    message: string;
+    error: string;
+    code: string;
+  };
+  delete: {
     status: Status;
     message: string;
     error: string;
@@ -61,6 +67,12 @@ const initialState: AdminState = {
     error: "",
     code: "",
   },
+  delete: {
+    status: "idle",
+    message: "",
+    error: "",
+    code: "",
+  },
 };
 
 const AdminSlice = createSlice<
@@ -88,8 +100,16 @@ const AdminSlice = createSlice<
             pageNo: 1,
           };
           break;
-        case "update":
+        case "detail":
+          state.detail = {
+            status: "idle",
+            message: "",
+            error: "",
+            code: "",
+            user: null,
+          };
           state.update = { status: "idle", message: "", error: "", code: "" };
+          state.delete = { status: "idle", message: "", error: "", code: "" };
           break;
       }
     },
@@ -173,12 +193,7 @@ const AdminSlice = createSlice<
     // 수정
     builder
       .addCase(updateAdminUser.pending, (state, _) => {
-        state.update = {
-          status: "pending",
-          message: "",
-          error: "",
-          code: "",
-        };
+        state.update = { status: "pending", message: "", error: "", code: "" };
       })
       .addCase(updateAdminUser.fulfilled, (state, { payload }) => {
         const {
@@ -190,6 +205,27 @@ const AdminSlice = createSlice<
       .addCase(updateAdminUser.rejected, (state, { payload }) => {
         state.update = {
           ...state.update,
+          status: "rejected",
+          error: payload?.result.message || ERROR_MESSAGE["E500"],
+          code: payload?.result.code || "E500",
+        };
+      });
+
+    // 삭제
+    builder
+      .addCase(deleteAdminUser.pending, (state, _) => {
+        state.delete = { status: "idle", message: "", error: "", code: "" };
+      })
+      .addCase(deleteAdminUser.fulfilled, (state, { payload }) => {
+        const {
+          result: { message, code },
+        } = payload;
+
+        state.delete = { ...state.delete, status: "fulfilled", message, code };
+      })
+      .addCase(deleteAdminUser.rejected, (state, { payload }) => {
+        state.delete = {
+          ...state.delete,
           status: "rejected",
           error: payload?.result.message || ERROR_MESSAGE["E500"],
           code: payload?.result.code || "E500",

@@ -8,6 +8,7 @@ import { classValidatorResolver } from "@hookform/resolvers/class-validator";
 import { useRouter } from "next/navigation";
 
 import Button from "@/components/button";
+import ConfirmModal from "@/components/confirm-modal";
 import Input from "@/components/input";
 import ProfileUploader from "@/components/profile-uploader";
 import RadioButton from "@/components/radio-button";
@@ -19,7 +20,7 @@ import useToastContext from "@/hook/use-toast-context";
 
 import { AdminDetailForm } from "@/models/validator-model";
 
-import { getAdminUserDetail, updateAdminUser } from "@/redux/apis/admin-api";
+import { deleteAdminUser, getAdminUserDetail, updateAdminUser } from "@/redux/apis/admin-api";
 import { useAppDispatch, useAppSelector, useThunkDispatch } from "@/redux/hook";
 import { resetAdmin } from "@/redux/modules/admin-slice";
 
@@ -57,6 +58,7 @@ export default function Page(props: Props) {
   const dispatch = useThunkDispatch();
   const appDispatch = useAppDispatch();
 
+  const [modalOpen, setModalOpen] = useState(false);
   const [defaultImg, setDefaultImg] = useState<string | null>(null);
 
   const {
@@ -66,6 +68,9 @@ export default function Page(props: Props) {
     detailStatus,
     detailError,
     user,
+    delStatus,
+    delMsg,
+    delError,
   } = useAppSelector(
     (state) => ({
       updateStatus: state.admin.update.status,
@@ -74,9 +79,16 @@ export default function Page(props: Props) {
       detailStatus: state.admin.detail.status,
       detailError: state.admin.detail.error,
       user: state.admin.detail.user,
+      delStatus: state.admin.delete.status,
+      delMsg: state.admin.delete.message,
+      delError: state.admin.delete.error,
     }),
     shallowEqual,
   );
+
+  const handleSwitchModal = () => {
+    setModalOpen(!modalOpen);
+  };
 
   const handleChangeFile = async (e: ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
@@ -139,6 +151,14 @@ export default function Page(props: Props) {
     dispatch(updateAdminUser({ id, formData }));
   };
 
+  const handleCancel = () => {
+    router.push("/admin");
+  };
+
+  const handleDelete = () => {
+    dispatch(deleteAdminUser({ id }));
+  };
+
   useEffect(() => {
     dispatch(getAdminUserDetail({ id }));
   }, [dispatch, id]);
@@ -170,8 +190,17 @@ export default function Page(props: Props) {
   }, [updateStatus]);
 
   useEffect(() => {
+    if (delStatus === "fulfilled") {
+      toast.success({ heading: "Success", message: delMsg });
+      router.push("/admin");
+    } else if (delStatus === "rejected") {
+      toast.error({ heading: "Error", message: delError });
+    }
+  }, [delStatus]);
+
+  useEffect(() => {
     return () => {
-      appDispatch(resetAdmin("update"));
+      appDispatch(resetAdmin("detail"));
     };
   }, [appDispatch]);
 
@@ -184,121 +213,137 @@ export default function Page(props: Props) {
   }
 
   return (
-    <form onSubmit={handleSubmit(handleChangeUserInfo)} className="flex">
-      <Controller
-        name="file"
-        control={control}
-        render={({ field: { value }, fieldState: { error } }) => (
-          <div className="flex flex-col items-center justify-center space-y-2">
-            <ProfileUploader
-              size={250}
-              defaultImg={defaultImg}
-              file={value}
-              onChange={handleChangeFile}
-            />
-            <div className="flex flex-col items-center justify-start space-y-1">
-              <div className="space-x-1">
-                <Button type="button" onClick={() => {}}>
-                  미리보기
-                </Button>
-                <Button
-                  type="button"
-                  className="text-red"
-                  onClick={handleRemoveProfile}
-                >
-                  삭제
-                </Button>
+    <>
+      <form onSubmit={handleSubmit(handleChangeUserInfo)} className="flex">
+        <Controller
+          name="file"
+          control={control}
+          render={({ field: { value }, fieldState: { error } }) => (
+            <div className="flex flex-col items-center justify-center space-y-2">
+              <ProfileUploader
+                size={250}
+                defaultImg={defaultImg}
+                file={value}
+                onChange={handleChangeFile}
+              />
+              <div className="flex flex-col items-center justify-start space-y-1">
+                <div className="space-x-1">
+                  <Button type="button" onClick={() => {}}>
+                    미리보기
+                  </Button>
+                  <Button
+                    type="button"
+                    className="text-red"
+                    onClick={handleRemoveProfile}
+                  >
+                    삭제
+                  </Button>
+                </div>
+                <p className="text-12 font-bold text-american-silver">
+                  jpg, jpeg, png, gif, bmp만 허용됩니다.
+                </p>
               </div>
-              <p className="text-12 font-bold text-american-silver">
-                jpg, jpeg, png, gif, bmp만 허용됩니다.
-              </p>
+              <p className="px-5 text-13 text-red">{error && error.message}</p>
             </div>
-            <p className="px-5 text-13 text-red">{error && error.message}</p>
+          )}
+        />
+
+        <div className="ml-20 flex w-full flex-col justify-start">
+          <div className="flex flex-col space-y-2">
+            <Controller
+              name="email"
+              control={control}
+              render={({ field: { value } }) => (
+                <Input
+                  type="text"
+                  className="w-full rounded-b-none"
+                  text="이메일"
+                  required
+                  value={value}
+                  disabled={true}
+                />
+              )}
+            />
+
+            <Controller
+              name="name"
+              control={control}
+              rules={{
+                required: "이름을 입력해주세요",
+              }}
+              render={({ field, fieldState: { error } }) => (
+                <Input
+                  type="text"
+                  className="rounded-t-none"
+                  text="이름"
+                  helperText={error && error.message}
+                  required
+                  {...field}
+                />
+              )}
+            />
+
+            <Controller
+              name="phoneNumber"
+              control={control}
+              render={({ field, fieldState: { error } }) => (
+                <Input
+                  type="text"
+                  className="rounded-t-none"
+                  text="전화번호"
+                  helperText={error && error.message}
+                  {...field}
+                />
+              )}
+            />
+
+            <Controller
+              name="permission"
+              control={control}
+              render={({ field: { value } }) => (
+                <div>
+                  <p className="text-18 text-black">권한설정</p>
+                  <RadioGroup name="permission" className="flex space-x-2">
+                    <RadioButton
+                      label="관리자"
+                      value={1}
+                      groupValue={value}
+                      onChange={handleChangePermission}
+                    />
+                    <RadioButton
+                      label="사용자"
+                      value={0}
+                      groupValue={value}
+                      onChange={handleChangePermission}
+                    />
+                  </RadioGroup>
+                </div>
+              )}
+            />
           </div>
-        )}
+
+          <div className="mt-20 flex justify-end space-x-1">
+            <Button
+              type="button"
+              className="text-red"
+              onClick={() => setModalOpen(true)}
+            >
+              삭제
+            </Button>
+            <Button type="button" onClick={handleCancel}>
+              취소
+            </Button>
+            <Button type="submit">수정</Button>
+          </div>
+        </div>
+      </form>
+
+      <ConfirmModal
+        open={modalOpen}
+        message="해당 작업은 실행 후 되돌릴 수 없습니다. 정말 삭제하시겠습니까?"
+        onClose={() => setModalOpen(false)}
+        onOk={handleDelete}
       />
-
-      <div className="ml-20 flex w-full flex-col justify-start">
-        <div className="flex flex-col space-y-2">
-          <Controller
-            name="email"
-            control={control}
-            render={({ field: { value } }) => (
-              <Input
-                type="text"
-                className="w-full rounded-b-none"
-                text="이메일"
-                required
-                value={value}
-                disabled={true}
-              />
-            )}
-          />
-
-          <Controller
-            name="name"
-            control={control}
-            rules={{
-              required: "이름을 입력해주세요",
-            }}
-            render={({ field, fieldState: { error } }) => (
-              <Input
-                type="text"
-                className="rounded-t-none"
-                text="이름"
-                helperText={error && error.message}
-                required
-                {...field}
-              />
-            )}
-          />
-
-          <Controller
-            name="phoneNumber"
-            control={control}
-            render={({ field, fieldState: { error } }) => (
-              <Input
-                type="text"
-                className="rounded-t-none"
-                text="전화번호"
-                helperText={error && error.message}
-                {...field}
-              />
-            )}
-          />
-
-          <Controller
-            name="permission"
-            control={control}
-            render={({ field: { value } }) => (
-              <div>
-                <p className="text-18 text-black">권한설정</p>
-                <RadioGroup name="permission" className="flex space-x-2">
-                  <RadioButton
-                    label="관리자"
-                    value={1}
-                    groupValue={value}
-                    onChange={handleChangePermission}
-                  />
-                  <RadioButton
-                    label="사용자"
-                    value={0}
-                    groupValue={value}
-                    onChange={handleChangePermission}
-                  />
-                </RadioGroup>
-              </div>
-            )}
-          />
-        </div>
-
-        <div className="mt-20 flex justify-end space-x-1">
-          <Button type="button" onClick={() => router.push("/admin")}>
-            취소
-          </Button>
-          <Button type="submit">수정</Button>
-        </div>
-      </div>
-    </form>
+    </>
   );
 }
