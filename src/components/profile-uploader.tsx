@@ -7,11 +7,12 @@ interface Props {
   size: number;
   defaultImg?: string | null | undefined;
   file?: string | null | undefined;
-  onChange: (e: ChangeEvent<HTMLInputElement>) => void;
+  disabled?: boolean;
+  onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
 }
 
 const ProfileUploader = (props: Props) => {
-  const { size, defaultImg, file, onChange } = props;
+  const { size, defaultImg, file, disabled = false, onChange } = props;
 
   return (
     <>
@@ -19,6 +20,7 @@ const ProfileUploader = (props: Props) => {
         type="file"
         id="file-uploader"
         className="hidden"
+        disabled={disabled}
         onChange={onChange}
       />
       <div className="flex items-center space-x-2 rounded-50">
@@ -27,7 +29,7 @@ const ProfileUploader = (props: Props) => {
           className={cn(
             `flex items-center justify-center rounded-1/2 border-1 border-dashed
             border-sonic-silver`,
-            "hover:cursor-pointer",
+            !disabled && "hover:cursor-pointer",
           )}
           style={{
             width: `${pxToRem(size)}rem`,

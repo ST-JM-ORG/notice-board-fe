@@ -14,6 +14,7 @@ import { resetAuth } from "@/redux/modules/auth-slice";
 import { saveToken } from "@/redux/modules/token-slice";
 
 import { cn } from "@/utils/classname";
+import { adminRole } from "@/utils/role";
 import { pxToRem } from "@/utils/size";
 
 export default function Header() {
@@ -170,7 +171,7 @@ export default function Header() {
                 >
                   내 정보
                 </button>
-                {role === "SUPER_ADMIN" && (
+                {adminRole(role) && (
                   <button
                     type="button"
                     className={cn(

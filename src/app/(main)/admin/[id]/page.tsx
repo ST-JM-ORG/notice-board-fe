@@ -25,6 +25,7 @@ import { useAppDispatch, useAppSelector, useThunkDispatch } from "@/redux/hook";
 import { resetAdmin } from "@/redux/modules/admin-slice";
 
 import { encodeFileToBase64 } from "@/utils/file-encoder";
+import { adminRole, superAdminRole } from "@/utils/role";
 
 interface Props {
   params: Promise<{ id: string }>;
@@ -71,6 +72,7 @@ export default function Page(props: Props) {
     delStatus,
     delMsg,
     delError,
+    role,
   } = useAppSelector(
     (state) => ({
       updateStatus: state.admin.update.status,
@@ -82,13 +84,10 @@ export default function Page(props: Props) {
       delStatus: state.admin.delete.status,
       delMsg: state.admin.delete.message,
       delError: state.admin.delete.error,
+      role: state.token.role,
     }),
     shallowEqual,
   );
-
-  const handleSwitchModal = () => {
-    setModalOpen(!modalOpen);
-  };
 
   const handleChangeFile = async (e: ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
@@ -224,6 +223,7 @@ export default function Page(props: Props) {
                 size={250}
                 defaultImg={defaultImg}
                 file={value}
+                disabled={!superAdminRole(role)}
                 onChange={handleChangeFile}
               />
               <div className="flex flex-col items-center justify-start space-y-1">
@@ -231,13 +231,15 @@ export default function Page(props: Props) {
                   <Button type="button" onClick={() => {}}>
                     미리보기
                   </Button>
-                  <Button
-                    type="button"
-                    className="text-red"
-                    onClick={handleRemoveProfile}
-                  >
-                    삭제
-                  </Button>
+                  {adminRole(role) && (
+                    <Button
+                      type="button"
+                      className="text-red"
+                      onClick={handleRemoveProfile}
+                    >
+                      삭제
+                    </Button>
+                  )}
                 </div>
                 <p className="text-12 font-bold text-american-silver">
                   jpg, jpeg, png, gif, bmp만 허용됩니다.
