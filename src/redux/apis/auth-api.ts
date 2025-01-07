@@ -12,7 +12,7 @@ export const signUp = createAsyncThunk<
   ApiResponse<boolean>,
   { formData: FormData },
   { rejectValue: ApiResponse }
->("auth/signUp", async (data, thunkAPI) => {
+>("auth/signUp", async (data, { rejectWithValue }) => {
   const { formData } = data;
 
   try {
@@ -24,9 +24,9 @@ export const signUp = createAsyncThunk<
     return response.data;
   } catch (e) {
     if (axios.isAxiosError(e) && e.response) {
-      return thunkAPI.rejectWithValue(e.response.data);
+      return rejectWithValue(e.response.data);
     } else {
-      return thunkAPI.rejectWithValue(ERROR_RESPONSE);
+      return rejectWithValue(ERROR_RESPONSE);
     }
   }
 });
@@ -35,7 +35,7 @@ export const emailDupCheck = createAsyncThunk<
   ApiResponse<null>,
   { email: string },
   { rejectValue: ApiResponse }
->("auth/emailDupCheck", async (data, thunkAPI) => {
+>("auth/emailDupCheck", async (data, { rejectWithValue }) => {
   const { email } = data;
 
   try {
@@ -43,9 +43,9 @@ export const emailDupCheck = createAsyncThunk<
     return response.data;
   } catch (e) {
     if (axios.isAxiosError(e) && e.response) {
-      return thunkAPI.rejectWithValue(e.response.data);
+      return rejectWithValue(e.response.data);
     } else {
-      return thunkAPI.rejectWithValue(ERROR_RESPONSE);
+      return rejectWithValue(ERROR_RESPONSE);
     }
   }
 });
@@ -54,7 +54,7 @@ export const login = createAsyncThunk<
   ApiResponse<{ accessToken: string; refreshToken: string }>,
   { email: string; pw: string },
   { rejectValue: ApiResponse }
->("auth/login", async ({ email, pw }, thunkAPI) => {
+>("auth/login", async ({ email, pw }, { rejectWithValue }) => {
   try {
     const response = await instance.post("/auth/login", {
       email,
@@ -63,18 +63,18 @@ export const login = createAsyncThunk<
     return response.data;
   } catch (e) {
     if (axios.isAxiosError(e) && e.response) {
-      return thunkAPI.rejectWithValue(e.response.data);
+      return rejectWithValue(e.response.data);
     } else {
-      return thunkAPI.rejectWithValue(ERROR_RESPONSE);
+      return rejectWithValue(ERROR_RESPONSE);
     }
   }
 });
 
 export const logout = createAsyncThunk<
-  ApiResponse<boolean | null | undefined>,
+  ApiResponse<boolean>,
   null,
   { rejectValue: ApiResponse }
->("auth/logout", async (_, thunkAPI) => {
+>("auth/logout", async (_, { rejectWithValue }) => {
   const refreshToken = getCookie(REFRESH_TOKEN);
 
   try {
@@ -86,9 +86,9 @@ export const logout = createAsyncThunk<
     return response.data;
   } catch (e) {
     if (axios.isAxiosError(e) && e.response) {
-      return thunkAPI.rejectWithValue(e.response.data);
+      return rejectWithValue(e.response.data);
     } else {
-      return thunkAPI.rejectWithValue(ERROR_RESPONSE);
+      return rejectWithValue(ERROR_RESPONSE);
     }
   }
 });
@@ -97,7 +97,7 @@ export const reissueToken = createAsyncThunk<
   ApiResponse<{ accessToken: string; refreshToken: string }>,
   null,
   { rejectValue: ApiResponse }
->("auth/reissueToken", async (_, thunkAPI) => {
+>("auth/reissueToken", async (_, { rejectWithValue }) => {
   const refreshToken = getCookie(REFRESH_TOKEN);
 
   try {
@@ -109,9 +109,9 @@ export const reissueToken = createAsyncThunk<
     return response.data;
   } catch (e) {
     if (axios.isAxiosError(e) && e.response) {
-      return thunkAPI.rejectWithValue(e.response.data);
+      return rejectWithValue(e.response.data);
     } else {
-      return thunkAPI.rejectWithValue(ERROR_RESPONSE);
+      return rejectWithValue(ERROR_RESPONSE);
     }
   }
 });

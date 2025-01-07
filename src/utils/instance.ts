@@ -9,6 +9,9 @@ const instance = axios.create({
   baseURL: process.env.NEXT_PUBLIC_BASE_URL,
   timeout: 10000,
   responseType: "json",
+  headers: {
+    "Content-Type": "application/json",
+  },
 });
 
 // 요청 인터셉터
@@ -20,14 +23,13 @@ instance.interceptors.request.use(
       config.headers.Authorization = `Bearer ${accessToken}`;
     }
 
-    config.headers = config.headers || {
-      "Content-Type": "application/json",
-    };
+    if (config.headers["Content-Type"]) {
+      config.headers["Content-Type"] = config.headers["Content-Type"];
+    }
 
     return config;
   },
-  (error) => {
-    // 2. 요청 에러가 있는 작업 처리
+  async (error) => {
     return Promise.reject(error);
   },
 );
