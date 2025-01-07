@@ -85,9 +85,6 @@ export class AdminDetailForm {
   phoneNumber: string;
 
   @IsOptional()
-  originFile: File | undefined | null;
-
-  @IsOptional()
   file: string | undefined | null;
 
   @IsOptional()

@@ -43,7 +43,6 @@ export default function Page(props: Props) {
         email: "",
         name: "",
         phoneNumber: "",
-        originFile: null,
         file: null,
         fileName: null,
         mime: null, //  jpg, jpeg, png, gif, bmp
@@ -61,6 +60,7 @@ export default function Page(props: Props) {
 
   const [modalOpen, setModalOpen] = useState(false);
   const [defaultImg, setDefaultImg] = useState<string | null>(null);
+  const [originFile, setOriginFile] = useState<File | null>(null);
 
   const {
     updateStatus,
@@ -105,7 +105,7 @@ export default function Page(props: Props) {
           const encodedFile = await encodeFileToBase64(file);
 
           if (typeof encodedFile === "string") {
-            setValue("originFile", file);
+            setOriginFile(file);
             setValue("file", encodedFile);
             setValue("fileName", file.name);
             setValue("mime", file.type);
@@ -118,11 +118,11 @@ export default function Page(props: Props) {
 
   const handleRemoveProfile = () => {
     clearErrors("file");
-    setValue("originFile", null);
     setValue("file", null);
     setValue("fileName", null);
     setValue("mime", null);
     setValue("isProfileDel", true);
+    setOriginFile(null);
     setDefaultImg(null);
   };
 
@@ -135,12 +135,11 @@ export default function Page(props: Props) {
 
     const name = getValues("name");
     const phoneNum = getValues("phoneNumber");
-    const file = getValues("originFile");
     const isProfileDel = getValues("isProfileDel");
     const permission = getValues("permission");
 
-    if (file) {
-      formData.append("profileImg", file);
+    if (originFile) {
+      formData.append("profileImg", originFile);
     }
     formData.append("name", name);
     formData.append("contact", phoneNum);
@@ -213,7 +212,7 @@ export default function Page(props: Props) {
 
   return (
     <>
-      <form onSubmit={handleSubmit(handleChangeUserInfo)} className="flex">
+      <form className="flex" onSubmit={handleSubmit(handleChangeUserInfo)}>
         <Controller
           name="file"
           control={control}
@@ -270,9 +269,6 @@ export default function Page(props: Props) {
             <Controller
               name="name"
               control={control}
-              rules={{
-                required: "이름을 입력해주세요",
-              }}
               render={({ field, fieldState: { error } }) => (
                 <Input
                   type="text"

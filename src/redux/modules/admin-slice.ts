@@ -94,10 +94,6 @@ const AdminSlice = createSlice<
             message: "",
             error: "",
             code: "",
-            totalCount: 0,
-            totalPageCount: 0,
-            pageSize: 10,
-            pageNo: 1,
           };
           break;
         case "detail":

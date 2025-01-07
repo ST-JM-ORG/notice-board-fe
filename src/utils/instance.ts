@@ -10,7 +10,7 @@ const instance = axios.create({
   timeout: 10000,
   responseType: "json",
   headers: {
-    "Content-Type": "application/json",
+    "Content-Type": "application/json;charset=UTF-8",
   },
 });
 
@@ -21,10 +21,6 @@ instance.interceptors.request.use(
 
     if (accessToken) {
       config.headers.Authorization = `Bearer ${accessToken}`;
-    }
-
-    if (config.headers["Content-Type"]) {
-      config.headers["Content-Type"] = config.headers["Content-Type"];
     }
 
     return config;
