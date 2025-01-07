@@ -13,6 +13,7 @@ import { ACCESS_TOKEN, REFRESH_TOKEN } from "@/constants/const";
  */
 export const middleware = async (request: NextRequest) => {
   const { pathname } = request.nextUrl;
+  
   const accessToken = request.cookies.get(ACCESS_TOKEN)?.value;
   const refreshToken = request.cookies.get(REFRESH_TOKEN)?.value;
 
