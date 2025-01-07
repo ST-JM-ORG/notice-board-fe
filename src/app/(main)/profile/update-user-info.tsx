@@ -32,10 +32,10 @@ export default function UpdateUserInfo() {
         email: "",
         name: "",
         phoneNumber: "",
-        originFile: null,
         file: null,
         fileName: null,
         mime: null, //  jpg, jpeg, png, gif, bmp
+        isProfileDel: false,
       },
     });
 
@@ -59,6 +59,7 @@ export default function UpdateUserInfo() {
     );
 
   const [defaultImg, setDefaultImg] = useState<string | null>(null);
+  const [originFile, setOriginFile] = useState<File | null>(null);
 
   const handleChangeFile = async (e: ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
@@ -75,10 +76,11 @@ export default function UpdateUserInfo() {
           clearErrors("file");
           const encodedFile = await encodeFileToBase64(file);
           if (typeof encodedFile === "string") {
-            setValue("originFile", file);
+            setOriginFile(file);
             setValue("file", encodedFile);
             setValue("fileName", file.name);
             setValue("mime", file.type);
+            setValue("isProfileDel", true);
           }
         }
       }
@@ -90,18 +92,24 @@ export default function UpdateUserInfo() {
     setValue("file", null);
     setValue("fileName", null);
     setValue("mime", null);
+    setValue("isProfileDel", true);
+    setOriginFile(null);
+    setDefaultImg(null);
   };
 
   const handleChangeUserInfo = () => {
     const formData = new FormData();
 
-    const file = getValues("originFile");
-    if (file) {
-      formData.append("profileImg", file);
+    const name = getValues("name");
+    const phoneNumber = getValues("phoneNumber");
+    const isProfileDel = getValues("isProfileDel");
+
+    if (originFile) {
+      formData.append("profileImg", originFile);
     }
-    formData.append("name", getValues("name"));
-    formData.append("contact", getValues("phoneNumber"));
-    formData.append("profileDelYn", file ? "false" : "true");
+    formData.append("name", name);
+    formData.append("contact", phoneNumber);
+    formData.append("profileDelYn", isProfileDel ? "Y" : "N");
 
     dispatch(updateUser({ formData }));
   };

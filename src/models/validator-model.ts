@@ -61,9 +61,6 @@ export class UserDetailForm {
   phoneNumber: string;
 
   @IsOptional()
-  originFile: File | undefined | null;
-
-  @IsOptional()
   file: string | undefined | null;
 
   @IsOptional()
@@ -71,6 +68,9 @@ export class UserDetailForm {
 
   @IsOptional()
   mime: string | undefined | null;
+
+  @IsOptional()
+  isProfileDel: boolean;
 }
 
 // 관리자 수정
