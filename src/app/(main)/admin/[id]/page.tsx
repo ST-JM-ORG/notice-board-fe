@@ -163,6 +163,7 @@ export default function Page(props: Props) {
   useEffect(() => {
     if (updateStatus === "fulfilled") {
       toast.success({ heading: "Success", message: updateMsg });
+      router.push("/admin");
     } else if (updateStatus === "rejected") {
       toast.error({ heading: "Error", message: updateError });
     }
@@ -269,20 +270,20 @@ export default function Page(props: Props) {
           <Controller
             name="permission"
             control={control}
-            render={({ field }) => (
+            render={({ field: { value } }) => (
               <div>
                 <p className="text-18 text-black">권한설정</p>
                 <RadioGroup name="permission" className="flex space-x-2">
                   <RadioButton
                     label="관리자"
                     value={1}
-                    groupValue={field.value}
+                    groupValue={value}
                     onChange={handleChangePermission}
                   />
                   <RadioButton
                     label="사용자"
                     value={0}
-                    groupValue={field.value}
+                    groupValue={value}
                     onChange={handleChangePermission}
                   />
                 </RadioGroup>
