@@ -1,10 +1,11 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
-import { IoPerson } from "react-icons/io5";
 import { shallowEqual } from "react-redux";
 
 import { useRouter } from "next/navigation";
+
+import ProfileImage from "@/components/profile-image";
 
 import useOutsideClick from "@/hook/use-outside-click";
 
@@ -112,21 +113,13 @@ export default function Header() {
             ref={ref}
             className={cn(
               `box-border flex h-full w-full items-center justify-center rounded-1/2
-              bg-gainsboro p-5 shadow-xl backdrop-blur`,
+              bg-gainsboro p-5 shadow-xl backdrop-blur transition-colors duration-200
+              ease-in-out`,
               "hover:bg-anti-flash-white",
-              "transition-colors duration-200 ease-in-out",
             )}
             onClick={handleSwitchProfileButton}
           >
-            {!profileImg ? (
-              <IoPerson />
-            ) : (
-              <img
-                alt="profile image"
-                src={process.env.NEXT_PUBLIC_BASE_URL + profileImg}
-                className="h-full w-full rounded-1/2 object-contain backdrop-blur"
-              />
-            )}
+            <ProfileImage src={profileImg} />
           </button>
           {animation && (
             <div
@@ -143,17 +136,7 @@ export default function Header() {
             >
               <div className="flex flex-col items-center justify-center">
                 <div className="h-40 w-40 rounded-1/2 border-1 border-gainsboro object-contain p-5 backdrop-blur">
-                  {!profileImg ? (
-                    <div className="rounded-1/2 bg-white p-10">
-                      <IoPerson />
-                    </div>
-                  ) : (
-                    <img
-                      alt="profile image"
-                      src={process.env.NEXT_PUBLIC_BASE_URL + profileImg}
-                      className="h-full w-full rounded-1/2"
-                    />
-                  )}
+                  <ProfileImage src={profileImg} />
                 </div>
                 <p className="mt-5 w-full text-center font-bold">
                   안녕하세요! {username}님
@@ -163,8 +146,8 @@ export default function Header() {
                 <button
                   type="button"
                   className={cn(
-                    "mb-2 rounded-t-10 bg-white py-5 text-14",
-                    "transition-colors duration-100 ease-in-out",
+                    `mb-2 rounded-t-10 bg-white py-5 text-14 transition-colors duration-100
+                    ease-in-out`,
                     "hover:bg-gainsboro hover:bg-opacity-30",
                   )}
                   onClick={handleGoProfilePage}
@@ -175,8 +158,7 @@ export default function Header() {
                   <button
                     type="button"
                     className={cn(
-                      "mb-2 bg-white py-5 text-14",
-                      "transition-colors duration-100 ease-in-out",
+                      "mb-2 bg-white py-5 text-14 transition-colors duration-100 ease-in-out",
                       "hover:bg-gainsboro hover:bg-opacity-30",
                     )}
                     onClick={handleGoAdminPage}
@@ -187,8 +169,7 @@ export default function Header() {
                 <button
                   type="button"
                   className={cn(
-                    "rounded-b-10 bg-white py-5 text-14",
-                    "transition-colors duration-100 ease-in-out",
+                    "rounded-b-10 bg-white py-5 text-14 transition-colors duration-100 ease-in-out",
                     "hover:bg-gainsboro hover:bg-opacity-30",
                   )}
                   onClick={handleLogout}
