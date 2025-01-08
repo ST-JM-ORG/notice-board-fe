@@ -23,7 +23,7 @@ export default function Header() {
   const appDispatch = useAppDispatch();
   const dispatch = useThunkDispatch();
 
-  const ref = useRef<HTMLButtonElement | null>(null);
+  const ref = useRef<HTMLDivElement | null>(null);
 
   const [open, setOpen] = useState<boolean>(false);
   const [animation, setAnimation] = useState<boolean>(false);
@@ -109,18 +109,12 @@ export default function Header() {
           Notice Board
         </h2>
         <div className="relative h-40 w-40">
-          <button
+          <ProfileImage
             ref={ref}
-            className={cn(
-              `box-border flex h-full w-full items-center justify-center rounded-1/2
-              bg-gainsboro p-5 shadow-xl backdrop-blur transition-colors duration-200
-              ease-in-out`,
-              "hover:bg-anti-flash-white",
-            )}
+            src={profileImg}
+            className="hover:cursor-pointer hover:bg-anti-flash-white"
             onClick={handleSwitchProfileButton}
-          >
-            <ProfileImage src={profileImg} />
-          </button>
+          />
           {animation && (
             <div
               ref={menuRef}
@@ -131,13 +125,11 @@ export default function Header() {
                   ? "animate-slide-top-right-in"
                   : "animate-slide-top-right-out",
               )}
-              style={{ top: `${pxToRem(height + 5)}rem` }}
+              style={{ top: `${pxToRem(height)}rem` }}
               onAnimationEnd={handleAnimatedEnd}
             >
               <div className="flex flex-col items-center justify-center">
-                <div className="h-40 w-40 rounded-1/2 border-1 border-gainsboro object-contain p-5 backdrop-blur">
-                  <ProfileImage src={profileImg} />
-                </div>
+                <ProfileImage src={profileImg} size={40} />
                 <p className="mt-5 w-full text-center font-bold">
                   안녕하세요! {username}님
                 </p>
