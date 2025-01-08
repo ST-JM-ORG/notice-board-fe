@@ -1,7 +1,6 @@
 "use client";
 
 import React, { use, useEffect, useState } from "react";
-import { IoPerson } from "react-icons/io5";
 import { shallowEqual } from "react-redux";
 
 import { useRouter } from "next/navigation";
@@ -10,6 +9,7 @@ import DataTable from "@/components/data-table";
 import DataTableCell from "@/components/data-table-cell";
 import DataTableRow from "@/components/data-table-row";
 import Pagination from "@/components/pagination";
+import ProfileImage from "@/components/profile-image";
 
 import { getAdminUserList } from "@/redux/apis/admin-api";
 import { useAppDispatch, useAppSelector, useThunkDispatch } from "@/redux/hook";
@@ -88,17 +88,7 @@ export default function Page(props: Props) {
                   {createRowNum(10, pageNo, totalCount, index)}
                 </DataTableCell>
                 <DataTableCell className="flex items-center justify-center">
-                  {profileImg ? (
-                    <img
-                      alt="Profile image"
-                      src={process.env.NEXT_PUBLIC_BASE_URL + profileImg}
-                      className="h-50 w-50 rounded-1/2"
-                    />
-                  ) : (
-                    <div className="flex h-50 w-50 items-center justify-center rounded-1/2 bg-gainsboro">
-                      <IoPerson className="h-20 w-20" />
-                    </div>
-                  )}
+                  <ProfileImage src={profileImg} size={40} />
                 </DataTableCell>
                 <DataTableCell>{email}</DataTableCell>
                 <DataTableCell>{name}</DataTableCell>
