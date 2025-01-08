@@ -155,7 +155,7 @@ export default function Header() {
                     )}
                     onClick={handleGoAdminPage}
                   >
-                    관리자 관리
+                    사용자 관리
                   </button>
                 )}
                 <button
