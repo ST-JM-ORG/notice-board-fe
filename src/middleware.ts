@@ -56,14 +56,6 @@ export const middleware = async (request: NextRequest) => {
         role: string;
       }
     >(accessToken);
-    const currentTime = Date.now() / 1000;
-
-    if (decodedToken.exp && decodedToken.exp < currentTime) {
-      if (pathname === "/login") {
-        return NextResponse.next();
-      }
-      return NextResponse.redirect(new URL("/login", request.url));
-    }
 
     const rolePermission =
       MODULE_PERMISSION.find(({ role }) => role === decodedToken.role)
