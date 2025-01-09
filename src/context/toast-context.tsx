@@ -52,6 +52,7 @@ export default function ToastContextProvider(props: PropsWithChildren) {
   }) => {
     const id = nanoid();
     const newToast: ToastData = { ...toast, type, id, duration: 2 };
+    setToasts((prev) => [...prev, newToast]);
 
     // Toast 메시지는 최대 TOAST_MAX_COUNT 개까지만 출력됨
     // if (toasts.length >= TOAST_MAX_COUNT) {
@@ -60,7 +61,7 @@ export default function ToastContextProvider(props: PropsWithChildren) {
     // } else {
     //   setToasts([newToast, ...toasts]);
     // }
-    setToasts([...toasts, newToast]);
+    // setToasts([...toasts, newToast]);
   };
 
   const info = (data: ToastInput) => {
@@ -101,7 +102,7 @@ export default function ToastContextProvider(props: PropsWithChildren) {
     <ToastContext.Provider value={{ success, warning, info, error }}>
       {children}
       {createPortal(
-        <div className="fixed bottom-0 right-0 mb-5 mr-5 space-y-1" ref={ref}>
+        <div ref={ref} className="fixed bottom-0 right-0 mb-5 mr-5 space-y-1">
           {toasts.map(({ id, type, heading, duration, message }) => (
             <ToastContainer
               key={id}
