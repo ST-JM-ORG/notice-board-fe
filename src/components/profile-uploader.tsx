@@ -43,7 +43,11 @@ const ProfileUploader = (props: Props) => {
               className="h-full w-full rounded-1/2 object-contain"
             />
           ) : defaultImg ? (
-            <img src={defaultImg} alt="Profile image" className="rounded-1/2" />
+            <img
+              src={defaultImg}
+              alt="Profile image"
+              className="h-full w-full rounded-1/2 object-contain"
+            />
           ) : (
             <span className="text-sonic-silver">프로필 이미지</span>
           )}
