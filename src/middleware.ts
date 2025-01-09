@@ -1,12 +1,10 @@
-import { jwtDecode, JwtPayload } from "jwt-decode";
+import { jwtDecode } from "jwt-decode";
 
 import { NextRequest, NextResponse } from "next/server";
 
-import {
-  ACCESS_TOKEN,
-  MODULE_PERMISSION,
-  REFRESH_TOKEN,
-} from "@/constants/const";
+import { ACCESS_TOKEN, MODULE_PERMISSION, REFRESH_TOKEN } from "@/constants/const";
+
+import { TokenPayload } from "@/models/token";
 
 /**
  * 미들웨어
@@ -20,6 +18,20 @@ export const middleware = async (request: NextRequest) => {
 
   const accessToken = request.cookies.get(ACCESS_TOKEN)?.value;
   const refreshToken = request.cookies.get(REFRESH_TOKEN)?.value;
+
+  if (pathname === "/unauthorized") {
+    return NextResponse.next();
+  }
+
+  if (!accessToken || !refreshToken) {
+    request.cookies.delete(ACCESS_TOKEN);
+    request.cookies.delete(REFRESH_TOKEN);
+
+    if (pathname === "/login") {
+      return NextResponse.next();
+    }
+    return NextResponse.redirect(new URL("/login", request.url));
+  }
 
   if (
     (!accessToken && !["/login", "/sign-up"].includes(pathname)) ||
@@ -36,7 +48,7 @@ export const middleware = async (request: NextRequest) => {
   }
 
   if (refreshToken) {
-    const decodedToken = jwtDecode<JwtPayload>(refreshToken);
+    const decodedToken = jwtDecode<TokenPayload>(refreshToken);
     const currentTime = Date.now() / 1000;
 
     if (decodedToken.exp && decodedToken.exp < currentTime) {
@@ -48,14 +60,7 @@ export const middleware = async (request: NextRequest) => {
   }
 
   if (accessToken) {
-    const decodedToken = jwtDecode<
-      JwtPayload & {
-        memberId: number;
-        name: string;
-        profileImg: string;
-        role: string;
-      }
-    >(accessToken);
+    const decodedToken = jwtDecode<TokenPayload>(accessToken);
 
     const rolePermission =
       MODULE_PERMISSION.find(({ role }) => role === decodedToken.role)
