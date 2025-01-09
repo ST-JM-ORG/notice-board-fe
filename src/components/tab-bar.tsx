@@ -19,7 +19,7 @@ export default function TabBar(props: Props) {
 
   return (
     <div
-      className="relative flex w-full justify-between rounded-30 bg-platinum bg-opacity-30
+      className="relative flex w-full justify-between rounded-30 bg-silver-sand bg-opacity-30
         backdrop-blur"
     >
       <div
