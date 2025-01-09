@@ -76,6 +76,7 @@ export default {
       keyframes: {
         "fade-in": {
           "0%": { transform: "translateX(300px)", opacity: "0" },
+          "70%": { transform: "translateX(-30px)", opacity: "1" },
           "100%": { transform: "translateX(0)", opacity: "1" },
         },
         "fade-out": {
