@@ -123,7 +123,7 @@ export default function UpdateUserInfo() {
       setValue("email", user ? user.email : "");
       setValue("name", user ? user.name : "");
       setValue("phoneNumber", user ? user.contact : "");
-      if (user) {
+      if (user?.profileImg) {
         setDefaultImg(process.env.NEXT_PUBLIC_BASE_URL + user.profileImg);
       } else {
         setDefaultImg(null);
