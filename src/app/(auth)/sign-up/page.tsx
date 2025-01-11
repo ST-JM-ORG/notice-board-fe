@@ -1,10 +1,10 @@
 "use client";
 
-import React, { ChangeEvent, useEffect } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { FaArrowRight } from "react-icons/fa";
 import { shallowEqual } from "react-redux";
-import { classValidatorResolver } from "@hookform/resolvers/class-validator";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 import { useRouter } from "next/navigation";
 
@@ -17,7 +17,7 @@ import { EmailRegex } from "@/constants/regex";
 
 import useToastContext from "@/hook/use-toast-context";
 
-import { SignUpForm } from "@/models/validator-model";
+import { SignUpScheme, SignUpSchemeType } from "@/models/validator-model";
 
 import { emailDupCheck, signUp } from "@/redux/apis/auth-api";
 import { useAppDispatch, useAppSelector, useThunkDispatch } from "@/redux/hook";
@@ -27,17 +27,16 @@ import { encodeFileToBase64 } from "@/utils/file-encoder";
 
 const Page = () => {
   const { control, handleSubmit, getValues, setValue, setError, clearErrors } =
-    useForm<SignUpForm>({
+    useForm<SignUpSchemeType>({
       mode: "onChange",
       reValidateMode: "onChange",
-      resolver: classValidatorResolver(SignUpForm),
+      resolver: zodResolver(SignUpScheme),
       defaultValues: {
         email: "",
         pw: "",
         pwConfirm: "",
         name: "",
         phoneNumber: "",
-        originFile: null,
         file: null,
         fileName: null,
         mime: null, //  jpg, jpeg, png, gif, bmp
@@ -48,6 +47,8 @@ const Page = () => {
   const router = useRouter();
   const dispatch = useThunkDispatch();
   const appDispatch = useAppDispatch();
+
+  const [originFile, setOriginFile] = useState<File | null>(null);
 
   // 회원가입
   const {
@@ -94,7 +95,7 @@ const Page = () => {
           const encodedFile = await encodeFileToBase64(file);
 
           if (typeof encodedFile === "string") {
-            setValue("originFile", file);
+            setOriginFile(file);
             setValue("file", encodedFile);
             setValue("fileName", file.name);
             setValue("mime", file.type);
@@ -125,14 +126,13 @@ const Page = () => {
 
   const handleSignUp = () => {
     const formData = new FormData();
-    const file = getValues("originFile");
 
     formData.append("email", getValues("email"));
     formData.append("password", getValues("pw"));
     formData.append("name", getValues("name"));
     formData.append("contact", getValues("phoneNumber"));
-    if (file) {
-      formData.append("profileImg", file);
+    if (originFile) {
+      formData.append("profileImg", originFile);
     }
 
     dispatch(signUp({ formData }));

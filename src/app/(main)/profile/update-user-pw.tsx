@@ -1,14 +1,14 @@
 import React, { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { shallowEqual } from "react-redux";
-import { classValidatorResolver } from "@hookform/resolvers/class-validator";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 import Button from "@/components/button";
 import Input from "@/components/input";
 
 import useToastContext from "@/hook/use-toast-context";
 
-import { UpdatePwForm } from "@/models/validator-model";
+import { UpdatePwScheme, UpdatePwSchemeType } from "@/models/validator-model";
 
 import { updatePw } from "@/redux/apis/user-api";
 import { useAppDispatch, useAppSelector, useThunkDispatch } from "@/redux/hook";
@@ -16,10 +16,10 @@ import { resetAuth } from "@/redux/modules/auth-slice";
 
 export default function UpdateUserPw() {
   const { control, handleSubmit, getValues, setError, watch } =
-    useForm<UpdatePwForm>({
+    useForm<UpdatePwSchemeType>({
       mode: "onChange",
       reValidateMode: "onChange",
-      resolver: classValidatorResolver(UpdatePwForm),
+      resolver: zodResolver(UpdatePwScheme),
       defaultValues: {
         currPw: "",
         newPw: "",

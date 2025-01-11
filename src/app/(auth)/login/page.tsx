@@ -4,7 +4,7 @@ import React, { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { FaArrowRight } from "react-icons/fa";
 import { shallowEqual } from "react-redux";
-import { classValidatorResolver } from "@hookform/resolvers/class-validator";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 import { useRouter } from "next/navigation";
 
@@ -13,7 +13,7 @@ import Input from "@/components/input";
 
 import useToastContext from "@/hook/use-toast-context";
 
-import { LoginForm } from "@/models/validator-model";
+import { LoginScheme, LoginSchemeType } from "@/models/validator-model";
 
 import { login } from "@/redux/apis/auth-api";
 import { useAppDispatch, useAppSelector, useThunkDispatch } from "@/redux/hook";
@@ -22,10 +22,10 @@ import { resetAuth } from "@/redux/modules/auth-slice";
 import { cn } from "@/utils/classname";
 
 const Page = () => {
-  const { control, handleSubmit, getValues } = useForm<LoginForm>({
+  const { control, handleSubmit, getValues } = useForm<LoginSchemeType>({
     mode: "onChange",
     reValidateMode: "onChange",
-    resolver: classValidatorResolver(LoginForm),
+    resolver: zodResolver(LoginScheme),
     defaultValues: {
       email: "",
       pw: "",

@@ -1,7 +1,7 @@
 import React, { ChangeEvent, useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { shallowEqual } from "react-redux";
-import { classValidatorResolver } from "@hookform/resolvers/class-validator";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 import { useRouter } from "next/navigation";
 
@@ -13,7 +13,10 @@ import { IMAGE_WHITELIST } from "@/constants/mime";
 
 import useToastContext from "@/hook/use-toast-context";
 
-import { UserDetailForm } from "@/models/validator-model";
+import {
+  UserDetailScheme,
+  UserDetailSchemeType,
+} from "@/models/validator-model";
 
 import { reissueToken } from "@/redux/apis/auth-api";
 import { getUser, updateUser } from "@/redux/apis/user-api";
@@ -24,10 +27,10 @@ import { encodeFileToBase64 } from "@/utils/file-encoder";
 
 export default function UpdateUserInfo() {
   const { control, handleSubmit, getValues, setValue, setError, clearErrors } =
-    useForm<UserDetailForm>({
+    useForm<UserDetailSchemeType>({
       mode: "onChange",
       reValidateMode: "onChange",
-      resolver: classValidatorResolver(UserDetailForm),
+      resolver: zodResolver(UserDetailScheme),
       defaultValues: {
         email: "",
         name: "",
@@ -108,7 +111,7 @@ export default function UpdateUserInfo() {
       formData.append("profileImg", originFile);
     }
     formData.append("name", name);
-    formData.append("contact", phoneNumber);
+    formData.append("contact", phoneNumber ? phoneNumber : "");
     formData.append("profileDelYn", isProfileDel ? "Y" : "N");
 
     dispatch(updateUser({ formData }));

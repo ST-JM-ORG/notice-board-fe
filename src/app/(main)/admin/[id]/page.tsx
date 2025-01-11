@@ -3,7 +3,7 @@
 import React, { ChangeEvent, use, useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { shallowEqual } from "react-redux";
-import { classValidatorResolver } from "@hookform/resolvers/class-validator";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 import { useRouter } from "next/navigation";
 
@@ -18,9 +18,16 @@ import { IMAGE_WHITELIST } from "@/constants/mime";
 
 import useToastContext from "@/hook/use-toast-context";
 
-import { AdminDetailForm } from "@/models/validator-model";
+import {
+  AdminDetailScheme,
+  AdminDetailSchemeType,
+} from "@/models/validator-model";
 
-import { deleteAdminUser, getAdminUserDetail, updateAdminUser } from "@/redux/apis/admin-api";
+import {
+  deleteAdminUser,
+  getAdminUserDetail,
+  updateAdminUser,
+} from "@/redux/apis/admin-api";
 import { useAppDispatch, useAppSelector, useThunkDispatch } from "@/redux/hook";
 import { resetAdmin } from "@/redux/modules/admin-slice";
 
@@ -35,10 +42,10 @@ export default function Page(props: Props) {
   const { params } = props;
 
   const { control, handleSubmit, getValues, setValue, setError, clearErrors } =
-    useForm<AdminDetailForm>({
+    useForm<AdminDetailSchemeType>({
       mode: "onChange",
       reValidateMode: "onChange",
-      resolver: classValidatorResolver(AdminDetailForm),
+      resolver: zodResolver(AdminDetailScheme),
       defaultValues: {
         email: "",
         name: "",
@@ -142,7 +149,7 @@ export default function Page(props: Props) {
       formData.append("profileImg", originFile);
     }
     formData.append("name", name);
-    formData.append("contact", phoneNum);
+    formData.append("contact", phoneNum ? phoneNum : "");
     formData.append("profileDelYn", isProfileDel ? "Y" : "N");
     formData.append("adminYn", permission ? "Y" : "N");
 
