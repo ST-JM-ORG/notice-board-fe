@@ -1,6 +1,12 @@
 "use client";
 
-import React, { use, useEffect, useState } from "react";
+import React, {
+  ChangeEvent,
+  use,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 import { shallowEqual } from "react-redux";
 
 import { useRouter } from "next/navigation";
@@ -10,6 +16,7 @@ import DataTableCell from "@/components/data-table-cell";
 import DataTableRow from "@/components/data-table-row";
 import Pagination from "@/components/pagination";
 import ProfileImage from "@/components/profile-image";
+import SearchInput from "@/components/search-input";
 
 import { getAdminUserList } from "@/redux/apis/admin-api";
 import { useAppDispatch, useAppSelector, useThunkDispatch } from "@/redux/hook";
@@ -40,6 +47,15 @@ export default function Page(props: Props) {
   );
 
   const [pageNo, setPageNo] = useState<number>(1);
+  const [searchTerm, setSearchTerm] = useState<string>("");
+
+  const handleChangeSearchTerm = useCallback(
+    (e: ChangeEvent<HTMLInputElement>) => {
+      e.preventDefault();
+      setSearchTerm(e.target.value);
+    },
+    [searchTerm],
+  );
 
   const handleAdminUserDetail = (id: number) => {
     router.push(`/admin/${id}`);
@@ -65,6 +81,19 @@ export default function Page(props: Props) {
 
   return (
     <>
+      <div className="flex justify-end space-x-2">
+        <select>
+          <option>전체</option>
+          <option>이메일</option>
+          <option>이름</option>
+          <option>전화번호</option>
+        </select>
+        <SearchInput
+          type="text"
+          value={searchTerm}
+          onChange={handleChangeSearchTerm}
+        />
+      </div>
       <DataTable
         columns={{
           cols: [

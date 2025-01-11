@@ -164,6 +164,9 @@ export default {
         tablet: "768px",
         laptop: "1280px",
       },
+      transitionProperty: {
+        width: "width",
+      },
       transitionTimingFunction: {
         "in-out-quart": "cubic-bezier(0.770, 0.000, 0.175, 1.000)",
       },
