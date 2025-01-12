@@ -12,6 +12,8 @@ interface Props {
   onBlur?: (e: FocusEvent<HTMLInputElement>) => void;
   helperText?: string | undefined | null;
   disabled?: boolean;
+  handleClear?: () => void;
+  handleSearch?: () => void;
 }
 
 const SearchInput = ({
@@ -23,11 +25,13 @@ const SearchInput = ({
   onBlur,
   helperText,
   disabled = false,
+  handleClear,
+  handleSearch,
 }: Props) => {
   return (
     <div
       className={cn(
-        `shadow-google relative h-40 w-200 rounded-20 bg-transparent transition-width
+        `relative h-40 w-200 rounded-20 bg-transparent shadow-google transition-width
         duration-200 ease-in-out`,
         "focus-within:w-400",
         className,
@@ -38,6 +42,11 @@ const SearchInput = ({
         type={type}
         value={value}
         onChange={onChange}
+        onKeyDown={(e) => {
+          if (handleSearch && e.key === "Enter") {
+            handleSearch();
+          }
+        }}
         onBlur={onBlur}
         disabled={disabled}
         placeholder="검색어를 입력하세요"
@@ -54,12 +63,14 @@ const SearchInput = ({
           `absolute right-40 top-1/2 -translate-y-1/2 rounded-1/2 p-2 transition-all
           duration-200 ease-in-out`,
         )}
+        onClick={handleClear}
       >
         <IoClose className="text-sonic-silver" />
       </button>
       <button
         className="absolute right-3 top-1/2 flex -translate-y-1/2 items-center justify-center
           border-l-1 border-l-american-silver px-5 text-white"
+        onClick={handleSearch}
       >
         <IoSearch className="text-20 text-sky-blue" />
       </button>

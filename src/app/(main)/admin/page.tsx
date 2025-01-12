@@ -37,8 +37,11 @@ export default function Page({ searchParams }: Props) {
   const appDispatch = useAppDispatch();
 
   const [pageNo, setPageNo] = useState<number>(1);
-  const [searchType, setSearchType] = useState<string>("");
-  const [searchWord, setSearchWord] = useState<string>("");
+  const [searchType, setSearchType] = useState<{ type: string; name: string }>({
+    type: "ALL",
+    name: "전체",
+  });
+  const [searchTerm, setSearchTerm] = useState<string>("");
 
   const { users, totalCount, totalPageCount } = useAppSelector(
     (state) => ({
@@ -52,9 +55,9 @@ export default function Page({ searchParams }: Props) {
   const handleChangeSearchWord = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
       e.preventDefault();
-      setSearchWord(e.target.value);
+      setSearchTerm(e.target.value);
     },
-    [setSearchWord],
+    [setSearchTerm],
   );
 
   const handleAdminUserDetail = (id: number) => {
@@ -65,12 +68,20 @@ export default function Page({ searchParams }: Props) {
     router.push(`/admin?p=${value}`);
   };
 
+  const handleSearch = () => {
+    dispatch(
+      getAdminUserList({ pageNo, searchType: searchType.type, searchTerm }),
+    );
+  };
+
   useEffect(() => {
     setPageNo(p ? Number(p) : 1);
   }, [p]);
 
   useEffect(() => {
-    dispatch(getAdminUserList({ pageNo }));
+    dispatch(
+      getAdminUserList({ pageNo, searchType: searchType.type, searchTerm }),
+    );
   }, [dispatch, pageNo]);
 
   useEffect(() => {
@@ -83,14 +94,21 @@ export default function Page({ searchParams }: Props) {
     <>
       <div className="flex justify-end space-x-2">
         <SelectBox
-          options={["전체", "이름", "이메일", "전화번호"]}
-          value={searchType}
+          options={[
+            { type: "ALL", name: "전체" },
+            { type: "NAME", name: "이름" },
+            { type: "EMAIL", name: "이메일" },
+            { type: "CONTACT", name: "전화번호" },
+          ]}
+          value={searchType.name}
           onClick={(value) => setSearchType(value)}
         />
         <SearchInput
           type="text"
-          value={searchWord}
+          value={searchTerm}
           onChange={handleChangeSearchWord}
+          handleClear={() => setSearchTerm("")}
+          handleSearch={handleSearch}
         />
       </div>
       <DataTable

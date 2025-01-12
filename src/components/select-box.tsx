@@ -8,9 +8,9 @@ import { pxToRem } from "@/utils/size";
 
 interface Props {
   width?: number;
-  options: string[];
+  options: { type: string; name: string }[];
   value: string | null | undefined;
-  onClick: (value: string) => void;
+  onClick: (value: { type: string; name: string }) => void;
 }
 
 export default function SelectBox({
@@ -21,7 +21,7 @@ export default function SelectBox({
 }: Props) {
   const [open, setOpen] = useState<boolean>(false);
 
-  const ref = useOutsideClick<HTMLDivElement>(() => setOpen(false));
+  const ref = useOutsideClick<HTMLUListElement>(() => setOpen(false));
 
   const handleSwitchOpen = useCallback(() => {
     setOpen(!open);
@@ -36,7 +36,7 @@ export default function SelectBox({
         )}
         onClick={handleSwitchOpen}
       >
-        <span>{value ? value : options[0]}</span>
+        <span>{value ? value : options[0].name}</span>
         <FaAngleDown
           className={cn(
             "transition-transform duration-200 ease-in-out",
@@ -45,32 +45,32 @@ export default function SelectBox({
         />
       </button>
       {open && (
-        <div
+        <ul
           ref={ref}
-          className="absolute left-0 top-0 flex flex-col rounded-5 border-1 border-silver-sand
-            bg-platinum p-2 shadow-google backdrop-blur"
+          className="absolute left-0 top-0 rounded-5 border-1 border-silver-sand bg-platinum
+            bg-opacity-50 p-2 shadow-google backdrop-blur"
           style={{ width: `${pxToRem(width)}rem` }}
         >
           {options &&
-            options.map((option, index) => (
-              <button
+            options.map(({ type, name }, index) => (
+              <li
                 key={index}
                 className={cn(
                   "flex w-full items-center rounded-5 px-8 py-2 text-start",
                   "hover:cursor-pointer hover:bg-vivid-cerulean hover:font-bold hover:text-white",
                 )}
                 onClick={() => {
-                  onClick(option);
+                  onClick({ type, name });
                   setOpen(false);
                 }}
               >
                 <div className="w-15">
-                  {value && value === option && <FaCheck className="text-12" />}
+                  {value && value === name && <FaCheck className="text-12" />}
                 </div>
-                <span>{option}</span>
-              </button>
+                <span>{name}</span>
+              </li>
             ))}
-        </div>
+        </ul>
       )}
     </div>
   );
