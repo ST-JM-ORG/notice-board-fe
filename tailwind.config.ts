@@ -39,6 +39,7 @@ export default {
       },
       borderWidth: pxToRem(10),
       boxShadow: {
+        google: "0 2px 8px 0 rgba(60, 64, 67, 0.25)",
         header: "0 4px 6px -1px rgba(0,0,0,0.1)",
       },
       colors: {
