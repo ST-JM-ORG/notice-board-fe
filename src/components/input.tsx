@@ -52,7 +52,7 @@ const Input = (props: Props) => {
           className={cn(
             `pointer-events-none absolute bottom-0 left-10 top-0 flex items-center text-15
             text-sonic-silver transition-all duration-200 ease-in-out`,
-            `peer-focus:-translate-y-20p peer-focus:text-12 peer-focus:text-sonic-silver
+            `peer-focus:-translate-y-20p peer-focus:text-12
             peer-[:not(input[value=''])]:-translate-y-20p
             peer-[:not(input[value=''])]:text-12`,
           )}
