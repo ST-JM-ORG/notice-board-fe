@@ -15,20 +15,18 @@ interface Props {
   disabled?: boolean;
 }
 
-const Input = (props: Props) => {
-  const {
-    id,
-    className,
-    type = "text",
-    text,
-    value,
-    onChange,
-    onBlur,
-    helperText,
-    required = false,
-    disabled = false,
-  } = props;
-
+const Input = ({
+  id,
+  className,
+  type = "text",
+  text,
+  value,
+  onChange,
+  onBlur,
+  helperText,
+  required = false,
+  disabled = false,
+}: Props) => {
   return (
     <div className={className}>
       <div className="relative">

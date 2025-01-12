@@ -27,8 +27,8 @@ const SearchInput = ({
   return (
     <div
       className={cn(
-        `shadow-google relative w-200 rounded-20 transition-width duration-200
-        ease-in-out`,
+        `shadow-google relative h-40 w-200 rounded-20 bg-transparent transition-width
+        duration-200 ease-in-out`,
         "focus-within:w-400",
         className,
       )}

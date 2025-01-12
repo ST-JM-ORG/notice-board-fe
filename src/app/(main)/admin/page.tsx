@@ -17,6 +17,7 @@ import DataTableRow from "@/components/data-table-row";
 import Pagination from "@/components/pagination";
 import ProfileImage from "@/components/profile-image";
 import SearchInput from "@/components/search-input";
+import SelectBox from "@/components/select-box";
 
 import { getAdminUserList } from "@/redux/apis/admin-api";
 import { useAppDispatch, useAppSelector, useThunkDispatch } from "@/redux/hook";
@@ -28,14 +29,16 @@ interface Props {
   searchParams: Promise<{ p: string | undefined }>;
 }
 
-export default function Page(props: Props) {
-  const { searchParams } = props;
-
+export default function Page({ searchParams }: Props) {
   const { p } = use(searchParams);
 
   const router = useRouter();
   const dispatch = useThunkDispatch();
   const appDispatch = useAppDispatch();
+
+  const [pageNo, setPageNo] = useState<number>(1);
+  const [searchType, setSearchType] = useState<string>("");
+  const [searchWord, setSearchWord] = useState<string>("");
 
   const { users, totalCount, totalPageCount } = useAppSelector(
     (state) => ({
@@ -46,15 +49,12 @@ export default function Page(props: Props) {
     shallowEqual,
   );
 
-  const [pageNo, setPageNo] = useState<number>(1);
-  const [searchTerm, setSearchTerm] = useState<string>("");
-
-  const handleChangeSearchTerm = useCallback(
+  const handleChangeSearchWord = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
       e.preventDefault();
-      setSearchTerm(e.target.value);
+      setSearchWord(e.target.value);
     },
-    [searchTerm],
+    [setSearchWord],
   );
 
   const handleAdminUserDetail = (id: number) => {
@@ -82,16 +82,15 @@ export default function Page(props: Props) {
   return (
     <>
       <div className="flex justify-end space-x-2">
-        <select>
-          <option>전체</option>
-          <option>이메일</option>
-          <option>이름</option>
-          <option>전화번호</option>
-        </select>
+        <SelectBox
+          options={["전체", "이름", "이메일", "전화번호"]}
+          value={searchType}
+          onClick={(value) => setSearchType(value)}
+        />
         <SearchInput
           type="text"
-          value={searchTerm}
-          onChange={handleChangeSearchTerm}
+          value={searchWord}
+          onChange={handleChangeSearchWord}
         />
       </div>
       <DataTable
