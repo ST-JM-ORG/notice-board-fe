@@ -16,9 +16,7 @@ interface Props {
   onOk: () => void;
 }
 
-export default function ConfirmModal(props: Props) {
-  const { open, message, onClose, onOk } = props;
-
+export default function ConfirmModal({ open, message, onClose, onOk }: Props) {
   const [element, setElement] = useState<Element | null>(null);
   const [animated, setAnimated] = useState<boolean>(true);
 
@@ -55,7 +53,8 @@ export default function ConfirmModal(props: Props) {
       <div
         ref={ref}
         className={cn(
-          "flex w-[25rem] flex-col rounded-20 border-1 border-gainsboro bg-white p-20",
+          `flex w-[25rem] flex-col rounded-20 border-1 border-gainsboro bg-platinum
+          bg-opacity-50 p-20 shadow-google backdrop-blur`,
           animated ? "animate-modal-slide-up" : "animate-modal-slide-down",
         )}
         onAnimationEnd={handleAnimationEnd}
@@ -77,11 +76,15 @@ export default function ConfirmModal(props: Props) {
           <div className="text-16">{message}</div>
         </section>
         <footer className="mt-20 flex w-full items-center justify-center space-x-1">
-          <Button className="w-full py-10" onClick={onClose}>
+          <Button
+            className="w-full bg-anti-flash-white py-10 font-bold"
+            onClick={onClose}
+          >
             취소
           </Button>
           <Button
-            className="w-full border-1 border-light-salmon-pink bg-pastel-red py-10 text-white"
+            className="w-full border-1 border-light-salmon-pink bg-pastel-red py-10 font-bold
+              text-white shadow-google"
             onClick={onOk}
           >
             삭제
