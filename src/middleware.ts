@@ -27,9 +27,10 @@ export const middleware = async (request: NextRequest) => {
     request.cookies.delete(ACCESS_TOKEN);
     request.cookies.delete(REFRESH_TOKEN);
 
-    if (pathname === "/login") {
+    if (pathname === "/login" || pathname === "/sign-up") {
       return NextResponse.next();
     }
+
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
