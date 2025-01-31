@@ -101,7 +101,7 @@ export default function Header() {
       className="shadow-m flex items-center justify-between border-b-1 border-b-gainsboro
         bg-white p-10"
     >
-      <div className="mx-auto flex w-full max-w-[80rem] justify-between">
+      <div className="mx-auto flex w-full justify-between">
         <h2
           className={cn("p-5 text-20 font-bold", "hover:cursor-pointer")}
           onClick={handleGoHomePage}
