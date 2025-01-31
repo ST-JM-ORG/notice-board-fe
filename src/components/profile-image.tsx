@@ -8,12 +8,18 @@ interface Props {
   src?: string | null | undefined;
   size?: number;
   className?: string;
+  clickable?: boolean;
   onClick?: () => void;
 }
 
-export default function ProfileImage(props: Props) {
-  const { ref, size, src, className, onClick } = props;
-
+export default function ProfileImage({
+  ref,
+  size,
+  src,
+  className,
+  clickable = false,
+  onClick,
+}: Props) {
   return (
     <div
       ref={ref}
@@ -33,7 +39,7 @@ export default function ProfileImage(props: Props) {
           className={cn(
             `flex h-full w-full items-center justify-center rounded-1/2 bg-gainsboro
               transition-colors duration-200 ease-in-out`,
-            "hover:bg-american-silver",
+            clickable && "hover:bg-american-silver",
           )}
         >
           <IoPerson />

@@ -113,6 +113,7 @@ export default function Header() {
             ref={ref}
             src={profileImg}
             className="hover:cursor-pointer"
+            clickable={true}
             onClick={handleSwitchProfileButton}
           />
           {animation && (
