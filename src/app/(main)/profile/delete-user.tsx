@@ -46,7 +46,7 @@ export default function DeleteUser() {
 
   return (
     <>
-      <h1 className="text-25">회원탈퇴</h1>
+      <h1 className="text-25 font-bold">회원탈퇴</h1>
       <div className="text-14 text-sonic-silver">
         회원탈퇴를 하면 다시 복구할 수 없습니다.
       </div>

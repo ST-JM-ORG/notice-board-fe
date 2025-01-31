@@ -153,9 +153,8 @@ export default function UpdateUserInfo() {
 
   return (
     <>
+      <h2 className="text-25 font-bold">프로필</h2>
       <form className="space-y-2" onSubmit={handleSubmit(handleChangeUserInfo)}>
-        <h2 className="text-25 font-bold">프로필</h2>
-
         <div className="flex flex-col">
           <Controller
             name="file"

@@ -69,6 +69,7 @@ export default function UpdateUserPw() {
 
   return (
     <>
+      <h1 className="text-25 font-bold">비밀번호 변경</h1>
       <form className="space-y-2" onSubmit={handleSubmit(handleChangePw)}>
         <Controller
           name="currPw"
