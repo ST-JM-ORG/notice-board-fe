@@ -18,8 +18,8 @@ export default function ProfileImage(props: Props) {
     <div
       ref={ref}
       className={cn(
-        `box-border flex items-center justify-center rounded-1/2 bg-gainsboro p-2
-        shadow-xl backdrop-blur transition-colors duration-200 ease-in-out`,
+        `box-border flex items-center justify-center rounded-1/2 bg-gainsboro shadow-xl
+        transition-colors duration-200 ease-in-out`,
         className,
       )}
       style={{
@@ -29,7 +29,13 @@ export default function ProfileImage(props: Props) {
       onClick={onClick}
     >
       {!src ? (
-        <div className="rounded-1/2 bg-gainsboro p-10">
+        <div
+          className={cn(
+            `flex h-full w-full items-center justify-center rounded-1/2 bg-gainsboro
+              transition-colors duration-200 ease-in-out`,
+            "hover:bg-american-silver",
+          )}
+        >
           <IoPerson />
         </div>
       ) : (

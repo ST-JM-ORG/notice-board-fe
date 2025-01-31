@@ -112,7 +112,7 @@ export default function Header() {
           <ProfileImage
             ref={ref}
             src={profileImg}
-            className="hover:cursor-pointer hover:bg-anti-flash-white"
+            className="hover:cursor-pointer"
             onClick={handleSwitchProfileButton}
           />
           {animation && (
@@ -138,9 +138,9 @@ export default function Header() {
                 <button
                   type="button"
                   className={cn(
-                    `mb-2 rounded-t-10 bg-white py-5 text-14 transition-colors duration-100
-                    ease-in-out`,
-                    "hover:bg-gainsboro hover:bg-opacity-30",
+                    `mb-2 rounded-t-10 bg-white bg-opacity-70 py-5 text-14 backdrop-blur
+                    transition-colors duration-100 ease-in-out`,
+                    "hover:bg-gainsboro",
                   )}
                   onClick={handleGoProfilePage}
                 >
@@ -150,8 +150,9 @@ export default function Header() {
                   <button
                     type="button"
                     className={cn(
-                      "mb-2 bg-white py-5 text-14 transition-colors duration-100 ease-in-out",
-                      "hover:bg-gainsboro hover:bg-opacity-30",
+                      `mb-2 bg-white bg-opacity-70 py-5 text-14 backdrop-blur transition-colors
+                      duration-100 ease-in-out`,
+                      "hover:bg-gainsboro",
                     )}
                     onClick={handleGoAdminPage}
                   >
@@ -161,8 +162,9 @@ export default function Header() {
                 <button
                   type="button"
                   className={cn(
-                    "rounded-b-10 bg-white py-5 text-14 transition-colors duration-100 ease-in-out",
-                    "hover:bg-gainsboro hover:bg-opacity-30",
+                    `rounded-b-10 bg-white bg-opacity-70 py-5 text-14 backdrop-blur transition-colors
+                    duration-100 ease-in-out`,
+                    "hover:bg-gainsboro",
                   )}
                   onClick={handleLogout}
                 >
