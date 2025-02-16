@@ -1,4 +1,4 @@
-export interface CategoryItem {
+export interface CategoryAPIResponse {
   id: number;
   categoryNm: string;
   sortOrder: number;

@@ -1,5 +1,6 @@
 import {
   createSlice,
+  PayloadAction,
   SliceCaseReducers,
   SliceSelectors,
 } from "@reduxjs/toolkit";
@@ -7,20 +8,22 @@ import {
 import { ERROR_MESSAGE } from "@/constants/error-code";
 import { Status } from "@/constants/type";
 
-import { CategoryItem } from "@/models/category-model";
+import { CategoryAPIResponse } from "@/models/category-model";
 
 import { getCategories } from "@/redux/apis/category-api";
 
 interface CategoryState {
+  selectedCategoryName: string | null | undefined;
   get: {
     status: Status;
     message: string;
     error: string;
-    categories: CategoryItem[];
+    categories: CategoryAPIResponse[];
   };
 }
 
 const initialState: CategoryState = {
+  selectedCategoryName: null,
   get: {
     status: "idle",
     message: "",
@@ -38,7 +41,11 @@ const CategorySlice = createSlice<
 >({
   name: "category",
   initialState,
-  reducers: {},
+  reducers: {
+    changeCategory: (state, { payload }: PayloadAction<string | undefined>) => {
+      state.selectedCategoryName = payload;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(getCategories.pending, (state, _) => {
@@ -56,6 +63,10 @@ const CategorySlice = createSlice<
           message: payload.result.message,
           categories: payload.data,
         };
+
+        if (payload.data.length > 0) {
+          state.selectedCategoryName = payload.data[0].categoryNm;
+        }
       })
       .addCase(getCategories.rejected, (state, { payload }) => {
         state.get = {
@@ -66,5 +77,7 @@ const CategorySlice = createSlice<
       });
   },
 });
+
+export const { changeCategory } = CategorySlice.actions;
 
 export default CategorySlice;

@@ -3,9 +3,7 @@ import React, { PropsWithChildren } from "react";
 import Header from "@/components/header";
 import SideBar from "@/components/side-bar";
 
-export default function Layout(props: PropsWithChildren) {
-  const { children } = props;
-
+export default function Layout({ children }: PropsWithChildren) {
   return (
     <main className="h-full w-full">
       <Header />

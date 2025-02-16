@@ -4,12 +4,12 @@ import axios from "axios";
 import { ERROR_RESPONSE } from "@/constants/const";
 
 import { ApiResponse } from "@/models/api-response";
-import { CategoryItem } from "@/models/category-model";
+import { CategoryAPIResponse } from "@/models/category-model";
 
 import instance from "@/utils/instance";
 
 export const getCategories = createAsyncThunk<
-  ApiResponse<CategoryItem[]>,
+  ApiResponse<CategoryAPIResponse[]>,
   undefined,
   { rejectValue: ApiResponse }
 >("category/list", async (_, { rejectWithValue }) => {
