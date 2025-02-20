@@ -32,6 +32,8 @@ export default {
         "progress-in": "progress-in 2.0s linear forwards",
         "slide-top-right-in": "slide-top-right-in .3s ease-in-out forwards",
         "slide-top-right-out": "slide-top-right-out .3s ease-in-out forwards",
+        "profile-fade-in": "profile-fade-in .3s ease-in-out forwards",
+        "profile-fade-out": "profile-fade-out .3s ease-in-out forwards",
       },
       borderRadius: {
         ...pxToRem(100),
@@ -124,6 +126,35 @@ export default {
           "100%": {
             transform: "scaleX(1)",
             transformOrigin: "left",
+          },
+        },
+        "profile-fade-in": {
+          "0%": {
+            transform: "scale(0)",
+            transformOrigin: "left bottom",
+            opacity: "1",
+          },
+          "70%": {
+            transform: "scale(1.05)",
+            transformOrigin: "left bottom",
+            opacity: "1",
+          },
+          "100%": {
+            transform: "scale(1)",
+            transformOrigin: "left bottom",
+            opacity: "1",
+          },
+        },
+        "profile-fade-out": {
+          "0%": {
+            transform: "scale(1)",
+            transformOrigin: "left bottom",
+            opacity: "1",
+          },
+          "100%": {
+            transform: "scale(0)",
+            transformOrigin: "left bottom",
+            opacity: "1",
           },
         },
         "slide-top-right-in": {

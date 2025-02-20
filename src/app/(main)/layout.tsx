@@ -1,15 +1,16 @@
 import React, { PropsWithChildren } from "react";
 
-import Header from "@/components/header";
 import SideBar from "@/components/side-bar";
 
 export default function Layout({ children }: PropsWithChildren) {
   return (
-    <main className="h-full w-full">
-      <Header />
+    <main className="flex h-screen w-full bg-cultured">
+      {/*<Header />*/}
       <SideBar />
-      <div className="mx-auto mt-30 max-w-[80rem] px-10 pl-[13.125rem]">
-        {children}
+      <div className="w-full bg-cultured pb-5 pr-5 pt-5">
+        <div className="h-full rounded-5 bg-white p-16 shadow-google">
+          {children}
+        </div>
       </div>
     </main>
   );

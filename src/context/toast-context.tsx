@@ -1,4 +1,10 @@
-import { createContext, PropsWithChildren, useEffect, useRef, useState } from "react";
+import {
+  createContext,
+  PropsWithChildren,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { createPortal } from "react-dom";
 import { nanoid } from "nanoid";
 
@@ -102,7 +108,7 @@ export default function ToastContextProvider(props: PropsWithChildren) {
     <ToastContext.Provider value={{ success, warning, info, error }}>
       {children}
       {createPortal(
-        <div ref={ref} className="fixed bottom-0 right-0 mb-5 mr-5 space-y-1">
+        <div ref={ref} className="fixed right-5 top-5 mb-5 space-y-1">
           {toasts.map(({ id, type, heading, duration, message }) => (
             <ToastContainer
               key={id}
