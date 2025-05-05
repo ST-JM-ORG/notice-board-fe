@@ -5,7 +5,7 @@ import { FaArrowRight } from "react-icons/fa";
 
 import Link from "next/link";
 
-import Header from "@/components/header";
+import Header from "@/src/features/common/header";
 
 export default function NotFound() {
   return (

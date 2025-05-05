@@ -11,19 +11,21 @@ import { shallowEqual } from "react-redux";
 
 import { useRouter } from "next/navigation";
 
-import DataTable from "@/components/data-table";
-import DataTableCell from "@/components/data-table-cell";
-import DataTableRow from "@/components/data-table-row";
-import Pagination from "@/components/pagination";
-import ProfileImage from "@/components/profile-image";
-import SearchInput from "@/components/search-input";
-import SelectBox from "@/components/select-box";
-
-import { getAdminUserList } from "@/redux/apis/admin-api";
-import { useAppDispatch, useAppSelector, useThunkDispatch } from "@/redux/hook";
-import { resetAdmin } from "@/redux/modules/admin-slice";
-
-import { createRowNum } from "@/utils/query";
+import DataTable from "@/src/features/common/data-table";
+import DataTableCell from "@/src/features/common/data-table-cell";
+import DataTableRow from "@/src/features/common/data-table-row";
+import Pagination from "@/src/features/common/pagination";
+import ProfileImage from "@/src/features/common/profile-image";
+import SearchInput from "@/src/features/common/search-input";
+import SelectBox from "@/src/features/common/select-box";
+import {
+  useAppDispatch,
+  useAppSelector,
+  useThunkDispatch,
+} from "@/src/redux/hook";
+import { resetAdmin } from "@/src/redux/modules/admin-slice";
+import { getAdminUserList } from "@/src/services/admin-api";
+import { createRowNum } from "@/src/shared/utils/query";
 
 interface Props {
   searchParams: Promise<{ p: string | undefined }>;

@@ -2,9 +2,12 @@ import { jwtDecode } from "jwt-decode";
 
 import { NextRequest, NextResponse } from "next/server";
 
-import { ACCESS_TOKEN, MODULE_PERMISSION, REFRESH_TOKEN } from "@/constants/const";
-
-import { TokenPayload } from "@/models/token";
+import { TokenPayload } from "@/src/entities/auth/token";
+import {
+  ACCESS_TOKEN,
+  MODULE_PERMISSION,
+  REFRESH_TOKEN,
+} from "@/src/shared/constants/const";
 
 /**
  * 미들웨어

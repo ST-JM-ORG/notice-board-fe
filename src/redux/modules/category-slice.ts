@@ -5,12 +5,10 @@ import {
   SliceSelectors,
 } from "@reduxjs/toolkit";
 
-import { ERROR_MESSAGE } from "@/constants/error-code";
-import { Status } from "@/constants/type";
-
-import { CategoryAPIResponse } from "@/models/category-model";
-
-import { getCategories } from "@/redux/apis/category-api";
+import { CategoryAPIResponse } from "@/src/entities/models/category-model";
+import { getCategories } from "@/src/services/category-api";
+import { ERROR_MESSAGE } from "@/src/shared/constants/error-code";
+import { Status } from "@/src/shared/constants/type";
 
 interface CategoryState {
   selectedCategoryName: string | null | undefined;

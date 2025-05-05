@@ -3,16 +3,20 @@ import { Controller, useForm } from "react-hook-form";
 import { shallowEqual } from "react-redux";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import Button from "@/components/button";
-import Input from "@/components/input";
-
-import useToastContext from "@/hook/use-toast-context";
-
-import { UpdatePwScheme, UpdatePwSchemeType } from "@/models/validator-model";
-
-import { updatePw } from "@/redux/apis/user-api";
-import { useAppDispatch, useAppSelector, useThunkDispatch } from "@/redux/hook";
-import { resetAuth } from "@/redux/modules/auth-slice";
+import {
+  UpdatePwScheme,
+  UpdatePwSchemeType,
+} from "@/src/entities/models/validator-model";
+import useToastContext from "@/src/hook/use-toast-context";
+import {
+  useAppDispatch,
+  useAppSelector,
+  useThunkDispatch,
+} from "@/src/redux/hook";
+import { resetAuth } from "@/src/redux/modules/auth-slice";
+import { updatePw } from "@/src/services/user-api";
+import Button from "@/src/shared/components/button";
+import Input from "@/src/shared/components/input";
 
 export default function UpdateUserPw() {
   const { control, handleSubmit, getValues, setError, watch } =

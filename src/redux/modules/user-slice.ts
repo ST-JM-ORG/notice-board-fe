@@ -1,15 +1,26 @@
-import { createSlice, PayloadAction, SliceCaseReducers, SliceSelectors } from "@reduxjs/toolkit";
+import {
+  createSlice,
+  PayloadAction,
+  SliceCaseReducers,
+  SliceSelectors,
+} from "@reduxjs/toolkit";
 
-import { ACCESS_TOKEN, REFRESH_TOKEN } from "@/constants/const";
-import { ERROR_CODE, ERROR_MESSAGE, ErrorType } from "@/constants/error-code";
-import { SUCCESS_CODE, SuccessType } from "@/constants/success-code";
-import { Status } from "@/constants/type";
-
-import { SingleUserType } from "@/models/user-response";
-
-import { deleteUser, getUser, updatePw, updateUser } from "@/redux/apis/user-api";
-
-import { removeCookie } from "@/utils/cookie";
+import { SingleUserType } from "@/src/entities/models/user-response";
+import {
+  deleteUser,
+  getUser,
+  updatePw,
+  updateUser,
+} from "@/src/services/user-api";
+import { ACCESS_TOKEN, REFRESH_TOKEN } from "@/src/shared/constants/const";
+import {
+  ERROR_CODE,
+  ERROR_MESSAGE,
+  ErrorType,
+} from "@/src/shared/constants/error-code";
+import { SUCCESS_CODE, SuccessType } from "@/src/shared/constants/success-code";
+import { Status } from "@/src/shared/constants/type";
+import { removeCookie } from "@/src/shared/utils/cookie";
 
 interface UserState {
   getUser: {

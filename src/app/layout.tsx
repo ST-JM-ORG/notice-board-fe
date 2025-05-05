@@ -3,10 +3,10 @@ import { ReactNode } from "react";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 
-import ReduxProvider from "@/provider/redux-provider";
-import ToastProvider from "@/provider/toast-provider";
-
 import "./globals.css";
+
+import ReduxProvider from "@/src/provider/redux-provider";
+import ToastProvider from "@/src/provider/toast-provider";
 
 const pretendard = localFont({
   src: "./fonts/PretendardVariable.woff2",

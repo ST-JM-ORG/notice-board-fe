@@ -6,9 +6,8 @@ import { IoMenuSharp } from "react-icons/io5";
 import { MdDelete } from "react-icons/md";
 import { shallowEqual } from "react-redux";
 
-import { useAppSelector } from "@/redux/hook";
-
-import { cn } from "@/utils/classname";
+import { useAppSelector } from "@/src/redux/hook";
+import { cn } from "@/src/shared/utils/classname";
 
 export default function Page() {
   const { categories } = useAppSelector(

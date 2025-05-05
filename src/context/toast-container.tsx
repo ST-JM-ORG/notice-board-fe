@@ -7,7 +7,7 @@ import { IoMdNotificationsOutline } from "react-icons/io";
 import { IoCloseOutline } from "react-icons/io5";
 import { MdOutlineErrorOutline } from "react-icons/md";
 
-import { cn } from "@/utils/classname";
+import { cn } from "@/src/shared/utils/classname";
 
 interface Props extends PropsWithChildren {
   className?: string;

@@ -8,22 +8,24 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import { useRouter } from "next/navigation";
 
-import Button from "@/components/button";
-import Input from "@/components/input";
-import ProfileUploader from "@/components/profile-uploader";
-
-import { IMAGE_WHITELIST } from "@/constants/mime";
-import { EmailRegex } from "@/constants/regex";
-
-import useToastContext from "@/hook/use-toast-context";
-
-import { SignUpScheme, SignUpSchemeType } from "@/models/validator-model";
-
-import { emailDupCheck, signUp } from "@/redux/apis/auth-api";
-import { useAppDispatch, useAppSelector, useThunkDispatch } from "@/redux/hook";
-import { resetAuth } from "@/redux/modules/auth-slice";
-
-import { encodeFileToBase64 } from "@/utils/file-encoder";
+import {
+  SignUpScheme,
+  SignUpSchemeType,
+} from "@/src/entities/models/validator-model";
+import ProfileUploader from "@/src/features/common/profile-uploader";
+import useToastContext from "@/src/hook/use-toast-context";
+import {
+  useAppDispatch,
+  useAppSelector,
+  useThunkDispatch,
+} from "@/src/redux/hook";
+import { resetAuth } from "@/src/redux/modules/auth-slice";
+import { emailDupCheck, signUp } from "@/src/services/auth/auth-api";
+import Button from "@/src/shared/components/button";
+import Input from "@/src/shared/components/input";
+import { IMAGE_WHITELIST } from "@/src/shared/constants/mime";
+import { EmailRegex } from "@/src/shared/constants/regex";
+import { encodeFileToBase64 } from "@/src/shared/utils/file-encoder";
 
 const Page = () => {
   const { control, handleSubmit, getValues, setValue, setError, clearErrors } =

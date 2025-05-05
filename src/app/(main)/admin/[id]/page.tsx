@@ -7,32 +7,31 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import { useRouter } from "next/navigation";
 
-import Button from "@/components/button";
-import ConfirmModal from "@/components/confirm-modal";
-import Input from "@/components/input";
-import ProfileUploader from "@/components/profile-uploader";
-import RadioButton from "@/components/radio-button";
-import RadioGroup from "@/components/radio-group";
-
-import { IMAGE_WHITELIST } from "@/constants/mime";
-
-import useToastContext from "@/hook/use-toast-context";
-
 import {
   AdminDetailScheme,
   AdminDetailSchemeType,
-} from "@/models/validator-model";
-
+} from "@/src/entities/models/validator-model";
+import ConfirmModal from "@/src/features/common/confirm-modal";
+import ProfileUploader from "@/src/features/common/profile-uploader";
+import RadioButton from "@/src/features/common/radio-button";
+import RadioGroup from "@/src/features/common/radio-group";
+import useToastContext from "@/src/hook/use-toast-context";
+import {
+  useAppDispatch,
+  useAppSelector,
+  useThunkDispatch,
+} from "@/src/redux/hook";
+import { resetAdmin } from "@/src/redux/modules/admin-slice";
 import {
   deleteAdminUser,
   getAdminUserDetail,
   updateAdminUser,
-} from "@/redux/apis/admin-api";
-import { useAppDispatch, useAppSelector, useThunkDispatch } from "@/redux/hook";
-import { resetAdmin } from "@/redux/modules/admin-slice";
-
-import { encodeFileToBase64 } from "@/utils/file-encoder";
-import { adminRole, superAdminRole } from "@/utils/role";
+} from "@/src/services/admin-api";
+import Button from "@/src/shared/components/button";
+import Input from "@/src/shared/components/input";
+import { IMAGE_WHITELIST } from "@/src/shared/constants/mime";
+import { encodeFileToBase64 } from "@/src/shared/utils/file-encoder";
+import { adminRole, superAdminRole } from "@/src/shared/utils/role";
 
 interface Props {
   params: Promise<{ id: string }>;

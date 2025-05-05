@@ -1,11 +1,19 @@
-import { createSlice, PayloadAction, SliceCaseReducers, SliceSelectors } from "@reduxjs/toolkit";
+import {
+  createSlice,
+  PayloadAction,
+  SliceCaseReducers,
+  SliceSelectors,
+} from "@reduxjs/toolkit";
 
-import { ERROR_MESSAGE } from "@/constants/error-code";
-import { Status } from "@/constants/type";
-
-import { AdminUserProps } from "@/models/admin-response";
-
-import { deleteAdminUser, getAdminUserDetail, getAdminUserList, updateAdminUser } from "@/redux/apis/admin-api";
+import { AdminUserProps } from "@/src/entities/models/admin-response";
+import {
+  deleteAdminUser,
+  getAdminUserDetail,
+  getAdminUserList,
+  updateAdminUser,
+} from "@/src/services/admin-api";
+import { ERROR_MESSAGE } from "@/src/shared/constants/error-code";
+import { Status } from "@/src/shared/constants/type";
 
 type ResetProps = "getList" | "detail" | "update" | "delete";
 

@@ -1,12 +1,18 @@
-import { createSlice, PayloadAction, SliceCaseReducers, SliceSelectors } from "@reduxjs/toolkit";
+import {
+  createSlice,
+  PayloadAction,
+  SliceCaseReducers,
+  SliceSelectors,
+} from "@reduxjs/toolkit";
 
-import { ACCESS_TOKEN, REFRESH_TOKEN } from "@/constants/const";
-import { ERROR_MESSAGE } from "@/constants/error-code";
-import { Status } from "@/constants/type";
-
-import { emailDupCheck, login, logout, signUp } from "@/redux/apis/auth-api";
-
-import { removeCookie, setCookie } from "@/utils/cookie";
+import { logout } from "@/src/services/auth/auth-api";
+import { ACCESS_TOKEN, REFRESH_TOKEN } from "@/src/shared/constants/const";
+import { ERROR_MESSAGE } from "@/src/shared/constants/error-code";
+import { Status } from "@/src/shared/constants/type";
+import { removeCookie, setCookie } from "@/src/shared/utils/cookie";
+import { emailDupCheck } from "@/src/use-cases/auth/email-dup-check";
+import { login } from "@/src/use-cases/auth/login";
+import { signUp } from "@/src/use-cases/auth/sign-up";
 
 type ResetProps = "login" | "signUp" | "emailDupCheck" | "logout";
 

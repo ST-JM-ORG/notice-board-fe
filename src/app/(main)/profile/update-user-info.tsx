@@ -5,25 +5,24 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import { useRouter } from "next/navigation";
 
-import Button from "@/components/button";
-import Input from "@/components/input";
-import ProfileUploader from "@/components/profile-uploader";
-
-import { IMAGE_WHITELIST } from "@/constants/mime";
-
-import useToastContext from "@/hook/use-toast-context";
-
 import {
   UserDetailScheme,
   UserDetailSchemeType,
-} from "@/models/validator-model";
-
-import { reissueToken } from "@/redux/apis/auth-api";
-import { getUser, updateUser } from "@/redux/apis/user-api";
-import { useAppDispatch, useAppSelector, useThunkDispatch } from "@/redux/hook";
-import { resetUser } from "@/redux/modules/user-slice";
-
-import { encodeFileToBase64 } from "@/utils/file-encoder";
+} from "@/src/entities/models/validator-model";
+import ProfileUploader from "@/src/features/common/profile-uploader";
+import useToastContext from "@/src/hook/use-toast-context";
+import {
+  useAppDispatch,
+  useAppSelector,
+  useThunkDispatch,
+} from "@/src/redux/hook";
+import { resetUser } from "@/src/redux/modules/user-slice";
+import { reissueToken } from "@/src/services/auth/auth-api";
+import { getUser, updateUser } from "@/src/services/user-api";
+import Button from "@/src/shared/components/button";
+import Input from "@/src/shared/components/input";
+import { IMAGE_WHITELIST } from "@/src/shared/constants/mime";
+import { encodeFileToBase64 } from "@/src/shared/utils/file-encoder";
 
 export default function UpdateUserInfo() {
   const { control, handleSubmit, getValues, setValue, setError, clearErrors } =

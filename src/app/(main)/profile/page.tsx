@@ -9,7 +9,7 @@ import DeleteUser from "@/app/(main)/profile/delete-user";
 import UpdateUserInfo from "@/app/(main)/profile/update-user-info";
 import UpdateUserPw from "@/app/(main)/profile/update-user-pw";
 
-import TabBar from "@/components/tab-bar";
+import TabBar from "@/src/features/common/tab-bar";
 
 export default function Page() {
   const [tabIndex, setTabIndex] = useState<number>(0);

@@ -8,18 +8,21 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import { useRouter } from "next/navigation";
 
-import Button from "@/components/button";
-import Input from "@/components/input";
-
-import useToastContext from "@/hook/use-toast-context";
-
-import { LoginScheme, LoginSchemeType } from "@/models/validator-model";
-
-import { login } from "@/redux/apis/auth-api";
-import { useAppDispatch, useAppSelector, useThunkDispatch } from "@/redux/hook";
-import { resetAuth } from "@/redux/modules/auth-slice";
-
-import { cn } from "@/utils/classname";
+import {
+  LoginScheme,
+  LoginSchemeType,
+} from "@/src/entities/models/validator-model";
+import useToastContext from "@/src/hook/use-toast-context";
+import {
+  useAppDispatch,
+  useAppSelector,
+  useThunkDispatch,
+} from "@/src/redux/hook";
+import { resetAuth } from "@/src/redux/modules/auth-slice";
+import { login } from "@/src/services/auth/auth-api";
+import Button from "@/src/shared/components/button";
+import Input from "@/src/shared/components/input";
+import { cn } from "@/src/shared/utils/classname";
 
 const Page = () => {
   const { control, handleSubmit, getValues } = useForm<LoginSchemeType>({
