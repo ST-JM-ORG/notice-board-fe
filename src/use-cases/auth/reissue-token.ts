@@ -3,12 +3,12 @@ import { AuthApi } from "@/src/services/auth-api";
 import { createThunk } from "@/src/use-cases/common-use-case";
 
 type Returned = ApiResponse<{ accessToken: string; refreshToken: string }>;
-type Args = { email: string; pw: string };
+type Args = null;
 
-export const login = createThunk<Returned, Args>(
-  "auth/login",
-  async (input) => {
-    const res = await AuthApi.login(input);
+export const reissueToken = createThunk<Returned, Args>(
+  "auth/reissueToken",
+  async () => {
+    const res = await AuthApi.reissueToken();
     return res.data;
   },
 );

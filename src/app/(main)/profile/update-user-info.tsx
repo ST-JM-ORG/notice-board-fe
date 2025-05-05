@@ -8,7 +8,7 @@ import { useRouter } from "next/navigation";
 import {
   UserDetailScheme,
   UserDetailSchemeType,
-} from "@/src/entities/models/validator-model";
+} from "@/src/entities/common/validator-model";
 import ProfileUploader from "@/src/features/common/profile-uploader";
 import useToastContext from "@/src/hook/use-toast-context";
 import {
@@ -17,7 +17,7 @@ import {
   useThunkDispatch,
 } from "@/src/redux/hook";
 import { resetUser } from "@/src/redux/modules/user-slice";
-import { reissueToken } from "@/src/services/auth/auth-api";
+import { reissueToken } from "@/src/services/auth-api";
 import { getUser, updateUser } from "@/src/services/user-api";
 import Button from "@/src/shared/components/button";
 import Input from "@/src/shared/components/input";

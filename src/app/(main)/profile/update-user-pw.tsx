@@ -6,7 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import {
   UpdatePwScheme,
   UpdatePwSchemeType,
-} from "@/src/entities/models/validator-model";
+} from "@/src/entities/common/validator-model";
 import useToastContext from "@/src/hook/use-toast-context";
 import {
   useAppDispatch,

@@ -1,11 +1,11 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
+import { ApiResponse } from "@/src/entities/common/api-response";
 import {
   AdminUserProps,
   AdminUserResponse,
 } from "@/src/entities/models/admin-response";
-import { ApiResponse } from "@/src/entities/models/api-response";
 import { ERROR_RESPONSE } from "@/src/shared/constants/const";
 import instance from "@/src/shared/utils/instance";
 import { createUrlQueryStr } from "@/src/shared/utils/query";

@@ -4,12 +4,12 @@ import {
   SliceSelectors,
 } from "@reduxjs/toolkit";
 
-import { reissueToken } from "@/src/services/auth/auth-api";
 import { ACCESS_TOKEN, REFRESH_TOKEN } from "@/src/shared/constants/const";
 import { ERROR_MESSAGE } from "@/src/shared/constants/error-code";
 import { Status } from "@/src/shared/constants/type";
 import { getCookie, setCookie } from "@/src/shared/utils/cookie";
 import { decodeAccessToken } from "@/src/shared/utils/token";
+import { reissueToken } from "@/src/use-cases/auth/reissue-token";
 
 interface TokenState {
   status: Status;

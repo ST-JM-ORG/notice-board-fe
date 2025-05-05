@@ -1,7 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
-import { ApiResponse } from "@/src/entities/models/api-response";
+import { ApiResponse } from "@/src/entities/common/api-response";
 import { SingleUserType } from "@/src/entities/models/user-response";
 import { ERROR_RESPONSE } from "@/src/shared/constants/const";
 import instance from "@/src/shared/utils/instance";

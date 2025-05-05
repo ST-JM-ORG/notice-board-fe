@@ -14,7 +14,7 @@ import { saveToken } from "@/redux/modules/token-slice";
 
 import ProfileImage from "@/src/features/common/profile-image";
 import SideBarButton from "@/src/features/common/side-bar-button";
-import { logout } from "@/src/services/auth/auth-api";
+import { logout } from "@/src/services/auth-api";
 import { getCategories } from "@/src/services/category-api";
 import { cn } from "@/src/shared/utils/classname";
 import { adminRole } from "@/src/shared/utils/role";

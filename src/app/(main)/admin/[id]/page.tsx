@@ -10,7 +10,7 @@ import { useRouter } from "next/navigation";
 import {
   AdminDetailScheme,
   AdminDetailSchemeType,
-} from "@/src/entities/models/validator-model";
+} from "@/src/entities/common/validator-model";
 import ConfirmModal from "@/src/features/common/confirm-modal";
 import ProfileUploader from "@/src/features/common/profile-uploader";
 import RadioButton from "@/src/features/common/radio-button";

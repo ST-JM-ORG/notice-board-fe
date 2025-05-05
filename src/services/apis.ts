@@ -1,6 +1,6 @@
 import { AxiosRequestConfig, AxiosResponse } from "axios";
 
-import { ApiResponse } from "@/src/entities/models/api-response";
+import { ApiResponse } from "@/src/entities/common/api-response";
 import instance from "@/src/shared/utils/instance";
 
 export const Get = async <T>(

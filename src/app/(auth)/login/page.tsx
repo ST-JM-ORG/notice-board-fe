@@ -11,7 +11,7 @@ import { useRouter } from "next/navigation";
 import {
   LoginScheme,
   LoginSchemeType,
-} from "@/src/entities/models/validator-model";
+} from "@/src/entities/common/validator-model";
 import useToastContext from "@/src/hook/use-toast-context";
 import {
   useAppDispatch,
@@ -19,7 +19,7 @@ import {
   useThunkDispatch,
 } from "@/src/redux/hook";
 import { resetAuth } from "@/src/redux/modules/auth-slice";
-import { login } from "@/src/services/auth/auth-api";
+import { login } from "@/src/services/auth-api";
 import Button from "@/src/shared/components/button";
 import Input from "@/src/shared/components/input";
 import { cn } from "@/src/shared/utils/classname";

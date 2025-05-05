@@ -11,7 +11,7 @@ import { useRouter } from "next/navigation";
 import {
   SignUpScheme,
   SignUpSchemeType,
-} from "@/src/entities/models/validator-model";
+} from "@/src/entities/common/validator-model";
 import ProfileUploader from "@/src/features/common/profile-uploader";
 import useToastContext from "@/src/hook/use-toast-context";
 import {
@@ -20,7 +20,7 @@ import {
   useThunkDispatch,
 } from "@/src/redux/hook";
 import { resetAuth } from "@/src/redux/modules/auth-slice";
-import { emailDupCheck, signUp } from "@/src/services/auth/auth-api";
+import { emailDupCheck, signUp } from "@/src/services/auth-api";
 import Button from "@/src/shared/components/button";
 import Input from "@/src/shared/components/input";
 import { IMAGE_WHITELIST } from "@/src/shared/constants/mime";

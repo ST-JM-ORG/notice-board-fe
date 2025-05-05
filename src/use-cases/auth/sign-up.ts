@@ -1,6 +1,6 @@
+import { ApiResponse } from "@/src/entities/common/api-response";
 import { FormDataModel } from "@/src/entities/common/form-data-model";
-import { ApiResponse } from "@/src/entities/models/api-response";
-import { AuthApi } from "@/src/services/auth/auth-api";
+import { AuthApi } from "@/src/services/auth-api";
 import { createThunk } from "@/src/use-cases/common-use-case";
 
 type Returned = ApiResponse<boolean>;

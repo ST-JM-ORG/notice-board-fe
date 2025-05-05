@@ -12,7 +12,7 @@ import { resetAuth } from "@/redux/modules/auth-slice";
 import { saveToken } from "@/redux/modules/token-slice";
 
 import ProfileImage from "@/src/features/common/profile-image";
-import { logout } from "@/src/services/auth/auth-api";
+import { logout } from "@/src/services/auth-api";
 import { cn } from "@/src/shared/utils/classname";
 import { adminRole } from "@/src/shared/utils/role";
 import { pxToRem } from "@/src/shared/utils/size";
