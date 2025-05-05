@@ -1,82 +1,30 @@
-import { createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
-
-import { ApiResponse } from "@/src/entities/common/api-response";
-import { SingleUserType } from "@/src/entities/models/user-response";
-import { ERROR_RESPONSE } from "@/src/shared/constants/const";
 import instance from "@/src/shared/utils/instance";
 
-export const getUser = createAsyncThunk<
-  ApiResponse<SingleUserType>,
-  null,
-  { rejectValue: ApiResponse }
->("user/me", async (_, thunkAPI) => {
-  try {
-    const response = await instance.get("/user/me");
-    return response.data;
-  } catch (e) {
-    if (axios.isAxiosError(e) && e.response) {
-      return thunkAPI.rejectWithValue(e.response.data);
-    } else {
-      return thunkAPI.rejectWithValue(ERROR_RESPONSE);
-    }
-  }
-});
+export const UserApi = {
+  // 내 정보 불러오기
+  async getMe() {
+    return await instance.get("/user/me");
+  },
 
-export const updateUser = createAsyncThunk<
-  ApiResponse<boolean>,
-  { formData: FormData },
-  { rejectValue: ApiResponse }
->("user/update", async ({ formData }, thunkAPI) => {
-  try {
-    const response = await instance.put("/user/me", formData, {
+  // 사용자 정보 수정
+  async updateUser(data: FormData) {
+    return await instance.put("/user/me", data, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
     });
-    return response.data;
-  } catch (e) {
-    if (axios.isAxiosError(e) && e.response) {
-      return thunkAPI.rejectWithValue(e.response.data);
-    } else {
-      return thunkAPI.rejectWithValue(ERROR_RESPONSE);
-    }
-  }
-});
+  },
 
-export const updatePw = createAsyncThunk<
-  ApiResponse<boolean>,
-  { currPw: string; newPw: string },
-  { rejectValue: ApiResponse }
->("user/changePw", async ({ currPw, newPw }, thunkAPI) => {
-  try {
-    const response = await instance.put("/user/me/password", {
+  // 비밀번호 변경
+  async updatePw({ currPw, newPw }: { currPw: string; newPw: string }) {
+    return await instance.put("/user/me/password", {
       currentPw: currPw,
       newPw,
     });
-    return response.data;
-  } catch (e) {
-    if (axios.isAxiosError(e) && e.response) {
-      return thunkAPI.rejectWithValue(e.response.data);
-    } else {
-      return thunkAPI.rejectWithValue(ERROR_RESPONSE);
-    }
-  }
-});
+  },
 
-export const deleteUser = createAsyncThunk<
-  ApiResponse<boolean>,
-  null,
-  { rejectValue: ApiResponse }
->("user/delete", async (_, thunkAPI) => {
-  try {
-    const response = await instance.delete("/user/me");
-    return response.data;
-  } catch (e) {
-    if (axios.isAxiosError(e) && e.response) {
-      return thunkAPI.rejectWithValue(e.response.data);
-    } else {
-      return thunkAPI.rejectWithValue(ERROR_RESPONSE);
-    }
-  }
-});
+  // 사용자 삭제
+  async deleteUser() {
+    return await instance.delete("/user/me");
+  },
+};

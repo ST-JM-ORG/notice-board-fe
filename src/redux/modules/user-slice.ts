@@ -6,12 +6,6 @@ import {
 } from "@reduxjs/toolkit";
 
 import { SingleUserType } from "@/src/entities/models/user-response";
-import {
-  deleteUser,
-  getUser,
-  updatePw,
-  updateUser,
-} from "@/src/services/user-api";
 import { ACCESS_TOKEN, REFRESH_TOKEN } from "@/src/shared/constants/const";
 import {
   ERROR_CODE,
@@ -21,6 +15,10 @@ import {
 import { SUCCESS_CODE, SuccessType } from "@/src/shared/constants/success-code";
 import { Status } from "@/src/shared/constants/type";
 import { removeCookie } from "@/src/shared/utils/cookie";
+import { deleteUser } from "@/src/use-cases/user/delete-user";
+import { getMe } from "@/src/use-cases/user/get-me";
+import { updatePw } from "@/src/use-cases/user/update-pw";
+import { updateUser } from "@/src/use-cases/user/update-user";
 
 interface UserState {
   getUser: {
@@ -124,13 +122,13 @@ const UserSlice = createSlice<
   extraReducers: (builder) => {
     // User 데이터 불러오기
     builder
-      .addCase(getUser.pending, (state, action) => {
+      .addCase(getMe.pending, (state, action) => {
         state.getUser.status = "pending";
         state.getUser.type = null;
         state.getUser.message = "";
         state.getUser.error = "";
       })
-      .addCase(getUser.fulfilled, (state, action) => {
+      .addCase(getMe.fulfilled, (state, action) => {
         const {
           payload: {
             data,
@@ -142,7 +140,7 @@ const UserSlice = createSlice<
         state.getUser.message = message;
         state.getUser.user = data;
       })
-      .addCase(getUser.rejected, (state, action) => {
+      .addCase(getMe.rejected, (state, action) => {
         if (action.payload) {
           const {
             result: { code, message },
