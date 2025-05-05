@@ -6,9 +6,9 @@ import {
 } from "@reduxjs/toolkit";
 
 import { CategoryAPIResponse } from "@/src/entities/models/category-model";
-import { getCategories } from "@/src/services/category-api";
 import { ERROR_MESSAGE } from "@/src/shared/constants/error-code";
 import { Status } from "@/src/shared/constants/type";
+import { getCategories } from "@/src/use-cases/category/get-categories";
 
 interface CategoryState {
   selectedCategoryName: string | null | undefined;
