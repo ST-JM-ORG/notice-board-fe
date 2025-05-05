@@ -6,14 +6,12 @@ import {
 } from "@reduxjs/toolkit";
 
 import { AdminUserProps } from "@/src/entities/models/admin-response";
-import {
-  deleteAdminUser,
-  getAdminUserDetail,
-  getAdminUserList,
-  updateAdminUser,
-} from "@/src/services/admin-api";
 import { ERROR_MESSAGE } from "@/src/shared/constants/error-code";
 import { Status } from "@/src/shared/constants/type";
+import { deleteAdminUser } from "@/src/use-cases/admin/delete-admin-user";
+import { getAdminUserDetail } from "@/src/use-cases/admin/get-admin-user-detail";
+import { getAdminUserList } from "@/src/use-cases/admin/get-admin-user-list";
+import { updateAdminUser } from "@/src/use-cases/admin/update-admin-user";
 
 type ResetProps = "getList" | "detail" | "update" | "delete";
 
